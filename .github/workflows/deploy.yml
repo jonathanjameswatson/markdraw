@@ -30,6 +30,8 @@ jobs:
         target_branch: gh-pages
         build_dir: release/wwwroot
         jekyll: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     -
       name: Change base-tag in index.html from / to Markdraw
       run: sed -i 's/<base href="\/" \/>/<base href="\/Markdraw\/" \/>/g' release/wwwroot/index.html
