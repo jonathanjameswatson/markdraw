@@ -24,7 +24,7 @@ jobs:
       run: dotnet publish Markdraw.csproj -c Release -o release --nologo
     -
       name: Change base-tag in index.html from / to Markdraw
-      run: sed -i 's/<base href="\/" \/>/<base href="\/Markdraw\/" \/>/g' release/wwwroot/index.html
+      run: sed -i 's/<base href="\/" \/>/<base href="\/markdraw\/" \/>/g' release/wwwroot/index.html
     -
       name: Deploy
       if: success()
