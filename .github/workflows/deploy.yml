@@ -23,6 +23,9 @@ jobs:
       name: Publish .NET Core Project
       run: dotnet publish Markdraw.csproj -c Release -o release --nologo
     -
+      name: Change base-tag in index.html from / to Markdraw
+      run: sed -i 's/<base href="\/" \/>/<base href="\/Markdraw\/" \/>/g' release/wwwroot/index.html
+    -
       name: Deploy
       if: success()
       uses: crazy-max/ghaction-github-pages@v2
@@ -32,6 +35,3 @@ jobs:
         jekyll: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    -
-      name: Change base-tag in index.html from / to Markdraw
-      run: sed -i 's/<base href="\/" \/>/<base href="\/Markdraw\/" \/>/g' release/wwwroot/index.html
