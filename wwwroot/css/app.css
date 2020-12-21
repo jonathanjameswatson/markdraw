@@ -1,3 +1,7 @@
 ﻿#blazor-error-ui {
     display: none;
 }
+
+.navbar-item img {
+    max-height: 10000000000000px;
+}

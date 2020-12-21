@@ -1,21 +1,32 @@
-<nav class="navbar container" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="/">
-      <b>Markdraw</b>
-    </a>
-
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div class="navbar-menu">
-    <div class="navbar-start">
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="container">
+      <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        Home
+        <img src="/icon.png" width="48" height="48">
+        <b>Markdraw</b>
       </a>
+
+      <a role="button" class="navbar-burger@(active ? " is-active" : "")" aria-label="menu" aria-expanded="@(active)" @onclick="ToggleActive">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div class="navbar-menu@(active ? " is-active" : "")">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/">
+          Home
+        </a>
+      </div>
     </div>
   </div>
 </nav>
+
+@code{
+  private bool active = false;
+
+  private void ToggleActive() {
+    active = !active;
+  }
+}
