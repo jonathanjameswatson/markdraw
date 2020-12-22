@@ -20,8 +20,16 @@ jobs:
       with:
         dotnet-version: 3.1
     -
-      name: Publish .NET Core Project
-      run: dotnet publish Markdraw.csproj -c Release -o release --nologo
+      name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    -
+      name: Install packages with yarn
+      run: yarn install
+    -
+      name: Build project with yarn
+      run: yarn build
     -
       name: Change base-tag in index.html from / to Markdraw
       run: sed -i 's/<base href="\/" \/>/<base href="\/markdraw\/" \/>/g' release/wwwroot/index.html
