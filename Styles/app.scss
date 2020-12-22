@@ -1,7 +1,22 @@
-﻿#blazor-error-ui {
+﻿@import '../node_modules/bulma/sass/utilities/initial-variables';
+@import '../node_modules/bulma/sass/utilities/functions';
+
+$spacing-shortcuts: ();
+
+$navbar-height: 4rem;
+
+$red: #b91d47;
+$red-invert: findColorInvert($red);
+
+$primary: $red;
+
+@import '../node_modules/bulma/bulma';
+
+#blazor-error-ui {
     display: none;
 }
 
 .navbar-item img {
+    margin-right: 6px;
     max-height: none !important;
 }

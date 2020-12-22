@@ -18,5 +18,8 @@
     "dev": "concurrently --kill-others \"dotnet watch run\" \"yarn run watch\"",
     "prod": "cross-env NODE_ENV='production' yarn gulp build",
     "build": "cross-env NODE_ENV='production' yarn gulp build && dotnet publish Markdraw.csproj -c Release -o release --nologo"
+  },
+  "dependencies": {
+    "bulma": "^0.9.1"
   }
 }
