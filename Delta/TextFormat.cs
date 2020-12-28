@@ -10,13 +10,13 @@ namespace Markdraw.Delta
 
     public TextFormat(bool bold, bool italic, string link, bool underlined, bool struckthrough)
     {
-        this.bold = bold;
-        this.italic = italic;
-        this.link = link;
-        this.underlined = underlined;
-        this.struckthrough = struckthrough;
+      this.bold = bold;
+      this.italic = italic;
+      this.link = link;
+      this.underlined = underlined;
+      this.struckthrough = struckthrough;
     }
 
-    public TextFormat() {}
+    public TextFormat() { }
   }
 }

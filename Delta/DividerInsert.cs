@@ -1,4 +1,4 @@
 namespace Markdraw.Delta
 {
-  public class DividerInsert : EmbedInsert {}
+  public class DividerInsert : EmbedInsert { }
 }

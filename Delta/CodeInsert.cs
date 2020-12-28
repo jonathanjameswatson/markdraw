@@ -1,4 +1,5 @@
-namespace Markdraw.Delta {
+namespace Markdraw.Delta
+{
   public class CodeInsert : EmbedInsert
   {
     private string _tag;

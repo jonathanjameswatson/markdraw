@@ -1,4 +1,5 @@
-namespace Markdraw.Delta {
+namespace Markdraw.Delta
+{
   public abstract class Insert : Op
   {
     public int length
@@ -6,6 +7,6 @@ namespace Markdraw.Delta {
       get => 1;
     }
 
-    public void setFormat(Format format) {}
+    public void setFormat(Format format) { }
   }
 }

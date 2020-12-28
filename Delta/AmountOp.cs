@@ -9,7 +9,8 @@ namespace Markdraw.Delta
       get => _amount;
       set
       {
-        if (value < 1) {
+        if (value < 1)
+        {
           throw new ArgumentOutOfRangeException("value", "You must operate on at least one character.");
         }
         _amount = value;

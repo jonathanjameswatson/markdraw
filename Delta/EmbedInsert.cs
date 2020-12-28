@@ -1,4 +1,4 @@
 namespace Markdraw.Delta
 {
-  public abstract class EmbedInsert : Insert {}
+  public abstract class EmbedInsert : Insert { }
 }
