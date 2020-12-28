@@ -2,13 +2,14 @@ using System;
 
 namespace Markdraw.Delta
 {
-    public class LineFormat : Format {
+    public class LineFormat : Format
+    {
       public bool quote = false;
       public bool bullet = false;
       public int header
       {
         get { return header; }
-        set { header = Math.Min(6, Math.Max(0, value)); }
+        set { header = Math.Clamp(value, 0, 6); }
       }
       public bool ordered = false;
 
@@ -18,6 +19,11 @@ namespace Markdraw.Delta
         this.bullet = bullet;
         this.header = header;
         this.ordered = ordered;
+      }
+
+      public LineFormat()
+      {
+        this.header = 0;
       }
     }
 }

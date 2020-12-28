@@ -1,6 +1,7 @@
 namespace Markdraw.Delta
 {
-    public abstract class Op {
-      private int _length;
-    }
+  public interface Op
+  {
+    public int length { get; }
+  }
 }

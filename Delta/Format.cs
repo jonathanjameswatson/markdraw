@@ -1,4 +1,4 @@
 namespace Markdraw.Delta
 {
-    public abstract class Format {}
+  public abstract class Format {}
 }

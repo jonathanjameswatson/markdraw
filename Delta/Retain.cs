@@ -1,6 +1,7 @@
 namespace Markdraw.Delta
 {
-    public class Retain : Op {
-        private Format _format;
-    }
+  public class Retain : AmountOp
+  {
+    public Retain(int amount) : base(amount) {}
+  }
 }

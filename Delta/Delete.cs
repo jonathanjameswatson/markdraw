@@ -1,4 +1,7 @@
 namespace Markdraw.Delta
 {
-    public class Delete : Op {}
+  public class Delete : AmountOp
+  {
+    public Delete(int amount) : base(amount) {}
+  }
 }
