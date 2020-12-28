@@ -18,5 +18,15 @@ namespace Markdraw.Delta
     }
 
     public TextFormat() { }
+
+    public bool hasSameAs(TextFormat textFormat)
+    {
+      return (this.bold == textFormat.bold
+              && this.italic == textFormat.italic
+              && this.link == textFormat.link
+              && this.underlined == textFormat.underlined
+              && this.struckthrough == textFormat.struckthrough
+             );
+    }
   }
 }

@@ -8,5 +8,10 @@ namespace Markdraw.Delta
     }
 
     public void setFormat(Format format) { }
+
+    public (int, bool) subtract(int amount)
+    {
+      return (1, true);
+    }
   }
 }

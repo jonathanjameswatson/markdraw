@@ -2,29 +2,24 @@ using System;
 
 namespace Markdraw.Delta
 {
-  public abstract class AmountOp : Op
+  public abstract class LengthOp : Op
   {
-    private int _amount
+    public int length
     {
-      get => _amount;
+      get => length;
       set
       {
         if (value < 1)
         {
           throw new ArgumentOutOfRangeException("value", "You must operate on at least one character.");
         }
-        _amount = value;
+        length = value;
       }
     }
 
-    public int length
+    public LengthOp(int length)
     {
-      get => _amount;
-    }
-
-    public AmountOp(int amount)
-    {
-      _amount = amount;
+      this.length = length;
     }
   }
 }

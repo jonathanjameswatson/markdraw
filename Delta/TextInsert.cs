@@ -18,6 +18,30 @@ namespace Markdraw.Delta
       }
     }
 
+    public new(int, bool) subtract(int amount)
+    {
+      int n = this._text.Length;
+      if (amount >= n)
+      {
+        return (n, true);
+      }
+      _text = _text.Substring(0, n - amount);
+      return (amount, false);
+    }
+
+    public TextInsert merge(TextInsert before)
+    {
+      if (this._format.hasSameAs(before._format))
+      {
+        before._text += this._text;
+        return before;
+      }
+      else
+      {
+        return null;
+      }
+    }
+
     public TextInsert(string text, TextFormat format)
     {
       this._text = text;
