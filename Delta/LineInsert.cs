@@ -4,6 +4,13 @@ namespace Markdraw.Delta
   {
     private LineFormat _format;
 
+    public LineInsert(LineFormat format)
+    {
+      this._format = format;
+    }
+
+    public LineInsert() : this(new LineFormat()) { }
+
     public new void setFormat(Format format)
     {
       if (format is LineFormat lineFormat)
@@ -11,12 +18,5 @@ namespace Markdraw.Delta
         this._format = lineFormat;
       }
     }
-
-    public LineInsert(LineFormat format)
-    {
-      this._format = format;
-    }
-
-    public LineInsert() : this(new LineFormat()) { }
   }
 }

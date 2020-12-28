@@ -10,6 +10,14 @@ namespace Markdraw.Delta
     private string _text;
     private TextFormat _format;
 
+    public TextInsert(string text, TextFormat format)
+    {
+      this._text = text;
+      this._format = format;
+    }
+
+    public TextInsert(string text) : this(text, new TextFormat()) { }
+
     public new void setFormat(Format format)
     {
       if (format is TextFormat textFormat)
@@ -42,12 +50,6 @@ namespace Markdraw.Delta
       }
     }
 
-    public TextInsert(string text, TextFormat format)
-    {
-      this._text = text;
-      this._format = format;
-    }
 
-    public TextInsert(string text) : this(text, new TextFormat()) { }
   }
 }
