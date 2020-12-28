@@ -17,5 +17,13 @@ namespace Markdraw.Delta
         this._format = textFormat;
       }
     }
+
+    public TextInsert(string text, TextFormat format)
+    {
+      this._text = text;
+      this._format = format;
+    }
+
+    public TextInsert(string text) : this(text, new TextFormat()) { }
   }
 }

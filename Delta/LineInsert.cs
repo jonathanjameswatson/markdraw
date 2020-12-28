@@ -11,5 +11,12 @@ namespace Markdraw.Delta
         this._format = lineFormat;
       }
     }
+
+    public LineInsert(LineFormat format)
+    {
+      this._format = format;
+    }
+
+    public LineInsert() : this(new LineFormat()) { }
   }
 }
