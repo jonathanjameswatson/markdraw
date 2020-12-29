@@ -50,6 +50,31 @@ namespace Markdraw.Delta
       }
     }
 
+    public TextInsert merge(TextInsert middle, TextInsert before)
+    {
+      if (this._format.hasSameAs(middle._format))
+      {
+        before._text += middle._text + this._text;
+        return before;
+      }
+      else
+      {
+        return null;
+      }
+    }
 
+    public bool deleteAt(int position, int amount)
+    {
+      this._text = _text.Substring(position, amount);
+      return this.length == 0;
+    }
+
+    public TextInsert splitAt(int position)
+    {
+      string startText = _text.Substring(0, position);
+      string endText = _text.Substring(position);
+      _text = startText;
+      return new TextInsert(endText, _format);
+    }
   }
 }
