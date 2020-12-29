@@ -1,15 +1,15 @@
 namespace Markdraw.Delta
 {
-  public abstract class Insert : Op
+  public abstract class Insert : IOp
   {
-    public int length
+    public int Length
     {
       get => 1;
     }
 
-    public void setFormat(Format format) { }
+    public void SetFormat(Format format) { }
 
-    public (int, bool) subtract(int amount)
+    public (int, bool) Subtract(int amount)
     {
       return (1, true);
     }

@@ -11,7 +11,7 @@ namespace Markdraw.Delta
 
     public LineInsert() : this(new LineFormat()) { }
 
-    public new void setFormat(Format format)
+    public new void SetFormat(Format format)
     {
       if (format is LineFormat lineFormat)
       {

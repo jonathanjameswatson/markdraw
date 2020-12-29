@@ -2,7 +2,7 @@ namespace Markdraw.Delta
 {
   public class TextInsert : Insert
   {
-    public new int length
+    public new int Length
     {
       get => _text.Length;
     }
@@ -18,7 +18,7 @@ namespace Markdraw.Delta
 
     public TextInsert(string text) : this(text, new TextFormat()) { }
 
-    public new void setFormat(Format format)
+    public new void SetFormat(Format format)
     {
       if (format is TextFormat textFormat)
       {
@@ -26,7 +26,7 @@ namespace Markdraw.Delta
       }
     }
 
-    public new(int, bool) subtract(int amount)
+    public new(int, bool) Subtract(int amount)
     {
       int n = this._text.Length;
       if (amount >= n)
@@ -37,9 +37,9 @@ namespace Markdraw.Delta
       return (amount, false);
     }
 
-    public TextInsert merge(TextInsert before)
+    public TextInsert Merge(TextInsert before)
     {
-      if (this._format.hasSameAs(before._format))
+      if (this._format.IsSameAs(before._format))
       {
         before._text += this._text;
         return before;
@@ -50,9 +50,9 @@ namespace Markdraw.Delta
       }
     }
 
-    public TextInsert merge(TextInsert middle, TextInsert before)
+    public TextInsert Merge(TextInsert middle, TextInsert before)
     {
-      if (this._format.hasSameAs(middle._format))
+      if (this._format.IsSameAs(middle._format))
       {
         before._text += middle._text + this._text;
         return before;
@@ -63,13 +63,13 @@ namespace Markdraw.Delta
       }
     }
 
-    public bool deleteAt(int position, int amount)
+    public bool DeleteAt(int position, int amount)
     {
       this._text = _text.Substring(position, amount);
-      return this.length == 0;
+      return this.Length == 0;
     }
 
-    public TextInsert splitAt(int position)
+    public TextInsert SplitAt(int position)
     {
       string startText = _text.Substring(0, position);
       string endText = _text.Substring(position);

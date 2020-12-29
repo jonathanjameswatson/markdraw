@@ -1,7 +1,7 @@
 namespace Markdraw.Delta
 {
-  public interface Op
+  public interface IOp
   {
-    public int length { get; }
+    public int Length { get; }
   }
 }

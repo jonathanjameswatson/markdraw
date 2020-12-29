@@ -5,14 +5,14 @@ namespace Markdraw.Delta
 {
   public class Delta
   {
-    private List<Op> _ops;
+    private List<IOp> _ops;
 
     public Delta()
     {
-      this._ops = new List<Op>();
+      this._ops = new List<IOp>();
     }
 
-    private Op pop()
+    private IOp Pop()
     {
       int n = this._ops.Count - 1;
       var last = this._ops[n];
@@ -20,60 +20,60 @@ namespace Markdraw.Delta
       return last;
     }
 
-    private Op peek()
+    private IOp Peek()
     {
       return this._ops[this._ops.Count - 1];
     }
 
-    public Delta insert(Insert insert)
+    public Delta Insert(Insert insert)
     {
       this._ops.Add(insert);
-      return this.normalise();
+      return this.Normalise();
     }
 
-    public Delta insert(string text, TextFormat format)
+    public Delta Insert(string text, TextFormat format)
     {
-      return insert(new TextInsert(text, format));
+      return Insert(new TextInsert(text, format));
     }
 
-    public Delta insert(string text)
+    public Delta Insert(string text)
     {
-      return insert(new TextInsert(text));
+      return Insert(new TextInsert(text));
     }
 
-    public Delta delete(int amount)
+    public Delta Delete(int amount)
     {
       this._ops.Add(new Delete(amount));
-      return this.normalise();
+      return this.Normalise();
     }
 
-    public Delta retain(int amount)
+    public Delta Retain(int amount)
     {
       this._ops.Add(new Retain(amount));
       return this;
     }
 
-    public Delta retain(int amount, Format format)
+    public Delta Retain(int amount, Format format)
     {
       this._ops.Add(new Retain(amount, format));
       return this;
     }
 
-    private Delta normalise()
+    private Delta Normalise()
     {
-      var last = peek();
+      var last = Peek();
       int n = this._ops.Count - 1;
 
 
       if (last is Delete delete)
       {
-        int toDelete = delete.length;
+        int toDelete = delete.Length;
 
         this._ops.RemoveAt(n);
 
-        while (peek() is Insert insert && toDelete > 0)
+        while (Peek() is Insert insert && toDelete > 0)
         {
-          (int subtracted, bool deleted) = insert.subtract(toDelete);
+          (int subtracted, bool deleted) = insert.Subtract(toDelete);
 
           if (deleted)
           {
@@ -90,33 +90,33 @@ namespace Markdraw.Delta
       }
       else if (last is TextInsert after && n > 1 && this._ops[n - 1] is TextInsert before)
       {
-        var merged = after.merge(before);
+        var merged = after.Merge(before);
         if (!(merged is null))
         {
-          pop();
+          Pop();
         }
       }
 
       return this;
     }
 
-    public Delta transform(Delta other)
+    public Delta Transform(Delta other)
     {
       int opIndex = 0;
       int opCharacterIndex = 0;
 
       foreach (var op in other._ops)
       {
-        int length = op.length;
+        int length = op.Length;
 
         if (op is Retain retain)
         {
           while (length > 0)
           {
             var next = _ops[opIndex];
-            int lengthRemaining = next.length - opCharacterIndex;
+            int lengthRemaining = next.Length - opCharacterIndex;
             int advanced = Math.Min(lengthRemaining, length);
-            opCharacterIndex = (opIndex + advanced) % next.length;
+            opCharacterIndex = (opIndex + advanced) % next.Length;
             opIndex += advanced;
             length -= advanced;
             if (opCharacterIndex == 0)
@@ -134,9 +134,9 @@ namespace Markdraw.Delta
             {
               if (nextInsert is TextInsert nextTextInsert)
               {
-                int lengthRemaining = next.length - opCharacterIndex;
+                int lengthRemaining = next.Length - opCharacterIndex;
                 int toDelete = Math.Min(lengthRemaining, length);
-                bool deleted = nextTextInsert.deleteAt(opCharacterIndex, toDelete);
+                bool deleted = nextTextInsert.DeleteAt(opCharacterIndex, toDelete);
 
                 if (deleted)
                 {
@@ -162,8 +162,8 @@ namespace Markdraw.Delta
 
             if (_ops[opIndex] is TextInsert after && opIndex >= 1 && _ops[opIndex - 1] is TextInsert before)
             {
-              int beforeLength = before.length;
-              var merged = after.merge(before);
+              int beforeLength = before.Length;
+              var merged = after.Merge(before);
               if (!(merged is null))
               {
                 _ops.RemoveAt(opIndex);
@@ -182,8 +182,8 @@ namespace Markdraw.Delta
 
             if (_ops[opIndex] is TextInsert after && opIndex >= 1 && _ops[opIndex - 1] is TextInsert before)
             {
-              int beforeLength = before.length;
-              var merged = after.merge(before);
+              int beforeLength = before.Length;
+              var merged = after.Merge(before);
               if (!(merged is null))
               {
                 _ops.RemoveAt(opIndex);
@@ -196,7 +196,7 @@ namespace Markdraw.Delta
           {
             if (_ops[opIndex] is TextInsert before)
             {
-              var after = before.splitAt(opCharacterIndex);
+              var after = before.SplitAt(opCharacterIndex);
               _ops.Insert(opIndex + 1, op);
               _ops.Insert(opIndex + 2, after);
               opIndex += 2;
@@ -204,8 +204,8 @@ namespace Markdraw.Delta
 
               if (op is TextInsert middle)
               {
-                int beforeAndMiddleLength = before.length + middle.length;
-                var merged = after.merge(middle, before);
+                int beforeAndMiddleLength = before.Length + middle.Length;
+                var merged = after.Merge(middle, before);
                 if (!(merged is null))
                 {
                   _ops.RemoveAt(opIndex);

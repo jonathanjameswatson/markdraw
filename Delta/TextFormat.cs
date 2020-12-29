@@ -2,30 +2,30 @@ namespace Markdraw.Delta
 {
   public class TextFormat : Format
   {
-    public bool bold = false;
-    public bool italic = false;
-    public string link = "";
-    public bool underlined = false;
-    public bool struckthrough = false;
+    public bool Bold = false;
+    public bool Italic = false;
+    public string Link = "";
+    public bool Underlined = false;
+    public bool Struckthrough = false;
 
     public TextFormat(bool bold, bool italic, string link, bool underlined, bool struckthrough)
     {
-      this.bold = bold;
-      this.italic = italic;
-      this.link = link;
-      this.underlined = underlined;
-      this.struckthrough = struckthrough;
+      this.Bold = bold;
+      this.Italic = italic;
+      this.Link = link;
+      this.Underlined = underlined;
+      this.Struckthrough = struckthrough;
     }
 
     public TextFormat() { }
 
-    public bool hasSameAs(TextFormat textFormat)
+    public bool IsSameAs(TextFormat textFormat)
     {
-      return (this.bold == textFormat.bold
-              && this.italic == textFormat.italic
-              && this.link == textFormat.link
-              && this.underlined == textFormat.underlined
-              && this.struckthrough == textFormat.struckthrough
+      return (this.Bold == textFormat.Bold
+              && this.Italic == textFormat.Italic
+              && this.Link == textFormat.Link
+              && this.Underlined == textFormat.Underlined
+              && this.Struckthrough == textFormat.Struckthrough
              );
     }
   }

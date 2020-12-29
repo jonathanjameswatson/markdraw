@@ -4,26 +4,26 @@ namespace Markdraw.Delta
 {
   public class LineFormat : Format
   {
-    public bool quote = false;
-    public bool bullet = false;
-    public int header
+    public bool Quote = false;
+    public bool Bullet = false;
+    public int Header
     {
-      get { return header; }
-      set { header = Math.Clamp(value, 0, 6); }
+      get { return Header; }
+      set { Header = Math.Clamp(value, 0, 6); }
     }
-    public bool ordered = false;
+    public bool Ordered = false;
 
     public LineFormat(bool quote, bool bullet, int header, bool ordered)
     {
-      this.quote = quote;
-      this.bullet = bullet;
-      this.header = header;
-      this.ordered = ordered;
+      this.Quote = quote;
+      this.Bullet = bullet;
+      this.Header = header;
+      this.Ordered = ordered;
     }
 
     public LineFormat()
     {
-      this.header = 0;
+      this.Header = 0;
     }
   }
 }
