@@ -10,7 +10,7 @@
 **This project is a work in progress.**
 ## Setup
 
-Make sure you have [Node.js](https://nodejs.org/), [Yarn](https://yarnpkg.com/) and [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core) installed.
+Make sure you have [Node.js](https://nodejs.org/), [Yarn](https://yarnpkg.com/) and [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) installed.
 
 ```bash
 $ git clone https://github.com/jonathanjameswatson/markdraw.git # or clone your own fork
