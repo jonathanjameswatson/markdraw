@@ -6,12 +6,12 @@ namespace Markdraw.Delta
 
     public Retain(int length) : base(length)
     {
-      this._format = null;
+      _format = null;
     }
 
     public Retain(int length, Format format) : base(length)
     {
-      this._format = format;
+      _format = format;
     }
   }
 }

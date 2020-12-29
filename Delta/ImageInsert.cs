@@ -8,7 +8,7 @@ namespace Markdraw.Delta
 
     public ImageInsert(string url)
     {
-      this._url = url;
+      _url = url;
     }
   }
 }

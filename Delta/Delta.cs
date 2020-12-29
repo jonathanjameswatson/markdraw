@@ -9,26 +9,26 @@ namespace Markdraw.Delta
 
     public Delta()
     {
-      this._ops = new List<IOp>();
+      _ops = new List<IOp>();
     }
 
     private IOp Pop()
     {
-      int n = this._ops.Count - 1;
-      var last = this._ops[n];
-      this._ops.RemoveAt(n);
+      int n = _ops.Count - 1;
+      var last = _ops[n];
+      _ops.RemoveAt(n);
       return last;
     }
 
     private IOp Peek()
     {
-      return this._ops[this._ops.Count - 1];
+      return _ops[_ops.Count - 1];
     }
 
     public Delta Insert(Insert insert)
     {
-      this._ops.Add(insert);
-      return this.Normalise();
+      _ops.Add(insert);
+      return Normalise();
     }
 
     public Delta Insert(string text, TextFormat format)
@@ -43,33 +43,33 @@ namespace Markdraw.Delta
 
     public Delta Delete(int amount)
     {
-      this._ops.Add(new Delete(amount));
-      return this.Normalise();
+      _ops.Add(new Delete(amount));
+      return Normalise();
     }
 
     public Delta Retain(int amount)
     {
-      this._ops.Add(new Retain(amount));
+      _ops.Add(new Retain(amount));
       return this;
     }
 
     public Delta Retain(int amount, Format format)
     {
-      this._ops.Add(new Retain(amount, format));
+      _ops.Add(new Retain(amount, format));
       return this;
     }
 
     private Delta Normalise()
     {
       var last = Peek();
-      int n = this._ops.Count - 1;
+      int n = _ops.Count - 1;
 
 
       if (last is Delete delete)
       {
         int toDelete = delete.Length;
 
-        this._ops.RemoveAt(n);
+        _ops.RemoveAt(n);
 
         while (Peek() is Insert insert && toDelete > 0)
         {
@@ -77,7 +77,7 @@ namespace Markdraw.Delta
 
           if (deleted)
           {
-            this._ops.RemoveAt(this._ops.Count - 1);
+            _ops.RemoveAt(_ops.Count - 1);
           }
 
           toDelete -= subtracted;
@@ -85,10 +85,10 @@ namespace Markdraw.Delta
 
         if (toDelete > 0)
         {
-          this._ops.Add(new Delete(toDelete));
+          _ops.Add(new Delete(toDelete));
         }
       }
-      else if (last is TextInsert after && n > 1 && this._ops[n - 1] is TextInsert before)
+      else if (last is TextInsert after && n > 1 && _ops[n - 1] is TextInsert before)
       {
         var merged = after.Merge(before);
         if (!(merged is null))

@@ -15,15 +15,15 @@ namespace Markdraw.Delta
 
     public LineFormat(bool quote, bool bullet, int header, bool ordered)
     {
-      this.Quote = quote;
-      this.Bullet = bullet;
-      this.Header = header;
-      this.Ordered = ordered;
+      Quote = quote;
+      Bullet = bullet;
+      Header = header;
+      Ordered = ordered;
     }
 
     public LineFormat()
     {
-      this.Header = 0;
+      Header = 0;
     }
   }
 }

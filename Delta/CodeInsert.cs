@@ -7,8 +7,8 @@ namespace Markdraw.Delta
 
     public CodeInsert(string text = "", string tag = "")
     {
-      this._text = text;
-      this._tag = tag;
+      _text = text;
+      _tag = tag;
     }
   }
 }

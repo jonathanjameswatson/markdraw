@@ -19,7 +19,7 @@ namespace Markdraw.Delta
 
     public LengthOp(int length)
     {
-      this.Length = length;
+      Length = length;
     }
   }
 }

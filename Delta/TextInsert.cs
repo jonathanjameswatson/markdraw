@@ -12,8 +12,8 @@ namespace Markdraw.Delta
 
     public TextInsert(string text, TextFormat format)
     {
-      this._text = text;
-      this._format = format;
+      _text = text;
+      _format = format;
     }
 
     public TextInsert(string text) : this(text, new TextFormat()) { }
@@ -22,13 +22,13 @@ namespace Markdraw.Delta
     {
       if (format is TextFormat textFormat)
       {
-        this._format = textFormat;
+        _format = textFormat;
       }
     }
 
     public new(int, bool) Subtract(int amount)
     {
-      int n = this._text.Length;
+      int n = _text.Length;
       if (amount >= n)
       {
         return (n, true);
@@ -39,9 +39,9 @@ namespace Markdraw.Delta
 
     public TextInsert Merge(TextInsert before)
     {
-      if (this._format.IsSameAs(before._format))
+      if (_format.IsSameAs(before._format))
       {
-        before._text += this._text;
+        before._text += _text;
         return before;
       }
       else
@@ -52,9 +52,9 @@ namespace Markdraw.Delta
 
     public TextInsert Merge(TextInsert middle, TextInsert before)
     {
-      if (this._format.IsSameAs(middle._format))
+      if (_format.IsSameAs(middle._format))
       {
-        before._text += middle._text + this._text;
+        before._text += middle._text + _text;
         return before;
       }
       else
@@ -65,8 +65,8 @@ namespace Markdraw.Delta
 
     public bool DeleteAt(int position, int amount)
     {
-      this._text = _text.Substring(position, amount);
-      return this.Length == 0;
+      _text = _text.Substring(position, amount);
+      return Length == 0;
     }
 
     public TextInsert SplitAt(int position)

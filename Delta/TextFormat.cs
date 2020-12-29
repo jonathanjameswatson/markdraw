@@ -10,22 +10,22 @@ namespace Markdraw.Delta
 
     public TextFormat(bool bold, bool italic, string link, bool underlined, bool struckthrough)
     {
-      this.Bold = bold;
-      this.Italic = italic;
-      this.Link = link;
-      this.Underlined = underlined;
-      this.Struckthrough = struckthrough;
+      Bold = bold;
+      Italic = italic;
+      Link = link;
+      Underlined = underlined;
+      Struckthrough = struckthrough;
     }
 
     public TextFormat() { }
 
     public bool IsSameAs(TextFormat textFormat)
     {
-      return (this.Bold == textFormat.Bold
-              && this.Italic == textFormat.Italic
-              && this.Link == textFormat.Link
-              && this.Underlined == textFormat.Underlined
-              && this.Struckthrough == textFormat.Struckthrough
+      return (Bold == textFormat.Bold
+              && Italic == textFormat.Italic
+              && Link == textFormat.Link
+              && Underlined == textFormat.Underlined
+              && Struckthrough == textFormat.Struckthrough
              );
     }
   }
