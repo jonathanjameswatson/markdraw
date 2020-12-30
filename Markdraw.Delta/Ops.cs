@@ -43,6 +43,18 @@ namespace Markdraw.Delta
       return _ops[Length - 1];
     }
 
+    private void InsertOp(int index, IOp op)
+    {
+      if (index >= Length)
+      {
+        _ops.Add(op);
+      }
+      else
+      {
+        _ops.Insert(index, op);
+      }
+    }
+
     public Ops Insert(Insert insert)
     {
       _ops.Add(insert);
@@ -135,7 +147,6 @@ namespace Markdraw.Delta
             int lengthRemaining = next.Length - opCharacterIndex;
             int advanced = Math.Min(lengthRemaining, length);
             opCharacterIndex = (opIndex + advanced) % next.Length;
-            opIndex += advanced;
             length -= advanced;
             if (opCharacterIndex == 0)
             {
@@ -195,10 +206,15 @@ namespace Markdraw.Delta
         {
           if (opCharacterIndex == 0)
           {
-            _ops.Insert(opIndex, op);
+            InsertOp(opIndex, op);
             opIndex += 1;
-
-            if (_ops[opIndex] is TextInsert after && opIndex >= 1 && _ops[opIndex - 1] is TextInsert before)
+            if (opIndex == Length)
+            {
+              Normalise();
+            }
+            else if (_ops[opIndex] is TextInsert after
+                     && opIndex >= 1
+                     && _ops[opIndex - 1] is TextInsert before)
             {
               int beforeLength = before.Length;
               var merged = after.Merge(before);
@@ -215,8 +231,8 @@ namespace Markdraw.Delta
             if (_ops[opIndex] is TextInsert before)
             {
               var after = before.SplitAt(opCharacterIndex);
-              _ops.Insert(opIndex + 1, op);
-              _ops.Insert(opIndex + 2, after);
+              InsertOp(opIndex + 1, op);
+              InsertOp(opIndex + 2, after);
               opIndex += 2;
               opCharacterIndex = 0;
 
@@ -227,7 +243,7 @@ namespace Markdraw.Delta
                 if (!(merged is null))
                 {
                   _ops.RemoveAt(opIndex);
-                  _ops.RemoveAt(opIndex);
+                  _ops.RemoveAt(opIndex - 1);
                   opIndex -= 2;
                   opCharacterIndex += beforeAndMiddleLength;
                 }

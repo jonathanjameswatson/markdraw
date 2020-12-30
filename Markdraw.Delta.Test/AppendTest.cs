@@ -1,10 +1,9 @@
 using System;
-using Markdraw.Delta;
 using Xunit;
 
 namespace Markdraw.Delta.Test
 {
-  public class BuildingTest
+  public class AppendTest
   {
     [Fact]
     public void EmptyDelta_IsEmptyDelta()
@@ -18,14 +17,15 @@ namespace Markdraw.Delta.Test
       new Ops().Insert("A").Is(new Ops().Insert("A"));
       new Ops().Insert("A").IsNot(new Ops().Insert("AA"));
       new Ops().Insert("A").IsNot(
-        new Ops().Insert("A", new TextFormat(true, false, null, false, false)));
+        new Ops().Insert("A", TextFormat.BoldPreset)
+      );
     }
 
     [Fact]
     public void Delta_HasAppendedTextMerged()
     {
       new Ops().Insert("A").Insert("A").Is(new Ops().Insert("AA"));
-      new Ops().Insert("A").Insert("A", new TextFormat(true, false, null, false, false)).Length.Is(2);
+      new Ops().Insert("A").Insert("A", TextFormat.BoldPreset).Length.Is(2);
     }
 
     [Fact]
@@ -40,7 +40,7 @@ namespace Markdraw.Delta.Test
     {
       new Ops().Insert("A").Delete(1).Is(new Ops());
       new Ops().Insert("AA").Delete(1).Is(new Ops().Insert("A"));
-      new Ops().Insert("AA").Insert("AA", new TextFormat(true, false, null, false, false)).Delete(3).Is(new Ops().Insert("A"));
+      new Ops().Insert("AA").Insert("AA", TextFormat.BoldPreset).Delete(3).Is(new Ops().Insert("A"));
     }
 
     [Fact]

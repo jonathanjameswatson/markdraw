@@ -6,12 +6,15 @@ namespace Markdraw.Delta
     public bool Italic = false;
     public string Link = "";
 
-    public TextFormat(bool bold, bool italic, string link, bool underlined, bool struckthrough)
+    public TextFormat(bool bold, bool italic, string link)
     {
       Bold = bold;
       Italic = italic;
       Link = link;
     }
+
+    public static TextFormat BoldPreset = new TextFormat(true, false, "");
+    public static TextFormat ItalicPreset = new TextFormat(false, true, "");
 
     public TextFormat() { }
 
