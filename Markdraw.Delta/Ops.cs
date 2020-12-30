@@ -7,6 +7,8 @@ namespace Markdraw.Delta
   {
     private List<IOp> _ops;
 
+    public int Length { get => _ops.Count; }
+
     public Ops()
     {
       _ops = new List<IOp>();
@@ -25,7 +27,7 @@ namespace Markdraw.Delta
 
     private IOp Pop()
     {
-      int n = _ops.Count - 1;
+      int n = Length - 1;
       var last = _ops[n];
       _ops.RemoveAt(n);
       return last;
@@ -33,7 +35,7 @@ namespace Markdraw.Delta
 
     private IOp Peek()
     {
-      return _ops[_ops.Count - 1];
+      return _ops[Length - 1];
     }
 
     public Ops Insert(Insert insert)
@@ -73,7 +75,7 @@ namespace Markdraw.Delta
     private Ops Normalise()
     {
       var last = Peek();
-      int n = _ops.Count - 1;
+      int n = Length - 1;
 
 
       if (last is Delete delete)
@@ -88,7 +90,7 @@ namespace Markdraw.Delta
 
           if (deleted)
           {
-            _ops.RemoveAt(_ops.Count - 1);
+            _ops.RemoveAt(Length - 1);
           }
 
           toDelete -= subtracted;
@@ -99,7 +101,7 @@ namespace Markdraw.Delta
           _ops.Add(new Delete(toDelete));
         }
       }
-      else if (last is TextInsert after && n > 1 && _ops[n - 1] is TextInsert before)
+      else if (last is TextInsert after && n > 0 && _ops[n - 1] is TextInsert before)
       {
         var merged = after.Merge(before);
         if (!(merged is null))
