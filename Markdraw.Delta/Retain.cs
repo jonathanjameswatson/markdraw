@@ -3,6 +3,7 @@ namespace Markdraw.Delta
   public class Retain : LengthOp
   {
     private Format _format;
+    public Format Format { get => _format; }
 
     public Retain(int length) : base(length)
     {

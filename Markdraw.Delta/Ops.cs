@@ -89,6 +89,21 @@ namespace Markdraw.Delta
       return this;
     }
 
+    public int? MergeBack(int index)
+    {
+      if (_ops[index] is TextInsert after && index >= 1 && _ops[index - 1] is TextInsert before)
+      {
+        int beforeLength = before.Length;
+        var merged = after.Merge(before);
+        if (merged is not null)
+        {
+          _ops.RemoveAt(index);
+          return beforeLength;
+        }
+      }
+      return null;
+    }
+
     private Ops Normalise()
     {
       var last = Peek();
@@ -118,13 +133,9 @@ namespace Markdraw.Delta
           _ops.Add(new Delete(toDelete));
         }
       }
-      else if (last is TextInsert after && n > 0 && _ops[n - 1] is TextInsert before)
+      else
       {
-        var merged = after.Merge(before);
-        if (!(merged is null))
-        {
-          Pop();
-        }
+        MergeBack(n);
       }
 
       return this;
@@ -141,16 +152,57 @@ namespace Markdraw.Delta
 
         if (op is Retain retain)
         {
+          var format = retain.Format;
+          bool shouldFormat = format is not null;
+
+          if (shouldFormat && opCharacterIndex != 0 && _ops[opIndex] is TextInsert before)
+          {
+            var after = before.SplitAt(opCharacterIndex);
+            InsertOp(opIndex + 1, after);
+            opIndex += 1;
+            opCharacterIndex = 0;
+          }
+
           while (length > 0)
           {
             var next = _ops[opIndex];
-            int lengthRemaining = next.Length - opCharacterIndex;
-            int advanced = Math.Min(lengthRemaining, length);
-            opCharacterIndex = (opIndex + advanced) % next.Length;
-            length -= advanced;
-            if (opCharacterIndex == 0)
+            if (next is Insert nextInsert)
             {
+              int lengthRemaining = nextInsert.Length - opCharacterIndex;
+              int advanced = Math.Min(lengthRemaining, length);
+
+              opCharacterIndex = (opCharacterIndex + advanced) % nextInsert.Length;
+              length -= advanced;
+
+              var toFormat = nextInsert;
+              bool extraMerge = false;
+
+              if (opCharacterIndex != 0)
+              {
+                var textInsert = toFormat as TextInsert;
+                var after = textInsert.SplitAt(opCharacterIndex);
+                opCharacterIndex = 0;
+                InsertOp(opIndex + 1, after);
+                toFormat = textInsert;
+                extraMerge = true;
+              }
+
+              if (shouldFormat)
+              {
+                toFormat.SetFormat(format);
+                MergeBack(opIndex);
+              }
+
               opIndex += 1;
+
+              if (extraMerge)
+              {
+                MergeBack(opIndex);
+              }
+            }
+            else
+            {
+              throw new InvalidOperationException("Only a list of inserts should be transformed.");
             }
           }
         }
@@ -186,19 +238,14 @@ namespace Markdraw.Delta
             }
             else
             {
-              throw new Exception();
+              throw new InvalidOperationException("Only a list of inserts should be transformed.");
             }
 
-            if (_ops[opIndex] is TextInsert after && opIndex >= 1 && _ops[opIndex - 1] is TextInsert before)
+            int? beforeLength = MergeBack(opIndex);
+            if (beforeLength is not null)
             {
-              int beforeLength = before.Length;
-              var merged = after.Merge(before);
-              if (!(merged is null))
-              {
-                _ops.RemoveAt(opIndex);
-                opIndex -= 1;
-                opCharacterIndex += beforeLength;
-              }
+              opIndex -= 1;
+              opCharacterIndex += (int)beforeLength;
             }
           }
         }
@@ -212,17 +259,13 @@ namespace Markdraw.Delta
             {
               Normalise();
             }
-            else if (_ops[opIndex] is TextInsert after
-                     && opIndex >= 1
-                     && _ops[opIndex - 1] is TextInsert before)
+            else
             {
-              int beforeLength = before.Length;
-              var merged = after.Merge(before);
-              if (!(merged is null))
+              int? beforeLength = MergeBack(opIndex);
+              if (beforeLength is not null)
               {
-                _ops.RemoveAt(opIndex);
                 opIndex -= 1;
-                opCharacterIndex += beforeLength;
+                opCharacterIndex += (int)beforeLength;
               }
             }
           }

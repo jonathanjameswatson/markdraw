@@ -11,11 +11,11 @@ namespace Markdraw.Delta
 
     public LineInsert() : this(new LineFormat()) { }
 
-    public new void SetFormat(Format format)
+    public override void SetFormat(Format format)
     {
       if (format is LineFormat lineFormat)
       {
-        _format = lineFormat;
+        _format.Merge(lineFormat);
       }
     }
 

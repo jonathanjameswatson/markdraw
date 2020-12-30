@@ -1,10 +1,15 @@
+using System;
+
 namespace Markdraw.Delta
 {
-  public class TextFormat : Format
+  public class TextFormat : Format, ICloneable
   {
     public bool? Bold = false;
     public bool? Italic = false;
     public string Link = "";
+
+    public static TextFormat BoldPreset = new TextFormat(true, false, "");
+    public static TextFormat ItalicPreset = new TextFormat(false, true, "");
 
     public TextFormat(bool? bold, bool? italic, string link)
     {
@@ -13,10 +18,14 @@ namespace Markdraw.Delta
       Link = link;
     }
 
-    public static TextFormat BoldPreset = new TextFormat(true, false, "");
-    public static TextFormat ItalicPreset = new TextFormat(false, true, "");
-
     public TextFormat() { }
+
+    public void Merge(TextFormat other)
+    {
+      Bold = other.Bold is null ? Bold : other.Bold;
+      Italic = other.Italic is null ? Italic : other.Italic;
+      Link = other.Link is null ? Link : other.Link;
+    }
 
     public override bool Equals(object obj)
     {
@@ -30,6 +39,11 @@ namespace Markdraw.Delta
     public override int GetHashCode()
     {
       return (Bold, Italic, Link).GetHashCode();
+    }
+
+    public object Clone()
+    {
+      return this.MemberwiseClone();
     }
   }
 }

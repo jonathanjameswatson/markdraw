@@ -4,13 +4,16 @@ namespace Markdraw.Delta
 {
   public class TextInsert : Insert
   {
-    public new int Length
+    public override int Length
     {
       get => _text.Length;
     }
 
     private string _text;
+    public string Text { get => _text; }
+
     private TextFormat _format;
+    public TextFormat Format { get => _format; }
 
     public TextInsert(string text, TextFormat format)
     {
@@ -25,11 +28,11 @@ namespace Markdraw.Delta
 
     public TextInsert(string text) : this(text, new TextFormat()) { }
 
-    public new void SetFormat(Format format)
+    public override void SetFormat(Format format)
     {
       if (format is TextFormat textFormat)
       {
-        _format = textFormat;
+        _format.Merge(textFormat);
       }
     }
 
@@ -81,7 +84,7 @@ namespace Markdraw.Delta
       string startText = _text.Substring(0, position);
       string endText = _text.Substring(position);
       _text = startText;
-      return new TextInsert(endText, _format);
+      return new TextInsert(endText, (TextFormat)_format.Clone());
     }
 
     public override bool Equals(object obj)

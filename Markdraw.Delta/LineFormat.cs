@@ -29,6 +29,14 @@ namespace Markdraw.Delta
 
     public LineFormat() { }
 
+    public void Merge(LineFormat other)
+    {
+      Quote = other.Quote is null ? Quote : other.Quote;
+      Bullet = other.Bullet is null ? Bullet : other.Bullet;
+      Ordered = other.Ordered is null ? Ordered : other.Ordered;
+      Header = other.Header is null ? Header : other.Header;
+    }
+
     public override bool Equals(object obj)
     {
       return (obj is LineFormat lineFormat

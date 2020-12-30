@@ -2,12 +2,12 @@ namespace Markdraw.Delta
 {
   public abstract class Insert : IOp
   {
-    public int Length
+    public virtual int Length
     {
       get => 1;
     }
 
-    public void SetFormat(Format format) { }
+    public virtual void SetFormat(Format format) { }
 
     public virtual (int, bool) Subtract(int amount)
     {
