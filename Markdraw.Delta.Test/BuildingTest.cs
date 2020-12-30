@@ -42,5 +42,13 @@ namespace Markdraw.Delta.Test
       new Ops().Insert("AA").Delete(1).Is(new Ops().Insert("A"));
       new Ops().Insert("AA").Insert("AA", new TextFormat(true, false, null, false, false)).Delete(3).Is(new Ops().Insert("A"));
     }
+
+    [Fact]
+    public void Delta_AppendingOps_FailsWithZeroLength()
+    {
+      Assert.Throws<ArgumentOutOfRangeException>(() => new Ops().Retain(0));
+      Assert.Throws<ArgumentOutOfRangeException>(() => new Ops().Delete(0));
+      Assert.Throws<ArgumentException>(() => new Ops().Insert(""));
+    }
   }
 }

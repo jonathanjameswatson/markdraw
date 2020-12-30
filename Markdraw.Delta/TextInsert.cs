@@ -1,3 +1,5 @@
+using System;
+
 namespace Markdraw.Delta
 {
   public class TextInsert : Insert
@@ -12,6 +14,11 @@ namespace Markdraw.Delta
 
     public TextInsert(string text, TextFormat format)
     {
+      if (text.Length == 0)
+      {
+        throw new ArgumentException("TextInsert cannot be empty");
+      }
+
       _text = text;
       _format = format;
     }
