@@ -35,6 +35,11 @@ namespace Markdraw.Delta
 
     private IOp Peek()
     {
+      if (Length == 0)
+      {
+        throw new InvalidOperationException("No elements to peek at");
+      }
+
       return _ops[Length - 1];
     }
 
