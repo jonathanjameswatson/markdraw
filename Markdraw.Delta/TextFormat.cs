@@ -15,12 +15,18 @@ namespace Markdraw.Delta
 
     public TextFormat() { }
 
-    public bool IsSameAs(TextFormat textFormat)
+    public override bool Equals(object obj)
     {
-      return (Bold == textFormat.Bold
+      return (obj is TextFormat textFormat
+              && Bold == textFormat.Bold
               && Italic == textFormat.Italic
               && Link == textFormat.Link
              );
+    }
+
+    public override int GetHashCode()
+    {
+      return (Bold, Italic, Link).GetHashCode();
     }
   }
 }

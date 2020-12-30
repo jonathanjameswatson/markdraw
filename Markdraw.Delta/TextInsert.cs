@@ -39,7 +39,7 @@ namespace Markdraw.Delta
 
     public TextInsert Merge(TextInsert before)
     {
-      if (_format.IsSameAs(before._format))
+      if (_format.Equals(before._format))
       {
         before._text += _text;
         return before;
@@ -52,7 +52,7 @@ namespace Markdraw.Delta
 
     public TextInsert Merge(TextInsert middle, TextInsert before)
     {
-      if (_format.IsSameAs(middle._format))
+      if (_format.Equals(middle._format))
       {
         before._text += middle._text + _text;
         return before;
@@ -75,6 +75,16 @@ namespace Markdraw.Delta
       string endText = _text.Substring(position);
       _text = startText;
       return new TextInsert(endText, _format);
+    }
+
+    public override bool Equals(object obj)
+    {
+      return obj is TextInsert x && x._text == _text && x._format.Equals(_format);
+    }
+
+    public override int GetHashCode()
+    {
+      return (_text, _format).GetHashCode();
     }
   }
 }

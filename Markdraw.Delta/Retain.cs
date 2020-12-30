@@ -13,5 +13,15 @@ namespace Markdraw.Delta
     {
       _format = format;
     }
+
+    public override bool Equals(object obj)
+    {
+      return obj is Retain x && x.Length == Length && x._format.Equals(_format);
+    }
+
+    public override int GetHashCode()
+    {
+      return (Length, _format).GetHashCode();
+    }
   }
 }

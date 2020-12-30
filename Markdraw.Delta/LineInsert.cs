@@ -18,5 +18,15 @@ namespace Markdraw.Delta
         _format = lineFormat;
       }
     }
+
+    public override bool Equals(object obj)
+    {
+      return obj is LineInsert x && x._format.Equals(_format);
+    }
+
+    public override int GetHashCode()
+    {
+      return _format.GetHashCode();
+    }
   }
 }

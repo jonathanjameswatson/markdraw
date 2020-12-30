@@ -10,5 +10,15 @@ namespace Markdraw.Delta
       _text = text;
       _tag = tag;
     }
+
+    public override bool Equals(object obj)
+    {
+      return obj is CodeInsert x && x._text == _text && x._tag == _tag;
+    }
+
+    public override int GetHashCode()
+    {
+      return (_text, _tag).GetHashCode();
+    }
   }
 }

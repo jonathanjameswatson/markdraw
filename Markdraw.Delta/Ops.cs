@@ -3,13 +3,24 @@ using System.Collections.Generic;
 
 namespace Markdraw.Delta
 {
-  public class Delta
+  public class Ops : IEnumerable<IOp>
   {
     private List<IOp> _ops;
 
-    public Delta()
+    public Ops()
     {
       _ops = new List<IOp>();
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+      return this.GetEnumerator();
+    }
+
+
+    public IEnumerator<IOp> GetEnumerator()
+    {
+      return _ops.GetEnumerator();
     }
 
     private IOp Pop()
@@ -25,41 +36,41 @@ namespace Markdraw.Delta
       return _ops[_ops.Count - 1];
     }
 
-    public Delta Insert(Insert insert)
+    public Ops Insert(Insert insert)
     {
       _ops.Add(insert);
       return Normalise();
     }
 
-    public Delta Insert(string text, TextFormat format)
+    public Ops Insert(string text, TextFormat format)
     {
       return Insert(new TextInsert(text, format));
     }
 
-    public Delta Insert(string text)
+    public Ops Insert(string text)
     {
       return Insert(new TextInsert(text));
     }
 
-    public Delta Delete(int amount)
+    public Ops Delete(int amount)
     {
       _ops.Add(new Delete(amount));
       return Normalise();
     }
 
-    public Delta Retain(int amount)
+    public Ops Retain(int amount)
     {
       _ops.Add(new Retain(amount));
       return this;
     }
 
-    public Delta Retain(int amount, Format format)
+    public Ops Retain(int amount, Format format)
     {
       _ops.Add(new Retain(amount, format));
       return this;
     }
 
-    private Delta Normalise()
+    private Ops Normalise()
     {
       var last = Peek();
       int n = _ops.Count - 1;
@@ -100,12 +111,12 @@ namespace Markdraw.Delta
       return this;
     }
 
-    public Delta Transform(Delta other)
+    public Ops Transform(Ops other)
     {
       int opIndex = 0;
       int opCharacterIndex = 0;
 
-      foreach (var op in other._ops)
+      foreach (var op in other)
       {
         int length = op.Length;
 

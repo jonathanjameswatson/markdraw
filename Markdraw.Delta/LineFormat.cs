@@ -25,5 +25,19 @@ namespace Markdraw.Delta
     {
       Header = 0;
     }
+
+    public override bool Equals(object obj)
+    {
+      return (obj is LineFormat lineFormat
+              && Quote == lineFormat.Quote
+              && Bullet == lineFormat.Bullet
+              && Ordered == lineFormat.Ordered
+             );
+    }
+
+    public override int GetHashCode()
+    {
+      return (Quote, Bullet, Header, Ordered).GetHashCode();
+    }
   }
 }
