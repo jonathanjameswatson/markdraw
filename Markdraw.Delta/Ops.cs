@@ -89,7 +89,7 @@ namespace Markdraw.Delta
 
         _ops.RemoveAt(n);
 
-        while (Peek() is Insert insert && toDelete > 0)
+        while (toDelete > 0 && Peek() is Insert insert)
         {
           (int subtracted, bool deleted) = insert.Subtract(toDelete);
 

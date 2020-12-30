@@ -26,9 +26,9 @@ namespace Markdraw.Delta
       }
     }
 
-    public new(int, bool) Subtract(int amount)
+    public override (int, bool) Subtract(int amount)
     {
-      int n = _text.Length;
+      int n = Length;
       if (amount >= n)
       {
         return (n, true);

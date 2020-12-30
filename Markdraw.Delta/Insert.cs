@@ -9,7 +9,7 @@ namespace Markdraw.Delta
 
     public void SetFormat(Format format) { }
 
-    public (int, bool) Subtract(int amount)
+    public virtual (int, bool) Subtract(int amount)
     {
       return (1, true);
     }
