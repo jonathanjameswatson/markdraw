@@ -2,11 +2,11 @@ namespace Markdraw.Delta
 {
   public class TextFormat : Format
   {
-    public bool Bold = false;
-    public bool Italic = false;
+    public bool? Bold = false;
+    public bool? Italic = false;
     public string Link = "";
 
-    public TextFormat(bool bold, bool italic, string link)
+    public TextFormat(bool? bold, bool? italic, string link)
     {
       Bold = bold;
       Italic = italic;

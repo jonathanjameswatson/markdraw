@@ -4,27 +4,30 @@ namespace Markdraw.Delta
 {
   public class LineFormat : Format
   {
-    public bool Quote = false;
-    public bool Bullet = false;
-    public int Header
-    {
-      get { return Header; }
-      set { Header = Math.Clamp(value, 0, 6); }
-    }
-    public bool Ordered = false;
+    public bool? Quote = false;
+    public bool? Bullet = false;
+    public bool? Ordered = false;
 
-    public LineFormat(bool quote, bool bullet, int header, bool ordered)
+    private int? _header = 0;
+    public int? Header
+    {
+      get { return _header; }
+      set { _header = value is null ? null : Math.Clamp((int)value, 0, 6); }
+    }
+
+    public static LineFormat QuotePreset = new LineFormat(true, false, false, 0);
+    public static LineFormat BulletPreset = new LineFormat(false, true, false, 0);
+    public static LineFormat OrderedPreset = new LineFormat(false, false, true, 0);
+
+    public LineFormat(bool? quote, bool? bullet, bool? ordered, int? header)
     {
       Quote = quote;
       Bullet = bullet;
-      Header = header;
       Ordered = ordered;
+      Header = header;
     }
 
-    public LineFormat()
-    {
-      Header = 0;
-    }
+    public LineFormat() { }
 
     public override bool Equals(object obj)
     {
@@ -32,12 +35,13 @@ namespace Markdraw.Delta
               && Quote == lineFormat.Quote
               && Bullet == lineFormat.Bullet
               && Ordered == lineFormat.Ordered
+              && Header == lineFormat.Header
              );
     }
 
     public override int GetHashCode()
     {
-      return (Quote, Bullet, Header, Ordered).GetHashCode();
+      return (Quote, Bullet, Ordered, Header).GetHashCode();
     }
   }
 }
