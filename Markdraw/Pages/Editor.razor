@@ -1,0 +1,126 @@
+@page "/editor"
+
+<div class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-narrow format-buttons">
+        <FormatButton icon="format-bold"></FormatButton>
+        <FormatButton icon="format-italic"></FormatButton>
+        <FormatButton icon="code-tags"></FormatButton>
+        <FormatButton icon="link"></FormatButton>
+        <hr />
+        <FormatButton icon="format-quote-close"></FormatButton>
+        <FormatButton icon="format-list-bulleted"></FormatButton>
+        <FormatButton icon="format-list-numbered"></FormatButton>
+        <hr />
+        <FormatButton icon="format-clear"></FormatButton>
+        <hr />
+        <FormatButton icon="image"></FormatButton>
+        <FormatButton icon="minus"></FormatButton>
+        <FormatButton icon="code-not-equal-variant"></FormatButton>
+      </div>
+
+      <div class="column">
+        <div class="content" contenteditable="">
+<h1>Headers</h1>
+<h1>H1</h1>
+<h2>H2</h2>
+<h3>H3</h3>
+<h4>H4</h4>
+<h5>H5</h5>
+<h6>H6</h6>
+<h2>Text</h2>
+<p>Regular line</p>
+<p><strong>Bold</strong></p>
+<p><em>Italic</em></p>
+<p><em><strong>Bold italic</strong></em></p>
+<p><strong>In bold, <em>italic</em></strong></p>
+<p><em>In italic, <strong>bold</strong></em></p>
+<p><code>Code</code></p>
+<h1>Code blocks</h1>
+<p>C# code:</p>
+<pre><code>namespace Markdraw.Delta
+{
+  public abstract class EmbedInsert : Insert { }
+}
+</code></pre>
+<p>C# code with highlighting:</p>
+<pre><code class="language-csharp">namespace Markdraw.Delta
+{
+  public abstract class EmbedInsert : Insert { }
+}
+</code></pre>
+<h2>Lists</h2>
+<p>Bulleted:</p>
+<ul>
+<li>a</li>
+<li>b
+<ul>
+<li>c</li>
+<li>d</li>
+</ul>
+</li>
+<li>e</li>
+</ul>
+<p>Numbered:</p>
+<ol>
+<li>a
+<ol>
+<li>b</li>
+<li>c
+<ol>
+<li>d</li>
+<li>e</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>f</li>
+<li>g</li>
+</ol>
+<p>Mixed:</p>
+<ul>
+<li>a
+<ol>
+<li>b</li>
+<li>c</li>
+</ol>
+</li>
+<li>d
+<ul>
+<li>e
+<ol>
+<li>f</li>
+<li>g</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h1>Quoted text</h1>
+<blockquote>
+<p>Quote1</p>
+<p>Nested quote</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>Deep quote</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<h1>Images</h1>
+<p><img src="https://bulma.io/images/placeholders/128x128.png" alt="128 placeholder" /></p>
+<h2>Links</h2>
+<p>Link: <a href="https://bulma.io/images/placeholders/128x128.png">link</a></p>
+<h2>Horizontal rule</h2>
+<hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

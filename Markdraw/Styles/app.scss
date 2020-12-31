@@ -1,5 +1,5 @@
-@import '../node_modules/bulma/sass/utilities/initial-variables';
-@import '../node_modules/bulma/sass/utilities/functions';
+@import '../../node_modules/bulma/sass/utilities/initial-variables';
+@import '../../node_modules/bulma/sass/utilities/functions';
 
 $spacing-shortcuts: ();
 
@@ -10,7 +10,7 @@ $red-invert: findColorInvert($red);
 
 $primary: $red;
 
-@import '../node_modules/bulma/bulma';
+@import '../../node_modules/bulma/bulma';
 
 #blazor-error-ui {
     display: none;
@@ -19,4 +19,28 @@ $primary: $red;
 .navbar-item img {
     margin-right: 6px;
     max-height: none !important;
+}
+
+.iconify {
+    font-size: 2em;
+}
+
+.format-buttons {
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+
+    padding-bottom: 0px;
+
+    &::after {
+        content: "";
+        display: block;
+        height: $column-gap;
+        width: 100%;
+    }
 }
