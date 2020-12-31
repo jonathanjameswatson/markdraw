@@ -34,6 +34,9 @@ jobs:
       name: Change base-tag in index.html from / to Markdraw
       run: sed -i 's/<base href="\/" \/>/<base href="\/markdraw\/" \/>/g' release/wwwroot/index.html
     -
+      name: Copy index.html to 404.html
+      run: cp release/wwwroot/index.html release/wwwroot/404.html
+    -
       name: Deploy
       if: success()
       uses: crazy-max/ghaction-github-pages@v2
