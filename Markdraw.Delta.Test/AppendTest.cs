@@ -44,38 +44,6 @@ namespace Markdraw.Delta.Test
     }
 
     [Fact]
-    public void Delta_DeleteFails_AtStart()
-    {
-      Assert.Throws<InvalidOperationException>(
-        () => new Ops().Delete(1)
-      );
-
-      Assert.Throws<InvalidOperationException>(
-        () => new Ops().Insert("A").Delete(2)
-      );
-    }
-
-    [Fact]
-    public void Delta_DeleteRemovesInserts()
-    {
-      new Ops()
-        .Insert("A")
-        .Delete(1)
-        .Is(new Ops());
-
-      new Ops()
-        .Insert("AA")
-        .Delete(1)
-        .Is(new Ops().Insert("A"));
-
-      new Ops()
-        .Insert("AA")
-        .Insert("AA", TextFormat.BoldPreset)
-        .Delete(3)
-        .Is(new Ops().Insert("A"));
-    }
-
-    [Fact]
     public void Delta_AppendingOps_FailsWithZeroLength()
     {
       Assert.Throws<ArgumentOutOfRangeException>(

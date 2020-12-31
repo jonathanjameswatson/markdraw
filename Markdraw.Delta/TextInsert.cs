@@ -73,9 +73,9 @@ namespace Markdraw.Delta
       }
     }
 
-    public bool DeleteAt(int position, int amount)
+    public bool DeleteUpTo(int position)
     {
-      _text = _text.Substring(position, amount);
+      _text = _text.Substring(position, Length - position);
       return Length == 0;
     }
 

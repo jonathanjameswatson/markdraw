@@ -58,7 +58,8 @@ namespace Markdraw.Delta
     public Ops Insert(Insert insert)
     {
       _ops.Add(insert);
-      return Normalise();
+      MergeBack(Length - 1);
+      return this;
     }
 
     public Ops Insert(string text, TextFormat format)
@@ -74,7 +75,7 @@ namespace Markdraw.Delta
     public Ops Delete(int amount)
     {
       _ops.Add(new Delete(amount));
-      return Normalise();
+      return this;
     }
 
     public Ops Retain(int amount)
@@ -91,7 +92,7 @@ namespace Markdraw.Delta
 
     public int? MergeBack(int index)
     {
-      if (_ops[index] is TextInsert after && index >= 1 && _ops[index - 1] is TextInsert before)
+      if (index >= 1 && index < Length && _ops[index] is TextInsert after && _ops[index - 1] is TextInsert before)
       {
         int beforeLength = before.Length;
         var merged = after.Merge(before);
@@ -102,43 +103,6 @@ namespace Markdraw.Delta
         }
       }
       return null;
-    }
-
-    private Ops Normalise()
-    {
-      var last = Peek();
-      int n = Length - 1;
-
-
-      if (last is Delete delete)
-      {
-        int toDelete = delete.Length;
-
-        _ops.RemoveAt(n);
-
-        while (toDelete > 0 && Peek() is Insert insert)
-        {
-          (int subtracted, bool deleted) = insert.Subtract(toDelete);
-
-          if (deleted)
-          {
-            _ops.RemoveAt(Length - 1);
-          }
-
-          toDelete -= subtracted;
-        }
-
-        if (toDelete > 0)
-        {
-          _ops.Add(new Delete(toDelete));
-        }
-      }
-      else
-      {
-        MergeBack(n);
-      }
-
-      return this;
     }
 
     public Ops Transform(Ops other)
@@ -232,17 +196,23 @@ namespace Markdraw.Delta
             {
               if (nextInsert is TextInsert nextTextInsert)
               {
-                int lengthRemaining = next.Length - opCharacterIndex;
+                if (opCharacterIndex != 0)
+                {
+                  var after = nextTextInsert.SplitAt(opCharacterIndex);
+                  opCharacterIndex = 0;
+                  opIndex += 1;
+                  InsertOp(opIndex, after);
+                  nextTextInsert = after;
+                }
+
+                int lengthRemaining = nextTextInsert.Length - opCharacterIndex;
                 int toDelete = Math.Min(lengthRemaining, length);
-                bool deleted = nextTextInsert.DeleteAt(opCharacterIndex, toDelete);
+                bool deleted = nextTextInsert.DeleteUpTo(toDelete);
+                length -= toDelete;
 
                 if (deleted)
                 {
                   _ops.RemoveAt(opIndex);
-                }
-                else
-                {
-                  opIndex += 1;
                 }
 
                 opCharacterIndex = deleted ? 0 : opCharacterIndex;
@@ -274,7 +244,7 @@ namespace Markdraw.Delta
             opIndex += 1;
             if (opIndex == Length)
             {
-              Normalise();
+              MergeBack(Length - 1);
             }
             else
             {
