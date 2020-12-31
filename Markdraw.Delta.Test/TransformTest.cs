@@ -8,21 +8,74 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void RetainAndInsert_Appends()
     {
-      new Ops().Insert("A").Transform(new Ops().Retain(1).Insert("B")).Is(new Ops().Insert("AB"));
-      new Ops().Insert("A").Transform(new Ops().Retain(1).Insert("B", TextFormat.BoldPreset)).Is(
-        new Ops().Insert("A").Insert("B", TextFormat.BoldPreset)
-      );
+      new Ops()
+        .Insert("A")
+        .Transform(new Ops().Retain(1).Insert("B"))
+        .Is(new Ops().Insert("AB"));
+
+      new Ops()
+        .Insert("A")
+        .Transform(new Ops().Retain(1).Insert("B", TextFormat.BoldPreset))
+        .Is(new Ops().Insert("A").Insert("B", TextFormat.BoldPreset));
     }
 
     [Fact]
     public void Retain_FormatsText()
     {
       var turnBold = new TextFormat(true, null, null);
-      new Ops().Insert("A").Transform(new Ops().Retain(1, turnBold)).Is(
-        new Ops().Insert("A", TextFormat.BoldPreset)
+
+      new Ops()
+        .Insert("A")
+        .Transform(new Ops().Retain(1, turnBold))
+        .Is(new Ops().Insert("A", TextFormat.BoldPreset));
+
+      new Ops()
+        .Insert("AA")
+        .Transform(new Ops().Retain(1, turnBold))
+        .Is(new Ops().Insert("A", TextFormat.BoldPreset).Insert("A"));
+
+      new Ops()
+        .Insert("AA")
+        .Transform(new Ops().Retain(1).Retain(1, turnBold))
+        .Is(new Ops().Insert("A").Insert("A", TextFormat.BoldPreset));
+
+      new Ops()
+        .Insert("A")
+        .Insert("A", (TextFormat)TextFormat.BoldPreset.Clone())
+        .Transform(new Ops().Retain(1, turnBold))
+        .Is(new Ops().Insert("AA", TextFormat.BoldPreset));
+
+      new Ops()
+        .Insert("A")
+        .Insert("A", (TextFormat)TextFormat.BoldPreset.Clone())
+        .Transform(new Ops().Retain(2, turnBold))
+        .Is(new Ops().Insert("AA", TextFormat.BoldPreset));
+
+      new Ops()
+        .Insert("A", (TextFormat)TextFormat.BoldPreset.Clone())
+        .Insert("A", (TextFormat)TextFormat.ItalicPreset.Clone())
+        .Transform(new Ops().Retain(2, turnBold))
+        .Is(new Ops()
+          .Insert("A", TextFormat.BoldPreset)
+          .Insert("A", new TextFormat(true, true, ""))
+        );
+
+      new Ops()
+      .Insert("AA", (TextFormat)TextFormat.BoldPreset.Clone())
+      .Insert("AA", (TextFormat)TextFormat.ItalicPreset.Clone())
+      .Transform(new Ops().Retain(1).Retain(2, TextFormat.BoldPreset))
+      .Is(new Ops()
+        .Insert("AAA", TextFormat.BoldPreset)
+        .Insert("A", TextFormat.ItalicPreset)
       );
-      new Ops().Insert("AA").Transform(new Ops().Retain(1, turnBold)).Is(
-        new Ops().Insert("A", TextFormat.BoldPreset).Insert("A")
+
+      new Ops()
+      .Insert("AAA")
+      .Transform(new Ops().Retain(1).Retain(1, TextFormat.BoldPreset))
+      .Is(new Ops()
+        .Insert("A")
+        .Insert("A", TextFormat.BoldPreset)
+        .Insert("A")
       );
     }
   }

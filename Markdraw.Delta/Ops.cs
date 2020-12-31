@@ -175,34 +175,51 @@ namespace Markdraw.Delta
               length -= advanced;
 
               var toFormat = nextInsert;
-              bool extraMerge = false;
 
               if (opCharacterIndex != 0)
               {
-                var textInsert = toFormat as TextInsert;
-                var after = textInsert.SplitAt(opCharacterIndex);
-                opCharacterIndex = 0;
-                InsertOp(opIndex + 1, after);
-                toFormat = textInsert;
-                extraMerge = true;
-              }
-
-              if (shouldFormat)
-              {
-                toFormat.SetFormat(format);
-                MergeBack(opIndex);
+                if (shouldFormat)
+                {
+                  var textInsert = toFormat as TextInsert;
+                  var after = textInsert.SplitAt(opCharacterIndex);
+                  opCharacterIndex = 0;
+                  InsertOp(opIndex + 1, after);
+                  toFormat = textInsert;
+                }
+                else
+                {
+                  opIndex -= 1;
+                }
               }
 
               opIndex += 1;
 
-              if (extraMerge)
+              if (shouldFormat)
               {
-                MergeBack(opIndex);
+                toFormat.SetFormat(format);
+                if (opIndex >= 2)
+                {
+                  int? beforeLength = MergeBack(opIndex - 1);
+                  if (beforeLength is not null)
+                  {
+                    opIndex -= 1;
+                  }
+                }
               }
             }
             else
             {
               throw new InvalidOperationException("Only a list of inserts should be transformed.");
+            }
+          }
+
+          if (shouldFormat && opIndex < Length && opIndex >= 1)
+          {
+            int? beforeLength = MergeBack(opIndex);
+            if (beforeLength is not null)
+            {
+              opCharacterIndex += (int)beforeLength;
+              opIndex -= 1;
             }
           }
         }
