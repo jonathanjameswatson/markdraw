@@ -2,7 +2,26 @@
 
 <div class="section">
   <div class="container">
-    <div class="content" contenteditable="">
+    <div class="columns">
+      <div class="column is-narrow format-buttons">
+        <FormatButton icon="format-bold"></FormatButton>
+        <FormatButton icon="format-italic"></FormatButton>
+        <FormatButton icon="code-tags"></FormatButton>
+        <FormatButton icon="link"></FormatButton>
+        <hr />
+        <FormatButton icon="format-quote-close"></FormatButton>
+        <FormatButton icon="format-list-bulleted"></FormatButton>
+        <FormatButton icon="format-list-numbered"></FormatButton>
+        <hr />
+        <FormatButton icon="format-clear"></FormatButton>
+        <hr />
+        <FormatButton icon="image"></FormatButton>
+        <FormatButton icon="minus"></FormatButton>
+        <FormatButton icon="code-not-equal-variant"></FormatButton>
+      </div>
+
+      <div class="column">
+        <div class="content" contenteditable="">
 <h1>Headers</h1>
 <h1>H1</h1>
 <h2>H2</h2>
@@ -100,6 +119,8 @@
 <p>Link: <a href="https://bulma.io/images/placeholders/128x128.png">link</a></p>
 <h2>Horizontal rule</h2>
 <hr />
+        </div>
+      </div>
     </div>
   </div>
 </div>

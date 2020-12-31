@@ -1,0 +1,17 @@
+<div class="field">
+  <button class="button">
+    <span class="icon is-small">
+      <i class="iconify" data-icon="mdi-@(Icon)"></i>
+    </span>
+  </button>
+</div>
+
+@code {
+  [Parameter]
+  public string Icon { get; set; }
+
+  protected override void OnInitialized()
+    {
+        Icon = Icon ?? "";
+    }
+}
