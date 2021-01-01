@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Markdraw.Delta;
 
 namespace Markdraw.MarkdownToDelta
 {
   public static class MarkdownToDeltaConverter
   {
+    private static readonly Regex lineFormatRegex = new Regex(@"^\s*(?:(?<quotes>(?:> ?)+)|(?<bullets>\* )|(?<ordered>\d+. )|(?<horizontalrule>(\*|\-) *\5 *\5 *$))*(?<headers>#+ )?(?<text>.*?)$", RegexOptions.Compiled | RegexOptions.Multiline);
+    private static readonly Regex linkAndImageRegex = new Regex(@"(?<image>(?:(?<!\\)(?:\\\\)*!(?=\[))?)(?<!\\)(?:\\\\)*\[(?<text>[^\[]*?)(?<!\\)(?:\\\\)*\]\((?<url>.*?(?<!\\)(?:\\\\)*)\)", RegexOptions.Compiled | RegexOptions.Multiline);
+
+
     public static List<string> SplitIntoLines(string markdown)
     {
       throw new NotImplementedException();
