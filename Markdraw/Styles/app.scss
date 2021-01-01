@@ -44,3 +44,12 @@ $primary: $red;
         width: 100%;
     }
 }
+
+.content > blockquote {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.content-container {
+    min-width: 0;
+}
