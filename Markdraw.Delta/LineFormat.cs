@@ -1,12 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Markdraw.Delta
 {
+  public enum Indent
+  {
+    Quote,
+    Bullet,
+    Number,
+    Code
+  }
+
   public class LineFormat : Format
   {
-    public bool? Quote = false;
-    public bool? Bullet = false;
-    public bool? Ordered = false;
+    public List<Indent> Indents;
 
     private int? _header = 0;
     public int? Header
@@ -15,41 +23,40 @@ namespace Markdraw.Delta
       set { _header = value is null ? null : Math.Clamp((int)value, 0, 6); }
     }
 
-    public static LineFormat QuotePreset = new LineFormat(true, false, false, 0);
-    public static LineFormat BulletPreset = new LineFormat(false, true, false, 0);
-    public static LineFormat OrderedPreset = new LineFormat(false, false, true, 0);
+    public static LineFormat QuotePreset = new LineFormat(new List<Indent>() { Indent.Quote }, 0);
+    public static LineFormat BulletPreset = new LineFormat(new List<Indent>() { Indent.Bullet }, 0);
+    public static LineFormat NumberPreset = new LineFormat(new List<Indent>() { Indent.Number }, 0);
+    public static LineFormat CodePreset = new LineFormat(new List<Indent>() { Indent.Code }, 0);
 
-    public LineFormat(bool? quote, bool? bullet, bool? ordered, int? header)
+    public LineFormat(List<Indent> indents, int? header)
     {
-      Quote = quote;
-      Bullet = bullet;
-      Ordered = ordered;
+      Indents = indents;
       Header = header;
     }
 
-    public LineFormat() { }
+    public LineFormat()
+    {
+      Indents = new List<Indent>();
+      Header = 0;
+    }
 
     public void Merge(LineFormat other)
     {
-      Quote = other.Quote is null ? Quote : other.Quote;
-      Bullet = other.Bullet is null ? Bullet : other.Bullet;
-      Ordered = other.Ordered is null ? Ordered : other.Ordered;
+      Indents = other.Indents is null ? Indents : other.Indents;
       Header = other.Header is null ? Header : other.Header;
     }
 
     public override bool Equals(object obj)
     {
       return (obj is LineFormat lineFormat
-              && Quote == lineFormat.Quote
-              && Bullet == lineFormat.Bullet
-              && Ordered == lineFormat.Ordered
+              && Indents.SequenceEqual(lineFormat.Indents)
               && Header == lineFormat.Header
              );
     }
 
     public override int GetHashCode()
     {
-      return (Quote, Bullet, Ordered, Header).GetHashCode();
+      return (Indents, Header).GetHashCode();
     }
   }
 }
