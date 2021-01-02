@@ -7,14 +7,8 @@ namespace Markdraw.MarkdownToDelta
 {
   public static class MarkdownToDeltaConverter
   {
-    private static readonly Regex lineFormatRegex = new Regex(@"^\s*(?:(?<quotes>(?:> ?)+)|(?<bullets>\* )|(?<ordered>\d+. )|(?<horizontalrule>(\*|\-) *\5 *\5 *$))*(?<headers>#+ )?(?<text>.*?)$", RegexOptions.Compiled | RegexOptions.Multiline);
-    private static readonly Regex linkAndImageRegex = new Regex(@"(?<image>(?:(?<!\\)(?:\\\\)*!(?=\[))?)(?<!\\)(?:\\\\)*\[(?<text>[^\[]*?)(?<!\\)(?:\\\\)*\]\((?<url>.*?(?<!\\)(?:\\\\)*)\)", RegexOptions.Compiled | RegexOptions.Multiline);
-
-
-    public static List<string> SplitIntoLines(string markdown)
-    {
-      throw new NotImplementedException();
-    }
+    private static readonly Regex lineFormatRegex = new Regex(@"^(?:(?<code>\s{4,})|(?<quotes>(?:>\s?)+)|(?<horizontalrule>(\*|\-)(?:\s*\k<horizontalrule>){2}\s*$)|(?<bullets>\*\s)|(?<ordered>\d+.\s))*(?<headers>#{1,6}\s*)?(?<text>.*?)$", RegexOptions.Compiled);
+    private static readonly Regex linkAndImageRegex = new Regex(@"(?<image>(?:(?<!\\)(?:\\\\)*!(?=\[))?)(?<!\\)(?:\\\\)*\[(?<text>[^\[]*?)(?<!\\)(?:\\\\)*\]\((?<url>.*?(?<!\\)(?:\\\\)*)\)", RegexOptions.Compiled);
 
     public static List<Insert> LineToInserts(string line)
     {
@@ -23,17 +17,24 @@ namespace Markdraw.MarkdownToDelta
 
     public static Ops Parse(string markdown)
     {
-      var lines = SplitIntoLines(markdown);
+      var linesAndFences = LineSplitter.Split(markdown);
 
       var ops = new Ops();
 
-      foreach (string line in lines)
+      foreach (LineOrFenced lineOrFenced in linesAndFences)
       {
-        var inserts = LineToInserts(line);
-
-        foreach (Insert insert in inserts)
+        if (lineOrFenced.Fenced)
         {
-          ops.Insert(insert);
+          ops.Insert(new CodeInsert(lineOrFenced.Contents, lineOrFenced.InfoString)); // format infostring?
+        }
+        else
+        {
+          var inserts = LineToInserts(lineOrFenced.Contents);
+
+          foreach (Insert insert in inserts)
+          {
+            ops.Insert(insert);
+          }
         }
       }
 
