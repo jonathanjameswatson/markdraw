@@ -1,5 +1,3 @@
-using System;
-using Markdraw.MarkdownToDelta;
 using Markdraw.Delta;
 using Xunit;
 
