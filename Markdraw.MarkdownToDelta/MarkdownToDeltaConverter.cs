@@ -7,14 +7,6 @@ namespace Markdraw.MarkdownToDelta
 {
   public static class MarkdownToDeltaConverter
   {
-    private static readonly Regex lineFormatRegex = new Regex(@"^(?:(?<code>\s{4,})|(?<quotes>(?:>\s?)+)|(?<horizontalrule>(\*|\-)(?:\s*\k<horizontalrule>){2}\s*$)|(?<bullets>\*\s)|(?<ordered>\d+.\s))*(?<headers>#{1,6}\s*)?(?<text>.*?)$", RegexOptions.Compiled);
-    private static readonly Regex linkAndImageRegex = new Regex(@"(?<image>(?:(?<!\\)(?:\\\\)*!(?=\[))?)(?<!\\)(?:\\\\)*\[(?<text>[^\[]*?)(?<!\\)(?:\\\\)*\]\((?<url>.*?(?<!\\)(?:\\\\)*)\)", RegexOptions.Compiled);
-
-    public static List<Insert> LineToInserts(string line)
-    {
-      throw new NotImplementedException();
-    }
-
     public static Ops Parse(string markdown)
     {
       var linesAndFences = LineSplitter.Split(markdown);
@@ -29,7 +21,7 @@ namespace Markdraw.MarkdownToDelta
         }
         else
         {
-          var inserts = LineToInserts(lineOrFenced.Contents);
+          var inserts = LineToDeltaConverter.Parse(lineOrFenced.Contents);
 
           foreach (Insert insert in inserts)
           {

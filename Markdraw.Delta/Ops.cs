@@ -9,6 +9,19 @@ namespace Markdraw.Delta
 
     public int Length { get => _ops.Count; }
 
+    public int Characters
+    {
+      get
+      {
+        int characters = 0;
+        foreach (var op in this)
+        {
+          characters += op.Length;
+        }
+        return characters;
+      }
+    }
+
     public Ops()
     {
       _ops = new List<IOp>();
@@ -70,6 +83,23 @@ namespace Markdraw.Delta
     public Ops Insert(string text)
     {
       return Insert(new TextInsert(text));
+    }
+
+    public Ops InsertMany(Ops inserts)
+    {
+      foreach (var op in inserts)
+      {
+        if (op is Insert insert)
+        {
+          Insert(insert);
+        }
+        else
+        {
+          throw new ArgumentException("Only an Ops of inserts can be inserted.");
+        }
+      }
+
+      return this;
     }
 
     public Ops Delete(int amount)

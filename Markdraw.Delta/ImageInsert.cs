@@ -3,12 +3,14 @@ namespace Markdraw.Delta
   public class ImageInsert : EmbedInsert
   {
     private string _url = "";
+    private string _alt = "";
 
     public ImageInsert() { }
 
-    public ImageInsert(string url)
+    public ImageInsert(string url, string alt)
     {
       _url = url;
+      _alt = alt;
     }
 
     public override bool Equals(object obj)
