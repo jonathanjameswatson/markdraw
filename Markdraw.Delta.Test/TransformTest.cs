@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Xunit;
 
 namespace Markdraw.Delta.Test
@@ -81,7 +82,7 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsLines()
     {
-      var turnQuote = new LineFormat(true, null, null, null);
+      var turnQuote = new LineFormat(new List<Indent>() { Indent.Quote }, null);
 
       new Ops()
         .Insert(new LineInsert())
