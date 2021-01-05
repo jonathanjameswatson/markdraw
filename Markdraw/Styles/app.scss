@@ -45,11 +45,16 @@ $primary: $red;
     }
 }
 
-.content > blockquote {
+.content > blockquote, pre {
     overflow-x: auto;
     overflow-y: hidden;
 }
 
 .content-container {
-    min-width: 0;
+    min-width: 1px;
+}
+
+body, html {
+    position: fixed;
+    overflow: hidden;
 }
