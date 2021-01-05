@@ -18,15 +18,13 @@ namespace Markdraw.MarkdownToDelta
         if (lineOrFenced.Fenced)
         {
           ops.Insert(new CodeInsert(lineOrFenced.Contents, lineOrFenced.InfoString)); // format infostring?
+          // ops.Insert(new LineInsert());
         }
         else
         {
           var inserts = LineToDeltaConverter.Parse(lineOrFenced.Contents);
 
-          foreach (Insert insert in inserts)
-          {
-            ops.Insert(insert);
-          }
+          ops.InsertMany(inserts);
         }
       }
 
