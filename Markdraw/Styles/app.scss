@@ -48,13 +48,9 @@ $primary: $red;
 .content > blockquote, pre {
     overflow-x: auto;
     overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .content-container {
     min-width: 1px;
-}
-
-body, html {
-    position: fixed;
-    overflow: hidden;
 }
