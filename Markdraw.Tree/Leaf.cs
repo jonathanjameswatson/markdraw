@@ -1,9 +1,9 @@
-using System;
+using Markdraw.Delta;
 
 namespace Markdraw.Tree
 {
   public abstract class Leaf : TreeNode
   {
-    public virtual Insert CorrespondingInsert;
+    public abstract Insert CorrespondingInsert { get; }
   }
 }

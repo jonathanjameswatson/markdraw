@@ -1,14 +1,15 @@
-using System;
 using Markdraw.Delta;
 
 namespace Markdraw.Tree
 {
   public class DividerLeaf : Leaf
   {
-    public override DividerInsert CorrespondingInsert;
+    private DividerInsert _correspondingInsert;
+    public override DividerInsert CorrespondingInsert { get => _correspondingInsert; }
 
-    public DividerLeaf(DividerInsert dividerInsert) {
-      CorrespondingInsert = dividerInsert;
+    public DividerLeaf(DividerInsert dividerInsert)
+    {
+      _correspondingInsert = dividerInsert;
     }
   }
 }
