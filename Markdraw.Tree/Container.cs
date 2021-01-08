@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Markdraw.Delta;
 
@@ -22,7 +23,7 @@ namespace Markdraw.Tree
         {
           var indents = lineInsert.Format.Indents;
           int numberOfIndents = indents.Count;
-          bool goneForwardOrNowhere = numberOfIndents > depth;
+          bool goneForward = numberOfIndents > depth;
           bool goneBack = numberOfIndents <= depth;
 
           if (indented)
@@ -39,6 +40,8 @@ namespace Markdraw.Tree
               {
                 lastIndent = indents[depth];
               }
+
+              opBuffer = lineOpBuffer;
             }
             else
             {
@@ -47,11 +50,38 @@ namespace Markdraw.Tree
           }
           else
           {
-            if (goneForwardOrNowhere)
+            if (goneForward)
             {
-
+              lastIndent = indents[depth];
+              indented = true;
+              addLeaves(opBuffer);
+              opBuffer = lineOpBuffer;
+            }
+            else
+            {
+              opBuffer.InsertMany(lineOpBuffer);
             }
           }
+        }
+        else if (op is Insert insert)
+        {
+          lineOpBuffer.Insert(insert);
+        }
+        else
+        {
+          throw new ArgumentException("ops must only contain inserts.");
+        }
+      }
+
+      if (opBuffer.Length != 0)
+      {
+        if (indented)
+        {
+          addContainer(lastIndent, opBuffer, depth + 1);
+        }
+        else
+        {
+          addLeaves(opBuffer);
         }
       }
     }
