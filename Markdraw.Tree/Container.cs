@@ -4,7 +4,7 @@ using Markdraw.Delta;
 
 namespace Markdraw.Tree
 {
-  public class Container : TreeNode
+  public class Container : TreeNode, IEnumerable<TreeNode>
   {
     private List<TreeNode> _elementsInside;
     public List<TreeNode> ElementsInside { get => _elementsInside; }
@@ -150,6 +150,17 @@ namespace Markdraw.Tree
       {
         _elementsInside.Add(new TextLeaf(textBuffer));
       }
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+      return this.GetEnumerator();
+    }
+
+
+    public IEnumerator<TreeNode> GetEnumerator()
+    {
+      return ElementsInside.GetEnumerator();
     }
   }
 }
