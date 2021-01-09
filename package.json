@@ -15,9 +15,9 @@
   },
   "scripts": {
     "watch": "cross-env NODE_ENV='development' yarn gulp watch",
-    "dev": "concurrently --kill-others \"dotnet watch --project Markdraw run\" \"yarn run watch\"",
+    "dev": "concurrently --kill-others \"dotnet watch --project MarkdrawBrowser run\" \"yarn run watch\"",
     "prod": "cross-env NODE_ENV='production' yarn gulp build",
-    "build": "cross-env NODE_ENV='production' yarn gulp build && dotnet publish Markdraw/Markdraw.csproj -c Release -o release --nologo"
+    "build": "cross-env NODE_ENV='production' yarn gulp build && dotnet publish MarkdrawBrowser/MarkdrawBrowser.csproj -c Release -o release --nologo"
   },
   "dependencies": {
     "bulma": "^0.9.1"

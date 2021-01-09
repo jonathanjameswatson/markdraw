@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src="./Markdraw/wwwroot/icon.png" alt="Logo" width="96" height="96">
+<img src="./MarkdrawBrowser/wwwroot/icon.png" alt="Logo" width="96" height="96">
 <br>
 </h1>
 

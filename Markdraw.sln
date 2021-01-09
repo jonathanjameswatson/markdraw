@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw", "Markdraw\Markdraw.csproj", "{17A60EEA-FF5B-410E-9D97-879DD676D8EF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Delta", "Markdraw.Delta\Markdraw.Delta.csproj", "{3FA21AF7-4267-43A3-805C-E01A4DBB3ECD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Delta.Test", "Markdraw.Delta.Test\Markdraw.Delta.Test.csproj", "{CE6006A1-D01D-4BAA-B3DD-F0ECC32093FE}"
@@ -16,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Tree", "Markdraw.Tree\Markdraw.Tree.csproj", "{805B9406-DA0C-4C20-9CDD-BC2143CAAE3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Tree.Test", "Markdraw.Tree.Test\Markdraw.Tree.Test.csproj", "{86A46DE0-ABE5-4F77-A360-D3A722C69466}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdrawBrowser", "MarkdrawBrowser\MarkdrawBrowser.csproj", "{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,18 +30,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Debug|x64.Build.0 = Debug|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Debug|x86.Build.0 = Debug|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Release|x64.ActiveCfg = Release|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Release|x64.Build.0 = Release|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Release|x86.ActiveCfg = Release|Any CPU
-		{17A60EEA-FF5B-410E-9D97-879DD676D8EF}.Release|x86.Build.0 = Release|Any CPU
 		{3FA21AF7-4267-43A3-805C-E01A4DBB3ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3FA21AF7-4267-43A3-805C-E01A4DBB3ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FA21AF7-4267-43A3-805C-E01A4DBB3ECD}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -114,5 +102,17 @@ Global
 		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|x64.Build.0 = Release|Any CPU
 		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|x86.ActiveCfg = Release|Any CPU
 		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|x86.Build.0 = Release|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Debug|x64.Build.0 = Debug|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Debug|x86.Build.0 = Debug|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Release|x64.ActiveCfg = Release|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Release|x64.Build.0 = Release|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Release|x86.ActiveCfg = Release|Any CPU
+		{9BAE56CD-5429-4BE1-A7CE-08EA1BEAFDFA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
