@@ -3,6 +3,7 @@ namespace Markdraw.Delta
   public class LineInsert : Insert
   {
     private LineFormat _format;
+    public LineFormat Format { get => _format; }
 
     public LineInsert(LineFormat format)
     {
