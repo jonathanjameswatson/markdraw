@@ -148,5 +148,122 @@ namespace Markdraw.Tree.Test
           })
         );
     }
+
+    [Fact]
+    public void MultipleIndents_WorkInside()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert(LineFormat.NumberPreset))
+            .Insert("B")
+            .Insert(new LineInsert(
+              new LineFormat(
+                new List<Indent>() { Indent.Number, Indent.Bullet },
+                0
+              )
+            ))
+            .Insert("C")
+            .Insert(new LineInsert(
+              new LineFormat(
+                new List<Indent>() { Indent.Number, Indent.Bullet, Indent.Quote },
+                0
+              )
+            ))
+            .Insert("D")
+            .Insert(new LineInsert(
+              new LineFormat(
+                new List<Indent>() { Indent.Number, Indent.Bullet },
+                0
+              )
+            ))
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new NumbersContainer(new List<TreeNode>() {
+              new TextLeaf(new List<TextInsert>() {
+                new TextInsert("A")
+              }),
+              new BulletsContainer(new List<TreeNode>() {
+                new TextLeaf(new List<TextInsert>() {
+                  new TextInsert("B")
+                }),
+                new QuoteContainer(new List<TreeNode>() {
+                  new TextLeaf(new List<TextInsert>() {
+                    new TextInsert("C")
+                  }),
+                }),
+                new TextLeaf(new List<TextInsert>() {
+                  new TextInsert("D")
+                })
+              })
+            })
+          })
+        );
+    }
+
+    [Fact]
+    public void MultipleIndents_WorkOnSameLineAtOnce()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert(
+              new LineFormat(
+                new List<Indent>() { Indent.Number, Indent.Bullet, Indent.Quote },
+                0
+              )
+            ))
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new NumbersContainer(new List<TreeNode>() {
+              new BulletsContainer(new List<TreeNode>() {
+                new QuoteContainer(new List<TreeNode>() {
+                  new TextLeaf(new List<TextInsert>() {
+                    new TextInsert("A")
+                  })
+                })
+              })
+            })
+          })
+        );
+    }
+
+    [Fact]
+    public void MultipleIndents_WorkDroppingDownOnTheSameLineAtOnce()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert(
+              new LineFormat(
+                new List<Indent>() { Indent.Number, Indent.Bullet, Indent.Quote },
+                0
+              )
+            ))
+            .Insert("B")
+            .Insert(new LineInsert(LineFormat.NumberPreset))
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new NumbersContainer(new List<TreeNode>() {
+              new BulletsContainer(new List<TreeNode>() {
+                new QuoteContainer(new List<TreeNode>() {
+                  new TextLeaf(new List<TextInsert>() {
+                    new TextInsert("A")
+                  })
+                })
+              }),
+              new TextLeaf(new List<TextInsert>() {
+                new TextInsert("B")
+              })
+            })
+          })
+        );
+    }
   }
 }
