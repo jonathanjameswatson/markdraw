@@ -96,30 +96,27 @@ namespace Markdraw.Tree
 
     public void AddContainer(Indent? indent, Ops ops, int depth)
     {
-      foreach (var op in ops)
+      Container newContainer;
+      switch (indent)
       {
-        Container newContainer;
-        switch (indent)
-        {
-          case Indent.Quote:
-            newContainer = new QuoteContainer(depth, ops);
-            break;
-          case Indent.Bullet:
-            newContainer = new BulletsContainer(depth, ops);
-            break;
-          case Indent.Number:
-            newContainer = new NumbersContainer(depth, ops);
-            break;
-          case Indent.Code:
-            newContainer = new QuoteContainer(depth, ops); // fix this
-            break;
-          default:
-            newContainer = new Container(depth, ops);
-            break;
-        }
-
-        _elementsInside.Add(newContainer);
+        case Indent.Quote:
+          newContainer = new QuoteContainer(depth, ops);
+          break;
+        case Indent.Bullet:
+          newContainer = new BulletsContainer(depth, ops);
+          break;
+        case Indent.Number:
+          newContainer = new NumbersContainer(depth, ops);
+          break;
+        case Indent.Code:
+          newContainer = new QuoteContainer(depth, ops); // fix this
+          break;
+        default:
+          newContainer = new Container(depth, ops);
+          break;
       }
+
+      _elementsInside.Add(newContainer);
     }
 
     public void AddLeaves(Ops ops)

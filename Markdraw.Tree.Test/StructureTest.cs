@@ -54,5 +54,25 @@ namespace Markdraw.Tree.Test
           })
         );
     }
+
+    [Fact]
+    public void Quote_IsQuoted()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert(LineFormat.QuotePreset))
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new QuoteContainer(new List<TreeNode>() {
+              new TextLeaf(new List<TextInsert>() {
+                new TextInsert("A")
+              })
+            })
+          })
+        );
+    }
   }
 }
