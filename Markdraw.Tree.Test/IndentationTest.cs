@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Markdraw.Tree.Test
 {
-  public class StructureTest
+  public class IndentationTest
   {
     [Fact]
     public void EmptyOps_IsEmptyContainer()
@@ -17,7 +17,7 @@ namespace Markdraw.Tree.Test
     }
 
     [Fact]
-    public void OneWord_IsOneWord()
+    public void OneLine_IsOneLine()
     {
       DeltaTree
         .Parse(
@@ -34,7 +34,7 @@ namespace Markdraw.Tree.Test
     }
 
     [Fact]
-    public void TwoLines_IsTwoLines()
+    public void TwoLines_AreTwoLines()
     {
       DeltaTree
         .Parse(
