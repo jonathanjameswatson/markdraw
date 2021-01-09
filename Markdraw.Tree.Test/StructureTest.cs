@@ -74,5 +74,79 @@ namespace Markdraw.Tree.Test
           })
         );
     }
+
+    [Fact]
+    public void Bullets_AreBulleted()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert(LineFormat.BulletPreset))
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new BulletsContainer(new List<TreeNode>() {
+              new TextLeaf(new List<TextInsert>() {
+                new TextInsert("A")
+              })
+            })
+          })
+        );
+    }
+
+    [Fact]
+    public void Numbers_AreNumbered()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert(LineFormat.NumberPreset))
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new NumbersContainer(new List<TreeNode>() {
+              new TextLeaf(new List<TextInsert>() {
+                new TextInsert("A")
+              })
+            })
+          })
+        );
+    }
+
+    [Fact]
+    public void MultipleIndents_WorkAdjacent()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert(LineFormat.NumberPreset))
+            .Insert("B")
+            .Insert(new LineInsert(LineFormat.BulletPreset))
+            .Insert("C")
+            .Insert(new LineInsert())
+            .Insert(new LineInsert(LineFormat.QuotePreset))
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new NumbersContainer(new List<TreeNode>() {
+              new TextLeaf(new List<TextInsert>() {
+                new TextInsert("A")
+              })
+            }),
+            new BulletsContainer(new List<TreeNode>() {
+              new TextLeaf(new List<TextInsert>() {
+                new TextInsert("B")
+              })
+            }),
+            new TextLeaf(new List<TextInsert>() {
+              new TextInsert("C")
+            }),
+            new QuoteContainer(new List<TreeNode>() {})
+          })
+        );
+    }
   }
 }

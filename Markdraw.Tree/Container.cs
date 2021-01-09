@@ -35,13 +35,13 @@ namespace Markdraw.Tree
               if (goneBack)
               {
                 indented = false;
+                AddLeaves(lineOpBuffer);
               }
               else
               {
                 lastIndent = indents[depth];
+                opBuffer = lineOpBuffer;
               }
-
-              opBuffer = lineOpBuffer;
             }
             else
             {
