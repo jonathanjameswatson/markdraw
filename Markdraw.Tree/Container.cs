@@ -30,7 +30,7 @@ namespace Markdraw.Tree
           {
             if (goneBack || indents[depth] != lastIndent)
             {
-              addContainer(lastIndent, opBuffer, depth + 1);
+              AddContainer(lastIndent, opBuffer, depth + 1);
 
               if (goneBack)
               {
@@ -47,6 +47,8 @@ namespace Markdraw.Tree
             {
               opBuffer.InsertMany(lineOpBuffer);
             }
+
+            opBuffer.Insert(lineInsert);
           }
           else
           {
@@ -54,14 +56,17 @@ namespace Markdraw.Tree
             {
               lastIndent = indents[depth];
               indented = true;
-              addLeaves(opBuffer);
+
               opBuffer = lineOpBuffer;
+              opBuffer.Insert(lineInsert);
             }
             else
             {
-              opBuffer.InsertMany(lineOpBuffer);
+              AddLeaves(lineOpBuffer);
             }
           }
+
+          lineOpBuffer = new Ops();
         }
         else if (op is Insert insert)
         {
@@ -73,20 +78,23 @@ namespace Markdraw.Tree
         }
       }
 
-      if (opBuffer.Length != 0)
+      if (opBuffer.Length != 0 && indented)
       {
-        if (indented)
-        {
-          addContainer(lastIndent, opBuffer, depth + 1);
-        }
-        else
-        {
-          addLeaves(opBuffer);
-        }
+        AddContainer(lastIndent, opBuffer, depth + 1);
+      }
+
+      if (lineOpBuffer.Length != 0)
+      {
+        AddLeaves(lineOpBuffer);
       }
     }
 
-    public void addContainer(Indent? indent, Ops ops, int depth)
+    public Container(List<TreeNode> elementsInside)
+    {
+      _elementsInside = elementsInside;
+    }
+
+    public void AddContainer(Indent? indent, Ops ops, int depth)
     {
       foreach (var op in ops)
       {
@@ -114,7 +122,7 @@ namespace Markdraw.Tree
       }
     }
 
-    public void addLeaves(Ops ops)
+    public void AddLeaves(Ops ops)
     {
       var textBuffer = new List<TextInsert>();
       foreach (var op in ops)

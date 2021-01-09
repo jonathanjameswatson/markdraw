@@ -12,17 +12,19 @@ namespace Markdraw.Tree
       get => CorrespondingInserts?[0];
     }
 
+    private List<TextInsert> __correspondingInserts;
     private List<TextInsert> _correspondingInserts
     {
+      get => __correspondingInserts;
       set
       {
-        _correspondingInserts = value;
+        __correspondingInserts = value;
         _text = String.Join("", value.Select(textInsert => textInsert.Text));
       }
     }
     private string _text;
 
-    public List<TextInsert> CorrespondingInserts { get; }
+    public List<TextInsert> CorrespondingInserts { get => _correspondingInserts; }
     public string Text { get => _text; }
 
     public TextLeaf(List<TextInsert> correspondingInserts)

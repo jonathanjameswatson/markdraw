@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.MarkdownToDelta.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Tree", "Markdraw.Tree\Markdraw.Tree.csproj", "{805B9406-DA0C-4C20-9CDD-BC2143CAAE3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Tree.Test", "Markdraw.Tree.Test\Markdraw.Tree.Test.csproj", "{86A46DE0-ABE5-4F77-A360-D3A722C69466}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,5 +102,17 @@ Global
 		{805B9406-DA0C-4C20-9CDD-BC2143CAAE3F}.Release|x64.Build.0 = Release|Any CPU
 		{805B9406-DA0C-4C20-9CDD-BC2143CAAE3F}.Release|x86.ActiveCfg = Release|Any CPU
 		{805B9406-DA0C-4C20-9CDD-BC2143CAAE3F}.Release|x86.Build.0 = Release|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Debug|x64.Build.0 = Debug|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Debug|x86.Build.0 = Debug|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|x64.ActiveCfg = Release|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|x64.Build.0 = Release|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|x86.ActiveCfg = Release|Any CPU
+		{86A46DE0-ABE5-4F77-A360-D3A722C69466}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

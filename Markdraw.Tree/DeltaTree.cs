@@ -6,15 +6,17 @@ using Markdraw.MarkdownToDelta;
 
 namespace Markdraw.Tree
 {
-  public class DeltaTree
+  public static class DeltaTree
   {
-    private Ops _ops;
-    public Container Contents { get; }
-
-    public DeltaTree(string markdown = "")
+    public static Container Parse(string markdown = "")
     {
-      _ops = MarkdownToDeltaConverter.Parse(markdown);
-      Contents = new Container(0, _ops);
+      var ops = MarkdownToDeltaConverter.Parse(markdown);
+      return Parse(ops);
+    }
+
+    public static Container Parse(Ops ops)
+    {
+      return new Container(0, ops);
     }
   }
 }
