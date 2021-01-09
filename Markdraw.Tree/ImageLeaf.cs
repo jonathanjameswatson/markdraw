@@ -14,7 +14,7 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      return $@"<img src=""""{CorrespondingInsert.Url}"""" alt=""""{CorrespondingInsert.Alt}"""" />";
+      return $@"<img src=""{CorrespondingInsert.Url}"" alt=""{CorrespondingInsert.Alt}"" />";
     }
   }
 }
