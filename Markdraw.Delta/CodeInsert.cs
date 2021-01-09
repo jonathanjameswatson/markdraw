@@ -2,23 +2,23 @@ namespace Markdraw.Delta
 {
   public class CodeInsert : EmbedInsert
   {
-    private string _text;
-    private string _tag;
+    public string Text { get; set; }
+    public string Tag { get; set; }
 
     public CodeInsert(string text = "", string tag = "")
     {
-      _text = text;
-      _tag = tag;
+      Text = text;
+      Tag = tag;
     }
 
     public override bool Equals(object obj)
     {
-      return obj is CodeInsert x && x._text == _text && x._tag == _tag;
+      return obj is CodeInsert x && x.Text == Text && x.Tag == Tag;
     }
 
     public override int GetHashCode()
     {
-      return (_text, _tag).GetHashCode();
+      return (Text, Tag).GetHashCode();
     }
   }
 }

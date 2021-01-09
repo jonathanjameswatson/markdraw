@@ -31,5 +31,10 @@ namespace Markdraw.Tree
     {
       _correspondingInserts = correspondingInserts;
     }
+
+    public override string ToString()
+    {
+      return Text;
+    }
   }
 }

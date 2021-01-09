@@ -2,25 +2,29 @@ namespace Markdraw.Delta
 {
   public class ImageInsert : EmbedInsert
   {
-    private string _url = "";
-    private string _alt = "";
+    public string Url { get; set; }
+    public string Alt { get; set; }
 
-    public ImageInsert() { }
+    public ImageInsert()
+    {
+      Url = "";
+      Alt = "";
+    }
 
     public ImageInsert(string url, string alt)
     {
-      _url = url;
-      _alt = alt;
+      Url = url;
+      Alt = alt;
     }
 
     public override bool Equals(object obj)
     {
-      return obj is ImageInsert x && x._url == _url;
+      return obj is ImageInsert x && x.Url == Url;
     }
 
     public override int GetHashCode()
     {
-      return _url.GetHashCode();
+      return Url.GetHashCode();
     }
   }
 }

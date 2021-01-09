@@ -10,5 +10,14 @@ namespace Markdraw.Tree
     {
       CorrespondingInsert = codeInsert;
     }
+
+    public override string ToString()
+    {
+      if (CorrespondingInsert.Tag != "")
+      {
+        return $@"<pre><code>""{CorrespondingInsert.Text}""</code></pre>";
+      }
+      return $@"<pre><code class=""language-""{CorrespondingInsert.Tag}"""">""{CorrespondingInsert.Text}""</code></pre>";
+    }
   }
 }

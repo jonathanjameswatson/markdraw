@@ -11,5 +11,10 @@ namespace Markdraw.Tree
     {
       _correspondingInsert = dividerInsert;
     }
+
+    public override string ToString()
+    {
+      return @"<hr />";
+    }
   }
 }

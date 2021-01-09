@@ -11,5 +11,10 @@ namespace Markdraw.Tree
     {
       _correspondingInsert = imageInsert;
     }
+
+    public override string ToString()
+    {
+      return $@"<img src=""""{CorrespondingInsert.Url}"""" alt=""""{CorrespondingInsert.Alt}"""" />";
+    }
   }
 }
