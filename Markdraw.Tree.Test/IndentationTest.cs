@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Markdraw.Tree;
 using Markdraw.Delta;
 using Xunit;
 

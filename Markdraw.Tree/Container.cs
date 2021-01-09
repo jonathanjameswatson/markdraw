@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Markdraw.Delta;
 
 namespace Markdraw.Tree
 {
   public class Container : TreeNode, IEnumerable<TreeNode>
   {
+    public virtual string OpeningTag { get => @"<div>"; }
+    public virtual string InsideOpeningTag { get => @"<p>"; }
+    public virtual string InsideClosingTag { get => @"</p>"; }
+    public virtual string ClosingTag { get => @"</div>"; }
+    public virtual bool WrapAllInside { get => false; }
+
     private List<TreeNode> _elementsInside;
     public List<TreeNode> ElementsInside { get => _elementsInside; }
 
@@ -166,6 +173,49 @@ namespace Markdraw.Tree
     public IEnumerator<TreeNode> GetEnumerator()
     {
       return ElementsInside.GetEnumerator();
+    }
+
+    public override string ToString()
+    {
+      var stringBuilder = new StringBuilder();
+
+      stringBuilder.Append(OpeningTag);
+
+      foreach (var child in ElementsInside)
+      {
+        if (WrapAllInside)
+        {
+          stringBuilder.Append(InsideOpeningTag);
+        }
+
+        if (child is TextLeaf)
+        {
+          if (!WrapAllInside)
+          {
+            stringBuilder.Append(@"<p>");
+          }
+
+          stringBuilder.Append(child.ToString());
+
+          if (!WrapAllInside)
+          {
+            stringBuilder.Append(@"</p>");
+          }
+        }
+        else
+        {
+          stringBuilder.Append(child.ToString());
+        }
+
+        if (WrapAllInside)
+        {
+          stringBuilder.Append(InsideClosingTag);
+        }
+      }
+
+      stringBuilder.Append(ClosingTag);
+
+      return stringBuilder.ToString();
     }
   }
 }
