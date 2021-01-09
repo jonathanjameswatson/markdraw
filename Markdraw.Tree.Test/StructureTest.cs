@@ -32,5 +32,27 @@ namespace Markdraw.Tree.Test
           })
         );
     }
+
+    [Fact]
+    public void TwoLines_IsTwoLines()
+    {
+      DeltaTree
+        .Parse(
+          new Ops()
+            .Insert("A")
+            .Insert(new LineInsert())
+            .Insert("B")
+        )
+        .Is(
+          new Container(new List<TreeNode>() {
+            new TextLeaf(new List<TextInsert>() {
+              new TextInsert("A")
+            }),
+            new TextLeaf(new List<TextInsert>() {
+              new TextInsert("B")
+            })
+          })
+        );
+    }
   }
 }
