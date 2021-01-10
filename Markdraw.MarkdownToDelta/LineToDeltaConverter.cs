@@ -53,8 +53,7 @@ namespace Markdraw.MarkdownToDelta
         }
         else if (indentMatch.Groups["horizontalrule"].Success)
         {
-          ops.Insert(new DividerInsert());
-          break;
+          return ops.Insert(new DividerInsert()).Insert(new LineInsert(lineFormat));
         }
         else if (indentMatch.Groups["bullet"].Success)
         {
