@@ -66,7 +66,7 @@ namespace Markdraw.Tree.Test
         })
       })
         .ToString()
-        .Is(@"<div><ul><li>A</li></ul></div>");
+        .Is(@"<div><ul><li><p>A</p></li></ul></div>");
     }
 
     [Fact]
@@ -80,7 +80,7 @@ namespace Markdraw.Tree.Test
         })
       })
         .ToString()
-        .Is(@"<div><ol><li>A</li></ol></div>");
+        .Is(@"<div><ol><li><p>A</p></li></ol></div>");
     }
 
     [Fact]
@@ -103,7 +103,7 @@ namespace Markdraw.Tree.Test
         new QuoteContainer(new List<TreeNode>() {})
       })
         .ToString()
-        .Is(@"<div><ol><li>A</li></ol><ul><li>B</li></ul><p>C</p><blockquote></blockquote></div>");
+        .Is(@"<div><ol><li><p>A</p></li></ol><ul><li><p>B</p></li></ul><p>C</p><blockquote></blockquote></div>");
     }
 
     [Fact]
@@ -158,6 +158,58 @@ namespace Markdraw.Tree.Test
       })
         .ToString()
         .Is(@"<div><pre><code>A</code></pre></div>");
+    }
+
+    [Fact]
+    public void Headers_AreConvertedToHtml()
+    {
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A")
+        }, 1)
+      })
+        .ToString()
+        .Is(@"<div><h1>A</h1></div>");
+
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A")
+        }, 2)
+      })
+        .ToString()
+        .Is(@"<div><h2>A</h2></div>");
+
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A")
+        }, 3)
+      })
+        .ToString()
+        .Is(@"<div><h3>A</h3></div>");
+
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A")
+        }, 4)
+      })
+        .ToString()
+        .Is(@"<div><h4>A</h4></div>");
+
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A")
+        }, 5)
+      })
+        .ToString()
+        .Is(@"<div><h5>A</h5></div>");
+
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A")
+        }, 6)
+      })
+        .ToString()
+        .Is(@"<div><h6>A</h6></div>");
     }
   }
 }

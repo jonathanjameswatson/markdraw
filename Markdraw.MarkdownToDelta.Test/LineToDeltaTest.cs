@@ -467,7 +467,7 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("A")
-            .Insert(new ImageInsert("B", "C"))
+            .Insert(new ImageInsert("C", "B"))
             .Insert("D")
             .Insert(new LineInsert())
         );
@@ -481,7 +481,7 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("A")
-            .Insert(new ImageInsert("B", "C"))
+            .Insert(new ImageInsert("C", "C"))
             .Insert("D")
             .Insert("E", new TextFormat(false, false, "F"))
             .Insert(new LineInsert())

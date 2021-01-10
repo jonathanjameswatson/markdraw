@@ -115,7 +115,7 @@ namespace Markdraw.MarkdownToDelta
 
           if (match.Groups["image"].Value != "")
           {
-            ops.Insert(new ImageInsert(match.Groups["text"].Value, match.Groups["url"].Value));
+            ops.Insert(new ImageInsert(match.Groups["url"].Value, match.Groups["text"].Value));
           }
           else
           {
