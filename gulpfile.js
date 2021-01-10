@@ -9,8 +9,8 @@ const browserSync = require('browser-sync').create();
 
 const dirs = {
     scss: {
-        src: 'Markdraw/Styles',
-        dest: 'Markdraw/wwwroot/css'
+        src: 'MarkdrawBrowser/Styles',
+        dest: 'MarkdrawBrowser/wwwroot/css'
     }
 };
 
