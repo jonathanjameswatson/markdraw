@@ -34,7 +34,7 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      return Text;
+      return $@"<p>{Text}</p>";
     }
   }
 }

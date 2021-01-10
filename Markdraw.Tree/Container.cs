@@ -188,24 +188,7 @@ namespace Markdraw.Tree
           stringBuilder.Append(InsideOpeningTag);
         }
 
-        if (child is TextLeaf)
-        {
-          if (!WrapAllInside)
-          {
-            stringBuilder.Append(@"<p>");
-          }
-
-          stringBuilder.Append(child.ToString());
-
-          if (!WrapAllInside)
-          {
-            stringBuilder.Append(@"</p>");
-          }
-        }
-        else
-        {
-          stringBuilder.Append(child.ToString());
-        }
+        stringBuilder.Append(child.ToString());
 
         if (WrapAllInside)
         {
