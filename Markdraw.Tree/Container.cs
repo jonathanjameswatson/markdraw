@@ -29,6 +29,7 @@ namespace Markdraw.Tree
         if (op is LineInsert lineInsert)
         {
           var indents = lineInsert.Format.Indents;
+          int header = lineInsert.Format.Header is null ? 0 : (int)lineInsert.Format.Header;
           int numberOfIndents = indents.Count;
           bool goneForward = numberOfIndents > depth;
           bool goneBack = numberOfIndents <= depth;
@@ -42,7 +43,7 @@ namespace Markdraw.Tree
               if (goneBack)
               {
                 indented = false;
-                AddLeaves(lineOpBuffer);
+                AddLeaves(lineOpBuffer, header);
               }
               else
               {
@@ -69,7 +70,7 @@ namespace Markdraw.Tree
             }
             else
             {
-              AddLeaves(lineOpBuffer);
+              AddLeaves(lineOpBuffer, header);
             }
           }
 
@@ -92,7 +93,7 @@ namespace Markdraw.Tree
 
       if (lineOpBuffer.Length != 0)
       {
-        AddLeaves(lineOpBuffer);
+        AddLeaves(lineOpBuffer, 0);
       }
     }
 
@@ -126,7 +127,7 @@ namespace Markdraw.Tree
       _elementsInside.Add(newContainer);
     }
 
-    public void AddLeaves(Ops ops)
+    public void AddLeaves(Ops ops, int header)
     {
       var textBuffer = new List<TextInsert>();
       foreach (var op in ops)
@@ -139,7 +140,7 @@ namespace Markdraw.Tree
         {
           if (textBuffer.Count != 0)
           {
-            _elementsInside.Add(new TextLeaf(textBuffer));
+            _elementsInside.Add(new TextLeaf(textBuffer, header));
             textBuffer = new List<TextInsert>();
           }
 
@@ -160,7 +161,7 @@ namespace Markdraw.Tree
 
       if (textBuffer.Count != 0)
       {
-        _elementsInside.Add(new TextLeaf(textBuffer));
+        _elementsInside.Add(new TextLeaf(textBuffer, header));
       }
     }
 

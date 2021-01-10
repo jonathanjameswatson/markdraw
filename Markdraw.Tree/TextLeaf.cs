@@ -23,18 +23,22 @@ namespace Markdraw.Tree
       }
     }
     private string _text;
+    public string Tag { get; set; }
 
     public List<TextInsert> CorrespondingInserts { get => _correspondingInserts; }
     public string Text { get => _text; }
 
-    public TextLeaf(List<TextInsert> correspondingInserts)
+    public TextLeaf(List<TextInsert> correspondingInserts, int header)
     {
       _correspondingInserts = correspondingInserts;
+      Tag = header == 0 ? "p" : $"h{header}";
     }
+
+    public TextLeaf(List<TextInsert> correspondingInserts) : this(correspondingInserts, 0) { }
 
     public override string ToString()
     {
-      return $@"<p>{Text}</p>";
+      return $@"<{Tag}>{Text}</{Tag}>";
     }
   }
 }
