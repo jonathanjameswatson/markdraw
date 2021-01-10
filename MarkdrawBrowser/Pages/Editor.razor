@@ -5,18 +5,33 @@
 
 
 @code {
-  public MarkupString content = (MarkupString)"<p>Loading...</p>";
+  private string markdown = "";
+  private MarkupString content = (MarkupString)"<p>Loading...</p>";
+  public string Markdown {
+    get => markdown;
+    set {
+      markdown = value;
+      content = (MarkupString)DeltaTree.Parse(markdown).ToString();
+    }
+  }
+
   protected override async Task OnInitializedAsync()
   {
     var url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
-    var urlContents = await Http.GetStringAsync(url);
-    content = (MarkupString)DeltaTree.Parse(urlContents).ToString();
+    Markdown = await Http.GetStringAsync(url);
   }
 }
 
 
 <div class="section">
   <div class="container">
+    <div class="field">
+      <label class="label">Markdown</label>
+      <p class="control">
+        <textarea class="textarea" rows="1" placeholder="Input markdown" @bind="Markdown"></textarea>
+      </p>
+    </div>
+    <hr />
     <div class="columns is-mobile">
       <div class="column is-narrow format-buttons">
         <FormatButton icon="format-bold"></FormatButton>
