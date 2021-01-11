@@ -281,7 +281,12 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("A")
-            .Insert(new LineInsert(LineFormat.QuotePreset))
+            .Insert(new LineInsert(
+              new LineFormat(
+                new List<Indent> { Indent.Quote },
+                0
+              )
+            ))
         );
     }
 
@@ -295,16 +300,6 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert("A")
             .Insert(new LineInsert(LineFormat.CodePreset))
         );
-
-      LineToDeltaConverter
-        .Parse("      A")
-        .Is(
-          new Ops()
-            .Insert("  A")
-            .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Code }, 0))
-            )
-        );
     }
 
     [Fact]
@@ -316,7 +311,17 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Quote, Indent.Number, Indent.Bullet }, 0))
+              new LineFormat(
+                new List<Indent>() {
+                  Indent.Quote,
+                  Indent.Empty(1),
+                  Indent.Number(2),
+                  Indent.Empty(1),
+                  Indent.Bullet,
+                  Indent.Empty(1)
+                },
+                0)
+              )
             )
         );
 
@@ -326,7 +331,17 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Bullet, Indent.Quote, Indent.Number }, 0))
+              new LineFormat(
+                new List<Indent>() {
+                  Indent.Bullet,
+                  Indent.Empty(2),
+                  Indent.Quote,
+                  Indent.Empty(2),
+                  Indent.Number(2),
+                  Indent.Empty(2)
+                },
+                0)
+              )
             )
         );
 
@@ -336,7 +351,15 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Quote, Indent.Quote, Indent.Quote }, 0))
+              new LineFormat(
+                new List<Indent>() {
+                  Indent.Quote,
+                  Indent.Quote,
+                  Indent.Quote,
+                  Indent.Empty(1)
+                },
+                0)
+              )
             )
         );
     }
@@ -350,7 +373,9 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("* A")
             .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Quote, Indent.Number, Indent.Code }, 0))
+              new LineFormat(
+                new List<Indent>() { Indent.Quote, Indent.Empty(1), Indent.Number(2), Indent.Code },
+                0))
             )
         );
     }
@@ -396,7 +421,7 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Quote }, 1))
+              new LineFormat(new List<Indent>() { Indent.Quote, Indent.Empty(1) }, 1))
             )
         );
 
@@ -406,7 +431,7 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Bullet }, 1))
+              new LineFormat(new List<Indent>() { Indent.Bullet, Indent.Empty(1) }, 1))
             )
         );
 
@@ -416,7 +441,7 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(new List<Indent>() { Indent.Number }, 1))
+              new LineFormat(new List<Indent>() { Indent.Number(2), Indent.Empty(1) }, 1))
             )
         );
 

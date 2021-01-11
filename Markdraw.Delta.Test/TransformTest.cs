@@ -82,7 +82,7 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsLines()
     {
-      var turnQuote = new LineFormat(new List<Indent>() { Indent.Quote }, null);
+      var turnQuote = new LineFormat(new List<Indent>() { Indent.Quote, Indent.Empty(1) }, null);
 
       new Ops()
         .Insert(new LineInsert())

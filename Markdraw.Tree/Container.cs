@@ -22,7 +22,7 @@ namespace Markdraw.Tree
       var opBuffer = new Ops();
       var lineOpBuffer = new Ops();
       bool indented = false;
-      Indent? lastIndent = null;
+      Indent lastIndent = null;
 
       foreach (var op in ops)
       {
@@ -102,26 +102,28 @@ namespace Markdraw.Tree
       _elementsInside = elementsInside;
     }
 
-    public void AddContainer(Indent? indent, Ops ops, int depth)
+    public void AddContainer(Indent indent, Ops ops, int depth)
     {
       Container newContainer;
-      switch (indent)
+      if (indent == Indent.Quote)
       {
-        case Indent.Quote:
-          newContainer = new QuoteContainer(depth, ops);
-          break;
-        case Indent.Bullet:
-          newContainer = new BulletsContainer(depth, ops);
-          break;
-        case Indent.Number:
-          newContainer = new NumbersContainer(depth, ops);
-          break;
-        case Indent.Code:
-          newContainer = new QuoteContainer(depth, ops); // fix this
-          break;
-        default:
-          newContainer = new Container(depth, ops);
-          break;
+        newContainer = new QuoteContainer(depth, ops);
+      }
+      else if (indent == Indent.Bullet)
+      {
+        newContainer = new BulletsContainer(depth, ops);
+      }
+      else if (indent.IsNumber())
+      {
+        newContainer = new NumbersContainer(depth, ops);
+      }
+      else if (indent == Indent.Code)
+      {
+        newContainer = new QuoteContainer(depth, ops); // fix this
+      }
+      else
+      {
+        newContainer = new Container(depth, ops);
       }
 
       _elementsInside.Add(newContainer);

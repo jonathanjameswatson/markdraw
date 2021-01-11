@@ -158,21 +158,21 @@ namespace Markdraw.Tree.Test
             .Insert("B")
             .Insert(new LineInsert(
               new LineFormat(
-                new List<Indent>() { Indent.Number, Indent.Bullet },
+                new List<Indent>() { Indent.Number(2), Indent.Bullet },
                 0
               )
             ))
             .Insert("C")
             .Insert(new LineInsert(
               new LineFormat(
-                new List<Indent>() { Indent.Number, Indent.Bullet, Indent.Quote },
+                new List<Indent>() { Indent.Number(2), Indent.Bullet, Indent.Quote },
                 0
               )
             ))
             .Insert("D")
             .Insert(new LineInsert(
               new LineFormat(
-                new List<Indent>() { Indent.Number, Indent.Bullet },
+                new List<Indent>() { Indent.Number(2), Indent.Bullet },
                 0
               )
             ))
@@ -210,7 +210,7 @@ namespace Markdraw.Tree.Test
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat(
-                new List<Indent>() { Indent.Number, Indent.Bullet, Indent.Quote },
+                new List<Indent>() { Indent.Number(2), Indent.Bullet, Indent.Quote },
                 0
               )
             ))
@@ -239,7 +239,7 @@ namespace Markdraw.Tree.Test
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat(
-                new List<Indent>() { Indent.Number, Indent.Bullet, Indent.Quote },
+                new List<Indent>() { Indent.Number(2), Indent.Bullet, Indent.Quote },
                 0
               )
             ))

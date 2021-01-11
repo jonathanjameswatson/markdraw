@@ -9,7 +9,7 @@ namespace Markdraw.MarkdownToDelta
   public static class LineToDeltaConverter
   {
     private static readonly Regex indentRegex = new Regex(
-      @"^(?<indent>(?<code>\s{4})|(?<quotes>>)|(?<horizontalrule>(?<hrstart>\*|\-)(?:\s{0,3}\k<hrstart>){2}\s*$)|(?<bullet>[\*-](?=\s))|(?<number>\d+.(?=\s)))?(?<whitespace>(?!\s{4})\s{0,3})?(?<text>.*)$",
+      @"^(?<indent>(?<whitespace>\s+)|(?<quotes>>)|(?<horizontalrule>(?<hrstart>\*|\-|_)(?:\s{0,3}\k<hrstart>){2}\s*$)|(?<bullet>[\*\-+](?=\s))|(?<number>\d{1,9}[.)](?=\s)))?(?<text>.*)$",
       RegexOptions.Compiled
     );
     private static readonly Regex headerRegex = new Regex(
@@ -37,15 +37,24 @@ namespace Markdraw.MarkdownToDelta
       string text = line;
       var indentMatch = indentRegex.Match(text);
 
-      bool codeMatch = false;
+      int? codeMatch = null;
 
       while (indentMatch.Groups["indent"].Success)
       {
-        var indentType = Indent.Code;
+        var indentType = Indent.Empty(0);
 
-        if (indentMatch.Groups["code"].Success)
+        if (indentMatch.Groups["whitespace"].Success)
         {
-          codeMatch = true;
+          int length = indentMatch.Groups["whitespace"].Length;
+          if (length % 4 == 0)
+          {
+            indentType = Indent.Code;
+            codeMatch = length;
+          }
+          else
+          {
+            indentType = Indent.Empty(length);
+          }
         }
         else if (indentMatch.Groups["quotes"].Success)
         {
@@ -61,22 +70,25 @@ namespace Markdraw.MarkdownToDelta
         }
         else if (indentMatch.Groups["number"].Success)
         {
-          indentType = Indent.Number;
+          indentType = Indent.Number(indentMatch.Groups["number"].Length);
         }
 
-        lineFormat.Indents.Add(indentType);
+        if (indentType is not null)
+        {
+          lineFormat.Indents.Add(indentType);
+        }
         text = indentMatch.Groups["text"].Value;
 
-        if (codeMatch)
+        if (codeMatch is not null)
         {
-          text = text.Insert(0, indentMatch.Groups["whitespace"].Value);
+          // text = text.Insert(0, String.Concat(Enumerable.Repeat("    ", (int)codeMatch / 4 - 1)));
           break;
         }
 
         indentMatch = indentRegex.Match(text);
       }
 
-      if (!codeMatch)
+      if (codeMatch is null)
       {
         var headerMatch = headerRegex.Match(text);
 

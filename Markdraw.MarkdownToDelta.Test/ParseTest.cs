@@ -53,7 +53,18 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert(new LineInsert())
             .Insert("Italic", TextFormat.ItalicPreset)
             .Insert(" test")
-            .Insert(new LineInsert(new LineFormat(new List<Indent>() { Indent.Number, Indent.Quote }, 0)))
+            .Insert(
+              new LineInsert(
+                new LineFormat(
+                  new List<Indent>() {
+                    Indent.Number(2),
+                    Indent.Empty(1),
+                    Indent.Quote,
+                    Indent.Empty(1)
+                  },
+                  0)
+                )
+              )
         );
     }
   }

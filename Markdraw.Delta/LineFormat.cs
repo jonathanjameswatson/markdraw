@@ -4,14 +4,6 @@ using System.Linq;
 
 namespace Markdraw.Delta
 {
-  public enum Indent
-  {
-    Quote,
-    Bullet,
-    Number,
-    Code
-  }
-
   public class LineFormat : Format
   {
     public List<Indent> Indents;
@@ -23,9 +15,9 @@ namespace Markdraw.Delta
       set { _header = value is null ? null : Math.Clamp((int)value, 0, 6); }
     }
 
-    public static LineFormat QuotePreset = new LineFormat(new List<Indent>() { Indent.Quote }, 0);
-    public static LineFormat BulletPreset = new LineFormat(new List<Indent>() { Indent.Bullet }, 0);
-    public static LineFormat NumberPreset = new LineFormat(new List<Indent>() { Indent.Number }, 0);
+    public static LineFormat QuotePreset = new LineFormat(new List<Indent>() { Indent.Quote, Indent.Empty(1) }, 0);
+    public static LineFormat BulletPreset = new LineFormat(new List<Indent>() { Indent.Bullet, Indent.Empty(1) }, 0);
+    public static LineFormat NumberPreset = new LineFormat(new List<Indent>() { Indent.Number(2), Indent.Empty(1) }, 0);
     public static LineFormat CodePreset = new LineFormat(new List<Indent>() { Indent.Code }, 0);
 
     public LineFormat(List<Indent> indents, int? header)
