@@ -5,8 +5,7 @@ import 'prismjs/plugins/custom-class/prism-custom-class.min.js';
 Prism.plugins.autoloader.languages_path = '/grammars/';
 Prism.plugins.customClass.prefix('prism--');
 
-Prism.highlightAll();
-
-window.manualHighlight = () => {
+window.renderMarkdown = (editor, content) => {
+  editor.innerHTML = content;
   Prism.highlightAll();
 }

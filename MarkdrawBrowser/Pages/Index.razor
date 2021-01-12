@@ -5,12 +5,12 @@
 
 @code {
   private string markdown = "";
-  private MarkupString content = (MarkupString)"<p>Loading...</p>";
+  private string content = "<p>Loading...</p>";
   public string Markdown {
     get => markdown;
     set {
       markdown = value;
-      content = (MarkupString)DeltaTree.Parse(markdown).ToString();
+      content = DeltaTree.Parse(markdown).ToString();
     }
   }
 
@@ -45,9 +45,7 @@
         </div>
 
         <div class="column content-container">
-          <div class="content" contenteditable="">
-            @content
-          </div>
+          <Editor Content="@content"></Editor>
         </div>
       </div>
     </div>
