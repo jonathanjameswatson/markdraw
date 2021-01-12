@@ -1,19 +1,60 @@
 @page "/"
+@using Markdraw.Tree
+@using System.Threading.Tasks;
+@inject HttpClient Http;
 
-<div class="hero is-fullheight-with-navbar">
-  <div class="hero-body">
+@code {
+  private string markdown = "";
+  private MarkupString content = (MarkupString)"<p>Loading...</p>";
+  public string Markdown {
+    get => markdown;
+    set {
+      markdown = value;
+      content = (MarkupString)DeltaTree.Parse(markdown).ToString();
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    var url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
+    Markdown = await Http.GetStringAsync(url);
+  }
+}
+
+<div>
+  <NavBar></NavBar>
+
+  <div class="section">
     <div class="container">
-      <div class="columns">
-        <div class="column is-4 is-offset-1 columns is-vcentered is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-2">This website is still being built</h1>
-            <p class="subtitle is-4">Come back later</p>
-          </div>
+      <div class="field">
+        <label class="label">Markdown</label>
+        <p class="control">
+          <textarea class="textarea" rows="1" placeholder="Input markdown" @bind="Markdown"></textarea>
+        </p>
+      </div>
+      <hr />
+      <div class="columns is-mobile">
+        <div class="column is-narrow format-buttons">
+          <FormatButton icon="format-bold"></FormatButton>
+          <FormatButton icon="format-italic"></FormatButton>
+          <FormatButton icon="code-tags"></FormatButton>
+          <FormatButton icon="link"></FormatButton>
+          <hr />
+          <FormatButton icon="format-quote-close"></FormatButton>
+          <FormatButton icon="format-list-bulleted"></FormatButton>
+          <FormatButton icon="format-list-numbered"></FormatButton>
+          <hr />
+          <FormatButton icon="format-clear"></FormatButton>
+          <hr />
+          <FormatButton icon="image"></FormatButton>
+          <FormatButton icon="minus"></FormatButton>
+          <FormatButton icon="code-not-equal-variant"></FormatButton>
         </div>
-        <div class="column is-4 is-offset-2">
-          <figure class="image is-square">
-            <img src="./icon.png" alt="Logo">
-          </figure>
+
+        <div class="column content-container">
+          <div class="content" contenteditable="">
+            @content
+          </div>
         </div>
       </div>
     </div>
