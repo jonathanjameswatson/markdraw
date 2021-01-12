@@ -6,7 +6,8 @@ namespace Markdraw.Delta
 {
   public class LineFormat : Format
   {
-    public List<Indent> Indents;
+    public List<Indent> Indents { get; set; }
+    public List<Indent> NonEmptyIndents { get => Indents.Where(indent => !indent.IsEmpty()).ToList(); }
 
     private int? _header = 0;
     public int? Header

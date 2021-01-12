@@ -28,7 +28,7 @@ namespace Markdraw.Tree
       {
         if (op is LineInsert lineInsert)
         {
-          var indents = lineInsert.Format.Indents;
+          var indents = lineInsert.Format.NonEmptyIndents;
           int header = lineInsert.Format.Header is null ? 0 : (int)lineInsert.Format.Header;
           int numberOfIndents = indents.Count;
           bool goneForward = numberOfIndents > depth;
