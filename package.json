@@ -6,12 +6,17 @@
   "author": "Jonathan Watson",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-loader": "^8.2.2",
     "browser-sync": "^2.26.13",
     "concurrently": "^5.3.0",
     "cross-env": "^7.0.3",
     "gulp": "^4.0.2",
     "gulp-sass": "^4.1.0",
-    "node-sass": "^5.0.0"
+    "node-sass": "^5.0.0",
+    "webpack": "^5.13.0",
+    "webpack-stream": "^6.1.1"
   },
   "scripts": {
     "watch": "cross-env NODE_ENV='development' yarn gulp watch",
@@ -20,6 +25,7 @@
     "build": "cross-env NODE_ENV='production' yarn gulp build && dotnet publish MarkdrawBrowser/MarkdrawBrowser.csproj -c Release -o release --nologo"
   },
   "dependencies": {
-    "bulma": "^0.9.1"
+    "bulma": "^0.9.1",
+    "prismjs": "^1.23.0"
   }
 }
