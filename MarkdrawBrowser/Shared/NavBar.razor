@@ -15,20 +15,47 @@
 
     <div class="navbar-menu@(active ? " is-active" : "")">
       <div class="navbar-start">
-        <div class="navbar-item">
-          Import Markdown
-        </div>
-        <div class="navbar-item">
-          Export Markdown
-        </div>
-      </div>
-
-      <div class="navbar-end">
         <a class="navbar-item" href="https://github.com/jonathanjameswatson/markdraw">
           GitHub
         </a>
       </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <button class="button" @onclick="Import">
+              Import
+            </button>
+            <button class="button" disabled>
+              Export
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="modal@(modal == ModalOpen.Import ? " is-active" : "")">
+    <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <div class="field">
+            <label class="label">Markdown</label>
+            <p class="control">
+              <textarea class="textarea" placeholder="Input markdown" @bind="temporaryMarkdown"></textarea>
+            </p>
+          </div>
+          <div class="buttons">
+            <button class="button" @onclick="SetMarkdown">
+              Import and close
+            </button>
+            <button class="button" @onclick="Close">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+      <button class="modal-close is-large" aria-label="close" @onclick="Close"></button>
   </div>
 </nav>
 
@@ -38,4 +65,48 @@
   private void ToggleActive() {
     active = !active;
   }
+
+  private enum ModalOpen {
+    Neither,
+    Import,
+    Export
+  }
+
+  private ModalOpen modal = ModalOpen.Neither;
+
+  private void Close() {
+    modal = ModalOpen.Neither;
+  }
+
+  private void Import() {
+    modal = ModalOpen.Import;
+  }
+
+  private void Export() {
+   modal = ModalOpen.Export;
+  }
+
+  private string markdown;
+  private string temporaryMarkdown;
+
+  [Parameter]
+  public string ImportMarkdown
+  {
+    get => markdown;
+    set
+    {
+      if (markdown == value) return;
+      temporaryMarkdown = value;
+      markdown = value;
+      ImportMarkdownChanged.InvokeAsync(value);
+    }
+  }
+
+  public void SetMarkdown() {
+    ImportMarkdown = temporaryMarkdown;
+    Close();
+  }
+
+  [Parameter]
+  public EventCallback<string> ImportMarkdownChanged { get; set; }
 }

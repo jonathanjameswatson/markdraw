@@ -22,17 +22,10 @@
 }
 
 <div>
-  <NavBar></NavBar>
+  <NavBar @bind-ImportMarkdown="Markdown"></NavBar>
 
   <div class="section">
     <div class="container">
-      <div class="field">
-        <label class="label">Markdown</label>
-        <p class="control">
-          <textarea class="textarea" rows="1" placeholder="Input markdown" @bind="Markdown"></textarea>
-        </p>
-      </div>
-      <hr />
       <div class="columns is-mobile">
         <div class="column is-narrow format-buttons">
           <FormatButton icon="format-bold"></FormatButton>
