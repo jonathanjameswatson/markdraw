@@ -6,36 +6,7 @@ const cursor = {
   end: 0
 }
 
-const setCursorPosition = (contentDiv) => {
-  const selection = rangy.getSelection();
-  const type = selection.nativeSelection.type.toString();
-  if (selection.rangeCount == 0) {
-    return;
-  }
-  if (type == 'None') {
-    return;
-  }
-  if (!contentDiv.contains(selection.getRangeAt(0).commonAncestorContainer)) {
-    return;
-  }
-
-  let node;
-  let offset;
-  const caret = type == 'Caret';
-
-  if (caret) {
-    node = selection.anchorNode;
-    offset = selection.anchorOffset;
-  } else {
-    if (!selection.isBackwards()) {
-      node = selection.anchorNode;
-      offset = selection.anchorOffset;
-    } else {
-      node = selection.focusNode;
-      offset = selection.focusOffset;
-    }
-  }
-
+const getI = (node, offset) => {
   let parentNode = node.nodeType == 3 ? node.parentNode : node;
 
   while (parentNode?.getAttribute("i") == null) {
@@ -49,7 +20,42 @@ const setCursorPosition = (contentDiv) => {
     totalOffset = offsetRange.toString().length;
   }
 
-  cursor.start = parseInt(parentNode.getAttribute("i"), 10) + totalOffset;
+  return parseInt(parentNode.getAttribute("i"), 10) + totalOffset;
+}
+
+const setCursorPosition = (contentDiv) => {
+  const selection = rangy.getSelection();
+  const type = selection.nativeSelection.type.toString();
+
+  if (selection.rangeCount == 0) {
+    return;
+  }
+
+  if (type == 'None') {
+    return;
+  }
+
+  if (!contentDiv.contains(selection.getRangeAt(0).commonAncestorContainer)) {
+    return;
+  }
+
+  try {
+    if (type == 'Caret') {
+      const i = getI(selection.anchorNode, selection.anchorOffset)
+      cursor.start = i;
+      cursor.end = i;
+    } else {
+      if (!selection.isBackwards()) {
+        cursor.start = getI(selection.anchorNode, selection.anchorOffset);
+        cursor.end = getI(selection.focusNode, selection.focusOffset);
+      } else {
+        cursor.start = getI(selection.focusNode, selection.focusOffset);
+        cursor.end = getI(selection.anchorNode, selection.anchorOffset);
+      }
+    }
+  } catch {
+    return;
+  }
 
   console.log(cursor);
 }
