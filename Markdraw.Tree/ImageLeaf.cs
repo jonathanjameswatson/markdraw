@@ -7,7 +7,9 @@ namespace Markdraw.Tree
     private ImageInsert _correspondingInsert;
     public override ImageInsert CorrespondingInsert { get => _correspondingInsert; }
 
-    public ImageLeaf(ImageInsert imageInsert)
+    public ImageLeaf(ImageInsert imageInsert) : this(imageInsert, null) { }
+
+    public ImageLeaf(ImageInsert imageInsert, DeltaTree deltaTree) : base(deltaTree)
     {
       _correspondingInsert = imageInsert;
     }

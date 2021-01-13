@@ -16,7 +16,8 @@ namespace Markdraw.Tree
     private List<TreeNode> _elementsInside;
     public List<TreeNode> ElementsInside { get => _elementsInside; }
 
-    public Container(int depth, Ops ops)
+    public Container(int depth, Ops ops) : this(depth, ops, null) { }
+    public Container(int depth, Ops ops, DeltaTree deltaTree) : base(deltaTree)
     {
       _elementsInside = new List<TreeNode>();
       var opBuffer = new Ops();
@@ -97,7 +98,9 @@ namespace Markdraw.Tree
       }
     }
 
-    public Container(List<TreeNode> elementsInside)
+    public Container(List<TreeNode> elementsInside) : this(elementsInside, null) { }
+
+    public Container(List<TreeNode> elementsInside, DeltaTree deltaTree) : base(deltaTree)
     {
       _elementsInside = elementsInside;
     }

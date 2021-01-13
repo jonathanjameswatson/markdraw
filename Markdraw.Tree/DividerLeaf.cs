@@ -7,7 +7,9 @@ namespace Markdraw.Tree
     private DividerInsert _correspondingInsert;
     public override DividerInsert CorrespondingInsert { get => _correspondingInsert; }
 
-    public DividerLeaf(DividerInsert dividerInsert)
+    public DividerLeaf(DividerInsert dividerInsert) : this(dividerInsert, null) { }
+
+    public DividerLeaf(DividerInsert dividerInsert, DeltaTree deltaTree) : base(deltaTree)
     {
       _correspondingInsert = dividerInsert;
     }

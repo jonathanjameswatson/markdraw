@@ -6,6 +6,8 @@ namespace Markdraw.Tree
   {
     public abstract Insert CorrespondingInsert { get; }
 
+    protected Leaf(DeltaTree deltaTree) : base(deltaTree) { }
+
     public override bool Equals(object obj)
     {
       return obj is Leaf x && x.CorrespondingInsert.Equals(this.CorrespondingInsert);

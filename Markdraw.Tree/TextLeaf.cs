@@ -14,7 +14,9 @@ namespace Markdraw.Tree
     public List<TextInsert> CorrespondingInserts { get; set; }
     public string Tag { get; set; }
 
-    public TextLeaf(List<TextInsert> correspondingInserts, int header)
+    public TextLeaf(List<TextInsert> correspondingInserts, int header) : this(correspondingInserts, header, null) { }
+
+    public TextLeaf(List<TextInsert> correspondingInserts, int header, DeltaTree deltaTree) : base(deltaTree)
     {
       CorrespondingInserts = correspondingInserts;
       Tag = header == 0 ? "p" : $"h{header}";

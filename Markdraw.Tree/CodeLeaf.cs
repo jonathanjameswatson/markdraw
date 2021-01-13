@@ -6,7 +6,9 @@ namespace Markdraw.Tree
   {
     public override CodeInsert CorrespondingInsert { get; }
 
-    public CodeLeaf(CodeInsert codeInsert)
+    public CodeLeaf(CodeInsert codeInsert) : this(codeInsert, null) { }
+
+    public CodeLeaf(CodeInsert codeInsert, DeltaTree deltaTree) : base(deltaTree)
     {
       CorrespondingInsert = codeInsert;
     }

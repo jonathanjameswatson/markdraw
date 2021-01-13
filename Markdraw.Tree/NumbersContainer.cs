@@ -13,6 +13,10 @@ namespace Markdraw.Tree
 
     public NumbersContainer(int depth, Ops ops) : base(depth, ops) { }
 
+    public NumbersContainer(int depth, Ops ops, DeltaTree deltaTree) : base(depth, ops, deltaTree) { }
+
     public NumbersContainer(List<TreeNode> elementsInside) : base(elementsInside) { }
+
+    public NumbersContainer(List<TreeNode> elementsInside, DeltaTree deltaTree) : base(elementsInside, deltaTree) { }
   }
 }
