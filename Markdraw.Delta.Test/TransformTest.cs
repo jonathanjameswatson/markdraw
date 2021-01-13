@@ -63,15 +63,16 @@ namespace Markdraw.Delta.Test
       new Ops()
       .Insert("AA", (TextFormat)TextFormat.BoldPreset.Clone())
       .Insert("AA", (TextFormat)TextFormat.ItalicPreset.Clone())
-      .Transform(new Ops().Retain(1).Retain(2, TextFormat.BoldPreset))
+      .Transform(new Ops().Retain(1).Retain(2, turnBold))
       .Is(new Ops()
-        .Insert("AAA", TextFormat.BoldPreset)
+        .Insert("AA", TextFormat.BoldPreset)
+        .Insert("A", new TextFormat(true, true, ""))
         .Insert("A", TextFormat.ItalicPreset)
       );
 
       new Ops()
       .Insert("AAA")
-      .Transform(new Ops().Retain(1).Retain(1, TextFormat.BoldPreset))
+      .Transform(new Ops().Retain(1).Retain(1, turnBold))
       .Is(new Ops()
         .Insert("A")
         .Insert("A", TextFormat.BoldPreset)
@@ -146,6 +147,23 @@ namespace Markdraw.Delta.Test
             .Insert("A", new TextFormat(false, false, "C"))
             .Insert("D")
             .Insert("B", new TextFormat(false, false, "C")));
+    }
+
+    [Fact]
+    public void Retain_FormatsTextWithNewLine()
+    {
+      var turnBold = new TextFormat(true, null, null);
+
+      new Ops()
+      .Insert("AAA")
+      .Insert(new LineInsert())
+      .Transform(new Ops().Retain(1).Retain(1, turnBold))
+      .Is(new Ops()
+        .Insert("A")
+        .Insert("A", TextFormat.BoldPreset)
+        .Insert("A")
+        .Insert(new LineInsert())
+      );
     }
   }
 }

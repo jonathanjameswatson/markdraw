@@ -168,37 +168,34 @@ namespace Markdraw.Delta
               opCharacterIndex = (opCharacterIndex + advanced) % nextInsert.Length;
               length -= advanced;
 
-              var toFormat = nextInsert;
-
               if (opCharacterIndex != 0)
               {
                 if (shouldFormat)
                 {
-                  var textInsert = toFormat as TextInsert;
+                  var textInsert = nextInsert as TextInsert;
                   var after = textInsert.SplitAt(opCharacterIndex);
                   opCharacterIndex = 0;
                   InsertOp(opIndex + 1, after);
-                  toFormat = textInsert;
-                }
-                else
-                {
-                  opIndex -= 1;
                 }
               }
 
-              opIndex += 1;
-
               if (shouldFormat)
               {
-                toFormat.SetFormat(format);
-                if (opIndex >= 2)
+                nextInsert.SetFormat(format);
+
+                if (opIndex >= 1)
                 {
-                  int? beforeLength = MergeBack(opIndex - 1);
+                  int? beforeLength = MergeBack(opIndex);
                   if (beforeLength is not null)
                   {
                     opIndex -= 1;
                   }
                 }
+              }
+
+              if (opCharacterIndex == 0)
+              {
+                opIndex += 1;
               }
             }
             else

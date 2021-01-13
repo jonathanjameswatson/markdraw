@@ -3,12 +3,14 @@
 @using Markdraw.Tree;
 @using System.Threading.Tasks;
 @inject HttpClient Http;
+@inject IJSRuntime JS;
 
 @code {
   private string markdown = "";
   private string content = "<p>Loading...</p>";
   private DeltaTree deltaTree;
   private int x = 1;
+  private Editor editor;
 
   public string Markdown {
     get => markdown;
@@ -30,6 +32,35 @@
     var url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
     Markdown = await Http.GetStringAsync(url);
   }
+
+  public class Cursor
+  {
+    public int start { get; set; }
+    public int end { get; set; }
+  }
+
+  public async Task<Cursor> GetCursor() {
+    return await JS.InvokeAsync<Cursor>("getCursor");
+  }
+
+  public async Task Bold()
+  {
+    var cursorPos = await GetCursor();
+    var transformation = new Ops();
+
+    Console.WriteLine($"start: {cursorPos.start}, end: {cursorPos.end}");
+
+    if (cursorPos.start > 0) {
+      transformation.Retain(cursorPos.start);
+    }
+
+    if (cursorPos.end - cursorPos.start != 0) {
+      transformation.Retain(cursorPos.end - cursorPos.start, new TextFormat(true, null, null));
+    }
+
+    deltaTree.Delta.Transform(transformation);
+    content = deltaTree.Root.ToString();
+  }
 }
 
 <div>
@@ -50,24 +81,24 @@
       <br />
       <div class="columns is-mobile">
         <div class="column is-narrow format-buttons">
-          <FormatButton icon="format-bold"></FormatButton>
-          <FormatButton icon="format-italic"></FormatButton>
-          <FormatButton icon="code-tags"></FormatButton>
-          <FormatButton icon="link"></FormatButton>
+          <FormatButton icon="format-bold" @onclick="Bold"></FormatButton>
+          <FormatButton icon="format-italic" Disabled></FormatButton>
+          <FormatButton icon="code-tags" Disabled></FormatButton>
+          <FormatButton icon="link" Disabled></FormatButton>
           <hr />
-          <FormatButton icon="format-quote-close"></FormatButton>
-          <FormatButton icon="format-list-bulleted"></FormatButton>
-          <FormatButton icon="format-list-numbered"></FormatButton>
+          <FormatButton icon="format-quote-close" Disabled></FormatButton>
+          <FormatButton icon="format-list-bulleted" Disabled></FormatButton>
+          <FormatButton icon="format-list-numbered" Disabled></FormatButton>
           <hr />
-          <FormatButton icon="format-clear"></FormatButton>
+          <FormatButton icon="format-clear" Disabled></FormatButton>
           <hr />
-          <FormatButton icon="image"></FormatButton>
-          <FormatButton icon="minus"></FormatButton>
-          <FormatButton icon="code-not-equal-variant"></FormatButton>
+          <FormatButton icon="image" Disabled></FormatButton>
+          <FormatButton icon="minus" Disabled></FormatButton>
+          <FormatButton icon="code-not-equal-variant" Disabled></FormatButton>
         </div>
 
         <div class="column content-container">
-          <Editor Content="@content"></Editor>
+          <Editor Content="@content" @ref="editor"></Editor>
         </div>
       </div>
     </div>

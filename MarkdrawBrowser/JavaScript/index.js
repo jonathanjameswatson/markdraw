@@ -1,10 +1,11 @@
 import rangy from 'rangy';
+
 import runPrism from './prism';
 
 const cursor = {
   start: 0,
   end: 0
-}
+};
 
 const getI = (node, offset) => {
   let parentNode = node.nodeType == 3 ? node.parentNode : node;
@@ -41,7 +42,7 @@ const setCursorPosition = (contentDiv) => {
 
   try {
     if (type == 'Caret') {
-      const i = getI(selection.anchorNode, selection.anchorOffset)
+      const i = getI(selection.anchorNode, selection.anchorOffset);
       cursor.start = i;
       cursor.end = i;
     } else {
@@ -56,15 +57,18 @@ const setCursorPosition = (contentDiv) => {
   } catch {
     return;
   }
-
-  console.log(cursor);
 }
 
 window.setUp = (editor) => {
-  editor.addEventListener("click", () => setCursorPosition(editor))
+  editor.addEventListener("click", () => setCursorPosition(editor));
+  editor.addEventListener("keydown", () => setCursorPosition(editor));
+  editor.addEventListener("focus", () => setCursorPosition(editor));
 }
 
 window.renderMarkdown = (editor, content) => {
   editor.innerHTML = content;
-  runPrism()
+  console.log(content);
+  runPrism();
 }
+
+window.getCursor = () => cursor;
