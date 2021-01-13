@@ -11,9 +11,11 @@
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    // if (firstRender)
-    // {
-      await JS.InvokeVoidAsync("renderMarkdown", editor, Content);
-    // }
+    if (firstRender)
+    {
+      await JS.InvokeVoidAsync("setUp", editor);
+    }
+
+    await JS.InvokeVoidAsync("renderMarkdown", editor, Content);
   }
 }

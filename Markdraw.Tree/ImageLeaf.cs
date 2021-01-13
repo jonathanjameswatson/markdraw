@@ -9,7 +9,7 @@ namespace Markdraw.Tree
 
     public ImageLeaf(ImageInsert imageInsert) : this(imageInsert, null, 0) { }
 
-    public ImageLeaf(ImageInsert imageInsert, DeltaTree deltaTree, int i) : base(deltaTree, 0)
+    public ImageLeaf(ImageInsert imageInsert, DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
       _correspondingInsert = imageInsert;
     }
