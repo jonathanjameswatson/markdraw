@@ -1,4 +1,5 @@
 using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 using Markdraw.Delta;
 
@@ -11,12 +12,21 @@ namespace Markdraw.Tree
       get => CorrespondingInserts?[0];
     }
 
-    public List<TextInsert> CorrespondingInserts { get; set; }
+    private List<TextInsert> _correspondingInserts;
+    public List<TextInsert> CorrespondingInserts
+    {
+      get => _correspondingInserts;
+      set
+      {
+        _length = value.Aggregate(0, (acc, textInsert) => acc + textInsert.Length);
+        _correspondingInserts = value;
+      }
+    }
     public string Tag { get; set; }
 
-    public TextLeaf(List<TextInsert> correspondingInserts, int header) : this(correspondingInserts, header, null) { }
+    public TextLeaf(List<TextInsert> correspondingInserts, int header) : this(correspondingInserts, header, null, 0) { }
 
-    public TextLeaf(List<TextInsert> correspondingInserts, int header, DeltaTree deltaTree) : base(deltaTree)
+    public TextLeaf(List<TextInsert> correspondingInserts, int header, DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
       CorrespondingInserts = correspondingInserts;
       Tag = header == 0 ? "p" : $"h{header}";
@@ -142,6 +152,10 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
+      if (ParentTree is not null && ParentTree.HasI)
+      {
+        return $@"<{Tag} i=""{I}"">{AddLinks(CorrespondingInserts)}</{Tag}>";
+      }
       return $@"<{Tag}>{AddLinks(CorrespondingInserts)}</{Tag}>";
     }
   }

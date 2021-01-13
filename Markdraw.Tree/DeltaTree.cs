@@ -8,19 +8,35 @@ namespace Markdraw.Tree
 {
   public class DeltaTree
   {
-    public Ops Delta { get; set; }
-    public Container Root { get; set; }
+    private Ops _delta;
+    private Container _root;
+    public Ops Delta
+    {
+      get => _delta;
+      set
+      {
+        _delta = value;
+        _root = new Container(0, Delta, this, 0);
+      }
+    }
+    public Container Root { get => _root; }
+    public bool HasI { get; set; }
 
     public DeltaTree(string markdown = "")
     {
       Delta = MarkdownToDeltaConverter.Parse(markdown);
-      Root = new Container(0, Delta, this);
+      HasI = true;
     }
 
     public DeltaTree(Ops ops)
     {
       Delta = ops;
-      Root = new Container(0, Delta, this);
+      HasI = true;
+    }
+
+    public void SetWithMarkdown(string markdown)
+    {
+      Delta = MarkdownToDeltaConverter.Parse(markdown);
     }
 
     public static Container Parse(string markdown)

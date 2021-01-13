@@ -7,23 +7,27 @@ namespace Markdraw.Tree
 {
   public class Container : TreeNode, IEnumerable<TreeNode>
   {
-    public virtual string OpeningTag { get => @"<div>"; }
-    public virtual string InsideOpeningTag { get => @"<p>"; }
-    public virtual string InsideClosingTag { get => @"</p>"; }
-    public virtual string ClosingTag { get => @"</div>"; }
+    public virtual string OpeningTag
+    {
+      get => ParentTree is not null && ParentTree.HasI ? $"<div i={I}>" : "<div>";
+    }
+    public virtual string InsideOpeningTag { get => "<p>"; }
+    public virtual string InsideClosingTag { get => "</p>"; }
+    public virtual string ClosingTag { get => "</div>"; }
     public virtual bool WrapAllInside { get => false; }
 
     private List<TreeNode> _elementsInside;
     public List<TreeNode> ElementsInside { get => _elementsInside; }
 
-    public Container(int depth, Ops ops) : this(depth, ops, null) { }
-    public Container(int depth, Ops ops, DeltaTree deltaTree) : base(deltaTree)
+    public Container(int depth, Ops ops) : this(depth, ops, null, 0) { }
+    public Container(int depth, Ops ops, DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
       _elementsInside = new List<TreeNode>();
       var opBuffer = new Ops();
       var lineOpBuffer = new Ops();
       bool indented = false;
       Indent lastIndent = null;
+      int currentI = i;
 
       foreach (var op in ops)
       {
@@ -39,12 +43,14 @@ namespace Markdraw.Tree
           {
             if (goneBack || indents[depth] != lastIndent)
             {
-              AddContainer(lastIndent, opBuffer, depth + 1);
+              currentI = AddContainer(lastIndent, opBuffer, depth + 1, currentI);
+              currentI += 1;
 
               if (goneBack)
               {
                 indented = false;
-                AddLeaves(lineOpBuffer, header);
+                currentI = AddLeaves(lineOpBuffer, header, currentI);
+                currentI += 1;
               }
               else
               {
@@ -71,7 +77,8 @@ namespace Markdraw.Tree
             }
             else
             {
-              AddLeaves(lineOpBuffer, header);
+              currentI = AddLeaves(lineOpBuffer, header, currentI);
+              currentI += 1;
             }
           }
 
@@ -89,52 +96,69 @@ namespace Markdraw.Tree
 
       if (opBuffer.Length != 0 && indented)
       {
-        AddContainer(lastIndent, opBuffer, depth + 1);
+        currentI = AddContainer(lastIndent, opBuffer, depth + 1, currentI);
+        currentI += 1;
       }
 
       if (lineOpBuffer.Length != 0)
       {
-        AddLeaves(lineOpBuffer, 0);
+        currentI = AddLeaves(lineOpBuffer, 0, currentI);
+        currentI += 1;
+      }
+
+      if (ElementsInside.Count > 0)
+      {
+        var lastElement = ElementsInside[ElementsInside.Count - 1];
+
+        _length = lastElement.I + lastElement.Length - i;
+      }
+      else
+      {
+        _length = 0;
       }
     }
 
-    public Container(List<TreeNode> elementsInside) : this(elementsInside, null) { }
+    public Container(List<TreeNode> elementsInside) : this(elementsInside, null, 0) { }
 
-    public Container(List<TreeNode> elementsInside, DeltaTree deltaTree) : base(deltaTree)
+    public Container(List<TreeNode> elementsInside, DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
       _elementsInside = elementsInside;
     }
 
-    public void AddContainer(Indent indent, Ops ops, int depth)
+    public int AddContainer(Indent indent, Ops ops, int depth, int start)
     {
       Container newContainer;
       if (indent == Indent.Quote)
       {
-        newContainer = new QuoteContainer(depth, ops);
+        newContainer = new QuoteContainer(depth, ops, ParentTree, start);
       }
       else if (indent == Indent.Bullet)
       {
-        newContainer = new BulletsContainer(depth, ops);
+        newContainer = new BulletsContainer(depth, ops, ParentTree, start);
       }
       else if (indent.IsNumber())
       {
-        newContainer = new NumbersContainer(depth, ops);
+        newContainer = new NumbersContainer(depth, ops, ParentTree, start);
       }
       else if (indent == Indent.Code)
       {
-        newContainer = new QuoteContainer(depth, ops); // fix this
+        newContainer = new QuoteContainer(depth, ops, ParentTree, start); // fix this
       }
       else
       {
-        newContainer = new Container(depth, ops);
+        newContainer = new Container(depth, ops, ParentTree, start);
       }
 
       _elementsInside.Add(newContainer);
+
+      return start + newContainer.Length;
     }
 
-    public void AddLeaves(Ops ops, int header)
+    public int AddLeaves(Ops ops, int header, int start)
     {
       var textBuffer = new List<TextInsert>();
+      int i = start;
+
       foreach (var op in ops)
       {
         if (op is TextInsert textInsert)
@@ -145,29 +169,37 @@ namespace Markdraw.Tree
         {
           if (textBuffer.Count != 0)
           {
-            _elementsInside.Add(new TextLeaf(textBuffer, header));
+            var textLeaf = new TextLeaf(textBuffer, header, ParentTree, i);
+            _elementsInside.Add(textLeaf);
             textBuffer = new List<TextInsert>();
+            i += textLeaf.Length;
           }
 
           if (op is DividerInsert dividerInsert)
           {
-            _elementsInside.Add(new DividerLeaf(dividerInsert));
+            _elementsInside.Add(new DividerLeaf(dividerInsert, ParentTree, i));
           }
           else if (op is ImageInsert imageInsert)
           {
-            _elementsInside.Add(new ImageLeaf(imageInsert));
+            _elementsInside.Add(new ImageLeaf(imageInsert, ParentTree, i));
           }
           else if (op is CodeInsert codeInsert)
           {
-            _elementsInside.Add(new CodeLeaf(codeInsert));
+            _elementsInside.Add(new CodeLeaf(codeInsert, ParentTree, i));
           }
+
+          i += 1;
         }
       }
 
       if (textBuffer.Count != 0)
       {
-        _elementsInside.Add(new TextLeaf(textBuffer, header));
+        var textLeaf = new TextLeaf(textBuffer, header, ParentTree, i);
+        _elementsInside.Add(textLeaf);
+        i += textLeaf.Length;
       }
+
+      return i;
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

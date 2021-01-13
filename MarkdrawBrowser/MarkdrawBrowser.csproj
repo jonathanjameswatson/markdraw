@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Markdraw.Tree\Markdraw.Tree.csproj" />
+    <ProjectReference Include="..\Markdraw.Delta\Markdraw.Delta.csproj" />
   </ItemGroup>
 
 </Project>
