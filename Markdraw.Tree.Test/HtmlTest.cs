@@ -151,13 +151,13 @@ namespace Markdraw.Tree.Test
         new CodeLeaf(new CodeInsert("A", "B"))
       })
         .ToString()
-        .Is(@"<div><pre><code class=""language-B"">A</code></pre></div>");
+        .Is(@"<div><pre class=""language-B"" contenteditable=""false""><code class=""language-B"">A</code></pre></div>");
 
       new Container(new List<TreeNode>() {
         new CodeLeaf(new CodeInsert("A", ""))
       })
         .ToString()
-        .Is(@"<div><pre><code>A</code></pre></div>");
+        .Is(@"<div><pre class=""language-none"" contenteditable=""false""><code class=""language-none"">A</code></pre></div>");
     }
 
     [Fact]
@@ -210,6 +210,20 @@ namespace Markdraw.Tree.Test
       })
         .ToString()
         .Is(@"<div><h6>A</h6></div>");
+    }
+
+    [Fact]
+    public void DoubleLinks_AreConvertedToHtml()
+    {
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A"),
+          new TextInsert("B", new TextFormat(false, false, "C")),
+          new TextInsert("D")
+        }, 0)
+      })
+        .ToString()
+        .Is(@"<div><p>A<a href=""C"">B</a>D</p></div>");
     }
   }
 }

@@ -132,6 +132,7 @@ namespace Markdraw.Tree
         else if (openLink != "" && link == "")
         {
           stringBuilder.Append($@"{AddItalics(buffer)}</a>");
+          openLink = "";
           buffer = new List<TextInsert>();
         }
 

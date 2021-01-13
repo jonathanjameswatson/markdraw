@@ -482,6 +482,18 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert("D")
             .Insert(new LineInsert())
         );
+
+      LineToDeltaConverter
+        .Parse("A[B](C)D[E](F)G")
+        .Is(
+          new Ops()
+            .Insert("A")
+            .Insert("B", new TextFormat(false, false, "C"))
+            .Insert("D")
+            .Insert("E", new TextFormat(false, false, "F"))
+            .Insert("G")
+            .Insert(new LineInsert())
+        );
     }
 
     [Fact]

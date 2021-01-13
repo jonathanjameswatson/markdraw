@@ -137,6 +137,15 @@ namespace Markdraw.Delta.Test
         .Insert("AA")
         .Transform(new Ops().Retain(1).Insert("A", TextFormat.BoldPreset))
         .Is(new Ops().Insert("A").Insert("A", TextFormat.BoldPreset).Insert("A"));
+
+      new Ops()
+        .Insert("AB", new TextFormat(false, false, "C"))
+        .Transform(new Ops().Retain(1).Insert("D"))
+        .Is(
+          new Ops()
+            .Insert("A", new TextFormat(false, false, "C"))
+            .Insert("D")
+            .Insert("B", new TextFormat(false, false, "C")));
     }
   }
 }
