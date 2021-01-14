@@ -39,6 +39,12 @@ namespace Markdraw.Delta
       Header = other.Header is null ? Header : other.Header;
     }
 
+    public void Modify(ModifyingLineFormat other)
+    {
+      other.IndentsFunction(Indents);
+      Header = other.HeaderFunction((int)Header);
+    }
+
     public override bool Equals(object obj)
     {
       return (obj is LineFormat lineFormat

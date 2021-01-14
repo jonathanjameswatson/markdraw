@@ -18,6 +18,10 @@ namespace Markdraw.Delta
       {
         _format.Merge(lineFormat);
       }
+      else if (format is ModifyingLineFormat modifyingLineFormat)
+      {
+        _format.Modify(modifyingLineFormat);
+      }
     }
 
     public override bool Equals(object obj)

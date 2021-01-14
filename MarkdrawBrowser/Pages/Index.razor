@@ -2,6 +2,7 @@
 @using Markdraw.Delta;
 @using Markdraw.Tree;
 @using System.Threading.Tasks;
+@using System.Collections.Generic;
 @inject HttpClient Http;
 @inject IJSRuntime JS;
 
@@ -12,16 +13,19 @@
   private int x = 1;
   private Editor editor;
 
-  public string Markdown {
+  public string Markdown
+  {
     get => markdown;
-    set {
+    set
+    {
       markdown = value;
       deltaTree.SetWithMarkdown(markdown);
       content = deltaTree.Root.ToString();
     }
   }
 
-  public void InsertLetter() {
+  public void InsertLetter()
+  {
     deltaTree.Delta = deltaTree.Delta.Transform(new Ops().Retain(x).Insert("COOL "));
     content = deltaTree.Root.ToString();
   }
@@ -39,27 +43,93 @@
     public int end { get; set; }
   }
 
-  public async Task<Cursor> GetCursor() {
+  public async Task<Cursor> GetCursor()
+  {
     return await JS.InvokeAsync<Cursor>("getCursor");
   }
 
-  public async Task Bold()
+  public async Task SetFormat(Format format)
   {
     var cursorPos = await GetCursor();
     var transformation = new Ops();
 
-    Console.WriteLine($"start: {cursorPos.start}, end: {cursorPos.end}");
-
-    if (cursorPos.start > 0) {
+    if (cursorPos.start > 0)
+    {
       transformation.Retain(cursorPos.start);
     }
 
-    if (cursorPos.end - cursorPos.start != 0) {
-      transformation.Retain(cursorPos.end - cursorPos.start, new TextFormat(true, null, null));
+    if (cursorPos.end - cursorPos.start != 0)
+    {
+      transformation.Retain(cursorPos.end - cursorPos.start, format);
     }
 
     deltaTree.Delta = deltaTree.Delta.Transform(transformation);
     content = deltaTree.Root.ToString();
+  }
+
+  public async Task Bold()
+  {
+    await SetFormat(new TextFormat(true, null, null));
+  }
+
+  public async Task Italic()
+  {
+    await SetFormat(new TextFormat(null, true, null));
+  }
+
+  public async Task Link()
+  {
+    await SetFormat(new TextFormat(null, null, null));
+  }
+
+  public async Task Quote()
+  {
+    await SetFormat(new ModifyingLineFormat(list => list.Insert(0, Indent.Quote), i => i));
+  }
+
+  public async Task Bullet()
+  {
+    await SetFormat(new ModifyingLineFormat(list => list.Insert(0, Indent.Bullet), i => i));
+  }
+
+  public async Task Number()
+  {
+    await SetFormat(new ModifyingLineFormat(list => list.Insert(0, Indent.Number(2)), i => i));
+  }
+
+  public async Task Clear()
+  {
+    await SetFormat(new TextFormat(false, false, ""));
+  }
+
+  public async Task ClearLine()
+  {
+    await SetFormat(new ModifyingLineFormat(list => list.Clear(), i => i));
+  }
+
+  public async Task HeaderUp()
+  {
+    await SetFormat(new ModifyingLineFormat(list => { }, i => (i + 6) % 7));
+  }
+
+  public async Task HeaderDown()
+  {
+    await SetFormat(new ModifyingLineFormat(list => { }, i => (i + 1) % 7));
+  }
+
+  public async Task Image()
+  {
+
+  }
+
+  public async Task Divider()
+  {
+
+  }
+
+  public async Task Code()
+  {
+
   }
 }
 
@@ -81,15 +151,19 @@
       <div class="columns is-mobile">
         <div class="column is-narrow format-buttons">
           <FormatButton icon="format-bold" @onclick="Bold"></FormatButton>
-          <FormatButton icon="format-italic" Disabled></FormatButton>
-          <FormatButton icon="code-tags" Disabled></FormatButton>
+          <FormatButton icon="format-italic" @onclick="Italic"></FormatButton>
+          <!--<FormatButton icon="code-tags" Disabled></FormatButton>-->
           <FormatButton icon="link" Disabled></FormatButton>
           <hr />
-          <FormatButton icon="format-quote-close" Disabled></FormatButton>
-          <FormatButton icon="format-list-bulleted" Disabled></FormatButton>
-          <FormatButton icon="format-list-numbered" Disabled></FormatButton>
+          <FormatButton icon="format-quote-close" @onclick="Quote"></FormatButton>
+          <FormatButton icon="format-list-bulleted" @onclick="Bullet"></FormatButton>
+          <FormatButton icon="format-list-numbered" @onclick="Number"></FormatButton>
           <hr />
-          <FormatButton icon="format-clear" Disabled></FormatButton>
+          <FormatButton icon="format-clear" @onclick="Clear"></FormatButton>
+          <FormatButton icon="format-horizontal-align-left" @onclick="ClearLine"></FormatButton>
+          <hr />
+          <FormatButton icon="format-font-size-increase" @onclick="HeaderUp"></FormatButton>
+          <FormatButton icon="format-font-size-decrease" @onclick="HeaderDown"></FormatButton>
           <hr />
           <FormatButton icon="image" Disabled></FormatButton>
           <FormatButton icon="minus" Disabled></FormatButton>
