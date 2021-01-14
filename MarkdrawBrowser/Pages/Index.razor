@@ -58,7 +58,7 @@
       transformation.Retain(cursorPos.end - cursorPos.start, new TextFormat(true, null, null));
     }
 
-    deltaTree.Delta.Transform(transformation);
+    deltaTree.Delta = deltaTree.Delta.Transform(transformation);
     content = deltaTree.Root.ToString();
   }
 }
@@ -76,7 +76,6 @@
           <button class="button is-danger" @onclick="InsertLetter">Test button</button>
         </p>
       </div>
-      <br />
       <br />
       <br />
       <div class="columns is-mobile">
