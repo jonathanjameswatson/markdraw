@@ -41,6 +41,7 @@
   {
     public int start { get; set; }
     public int end { get; set; }
+    public int nextLine { get; set; }
   }
 
   public async Task<Cursor> GetCursor()
@@ -58,9 +59,11 @@
       transformation.Retain(cursorPos.start);
     }
 
-    if (cursorPos.end - cursorPos.start != 0)
+    int end = format is ModifyingLineFormat || format is LineFormat ? cursorPos.nextLine : cursorPos.end;
+
+    if (end - cursorPos.start != 0)
     {
-      transformation.Retain(cursorPos.end - cursorPos.start, format);
+      transformation.Retain(end - cursorPos.start, format);
     }
 
     deltaTree.Delta = deltaTree.Delta.Transform(transformation);
@@ -109,12 +112,12 @@
 
   public async Task HeaderUp()
   {
-    await SetFormat(new ModifyingLineFormat(list => { }, i => (i + 6) % 7));
+    await SetFormat(new ModifyingLineFormat(list => { }, i => Math.Max((i + 6) % 7, 1)));
   }
 
   public async Task HeaderDown()
   {
-    await SetFormat(new ModifyingLineFormat(list => { }, i => (i + 1) % 7));
+    await SetFormat(new ModifyingLineFormat(list => { }, i => (i == 0 ? i : i + 1) % 7));
   }
 
   public async Task Image()

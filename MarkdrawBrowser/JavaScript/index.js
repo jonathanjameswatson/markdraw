@@ -4,7 +4,8 @@ import runPrism from './prism';
 
 const cursor = {
   start: 0,
-  end: 0
+  end: 0,
+  nextLine: 0,
 };
 
 const getI = (node, offset) => {
@@ -21,7 +22,7 @@ const getI = (node, offset) => {
     totalOffset = offsetRange.toString().length;
   }
 
-  return parseInt(parentNode.getAttribute("i"), 10) + totalOffset;
+  return [parentNode, parseInt(parentNode.getAttribute("i"), 10) + totalOffset];
 }
 
 const setCursorPosition = (contentDiv) => {
@@ -40,20 +41,35 @@ const setCursorPosition = (contentDiv) => {
     return;
   }
 
+  let node;
+
   try {
     if (type == 'Caret') {
-      const i = getI(selection.anchorNode, selection.anchorOffset);
+      const [resultNode, i] = getI(selection.anchorNode, selection.anchorOffset);
       cursor.start = i;
       cursor.end = i;
+      node = resultNode;
     } else {
       if (!selection.isBackwards()) {
-        cursor.start = getI(selection.anchorNode, selection.anchorOffset);
-        cursor.end = getI(selection.focusNode, selection.focusOffset);
+        [, cursor.start] = getI(selection.anchorNode, selection.anchorOffset);
+        [node, cursor.end] = getI(selection.focusNode, selection.focusOffset);
       } else {
-        cursor.start = getI(selection.focusNode, selection.focusOffset);
-        cursor.end = getI(selection.anchorNode, selection.anchorOffset);
+        [, cursor.start] = getI(selection.focusNode, selection.focusOffset);
+        [node, cursor.end] = getI(selection.anchorNode, selection.anchorOffset);
       }
     }
+
+    while (node.nextElementSibling == null) {
+      node = node.parentElement;
+      if (node == contentDiv) {
+        cursor.nextLine = cursor.end;
+        return;
+      }
+    }
+
+    const nextLineI = node.nextElementSibling?.getAttribute("i");
+
+    cursor.nextLine = nextLineI == null ? cursor.end : parseInt(nextLineI);
   } catch {
     return;
   }
@@ -67,7 +83,6 @@ window.setUp = (editor) => {
 
 window.renderMarkdown = (editor, content) => {
   editor.innerHTML = content;
-  console.log(content);
   runPrism();
 }
 

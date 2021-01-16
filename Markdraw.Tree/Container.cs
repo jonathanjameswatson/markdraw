@@ -11,8 +11,7 @@ namespace Markdraw.Tree
     {
       get => ParentTree is not null && ParentTree.HasI ? $"<div i={I}>" : "<div>";
     }
-    public virtual string InsideOpeningTag { get => "<p>"; }
-    public virtual string InsideClosingTag { get => "</p>"; }
+    public virtual string InsideClosingTag { get => "</li>"; }
     public virtual string ClosingTag { get => "</div>"; }
     public virtual bool WrapAllInside { get => false; }
 
@@ -213,6 +212,11 @@ namespace Markdraw.Tree
       return ElementsInside.GetEnumerator();
     }
 
+    public virtual string InsideOpeningTag(int i)
+    {
+      return $@"<li i=""{i}"">";
+    }
+
     public override string ToString()
     {
       var stringBuilder = new StringBuilder();
@@ -223,7 +227,7 @@ namespace Markdraw.Tree
       {
         if (WrapAllInside)
         {
-          stringBuilder.Append(InsideOpeningTag);
+          stringBuilder.Append(InsideOpeningTag(child.I));
         }
 
         stringBuilder.Append(child.ToString());

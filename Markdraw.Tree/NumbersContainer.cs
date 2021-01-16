@@ -9,8 +9,6 @@ namespace Markdraw.Tree
     {
       get => ParentTree is not null && ParentTree.HasI ? $"<ol i={I}>" : "<ol>";
     }
-    public override string InsideOpeningTag { get => @"<li>"; }
-    public override string InsideClosingTag { get => @"</li>"; }
     public override string ClosingTag { get => @"</ol>"; }
     public override bool WrapAllInside { get => true; }
 
