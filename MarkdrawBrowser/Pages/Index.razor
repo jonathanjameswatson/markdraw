@@ -15,7 +15,7 @@
 
   private ModalOpen modal = ModalOpen.None;
   private string modalLink = "";
-  private string modalImageURL = "";
+  private string modalImageUrl = "";
   private string modalImageAlt = "";
   private string modalCodeLanguage = "";
   private string modalCodeContents = "";
@@ -84,6 +84,26 @@
     content = deltaTree.Root.ToString();
   }
 
+  public async Task InsertElements(Ops inserts) {
+    var cursorPos = await GetCursor();
+    var transformation = new Ops();
+
+    if (cursorPos.start > 0)
+    {
+      transformation.Retain(cursorPos.start);
+    }
+
+    if (cursorPos.end - cursorPos.start != 0)
+    {
+      transformation.Delete(cursorPos.end - cursorPos.start);
+    }
+
+    transformation.InsertMany(inserts);
+
+    deltaTree.Delta = deltaTree.Delta.Transform(transformation);
+    content = deltaTree.Root.ToString();
+  }
+
   public async Task Bold()
   {
     await SetFormat(new TextFormat(true, null, null));
@@ -141,7 +161,12 @@
 
   public async Task Divider()
   {
-
+    await InsertElements(
+      new Ops()
+        .Insert(new LineInsert())
+        .Insert(new DividerInsert())
+        .Insert(new LineInsert())
+    );
   }
 
   public void Code()
@@ -156,6 +181,26 @@
   private async Task SetLink()
   {
     await SetFormat(new TextFormat(null, null, modalLink));
+    Close();
+  }
+
+  private async Task AddImage()
+  {
+    await InsertElements(
+      new Ops()
+        .Insert(new ImageInsert(modalImageUrl, modalImageAlt))
+    );
+    Close();
+  }
+
+  private async Task AddCode()
+  {
+    await InsertElements(
+      new Ops()
+        .Insert(new LineInsert())
+        .Insert(new CodeInsert(modalCodeContents, modalCodeLanguage))
+        .Insert(new LineInsert())
+    );
     Close();
   }
 }
@@ -186,17 +231,17 @@
           <div class="field">
             <label class="label">Image address</label>
             <p class="control">
-              <input class="input" type="text">
+              <input class="input" type="text" @bind="modalImageUrl">
             </p>
           </div>
           <div class="field">
             <label class="label">Alternative text</label>
             <p class="control">
-              <input class="input" type="text">
+              <input class="input" type="text" @bind="modalImageAlt">
             </p>
           </div>
           <div class="buttons">
-            <button class="button" disabled>
+            <button class="button" @onclick="AddImage">
               Insert image
             </button>
             <button class="button" @onclick="Close">
@@ -207,17 +252,17 @@
           <div class="field">
             <label class="label">Language</label>
             <p class="control">
-              <input class="input" type="text">
+              <input class="input" type="text" @bind="modalCodeLanguage">
             </p>
           </div>
           <div class="field">
             <label class="label">Code</label>
             <p class="control">
-              <textarea class="textarea"></textarea>
+              <textarea class="textarea" @bind="modalCodeContents"></textarea>
             </p>
           </div>
           <div class="buttons">
-            <button class="button" disabled>
+            <button class="button" @onclick="AddCode">
               Insert code
             </button>
             <button class="button" @onclick="Close">
@@ -260,7 +305,7 @@
           <FormatButton icon="format-font-size-decrease" @onclick="HeaderDown"></FormatButton>
           <hr />
           <FormatButton icon="image" @onclick="Image"></FormatButton>
-          <FormatButton icon="minus" Disabled></FormatButton>
+          <FormatButton icon="minus" @onclick="Divider"></FormatButton>
           <FormatButton icon="code-not-equal-variant" @onclick="Code"></FormatButton>
         </div>
 
