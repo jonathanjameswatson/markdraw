@@ -10,7 +10,6 @@
   private string markdown = "";
   private string content = "<p>Loading...</p>";
   private DeltaTree deltaTree;
-  private int x = 1;
   private Editor editor;
 
   private ModalOpen modal = ModalOpen.None;
@@ -36,12 +35,6 @@
       deltaTree.SetWithMarkdown(markdown);
       content = deltaTree.Root.ToString();
     }
-  }
-
-  public void InsertLetter()
-  {
-    deltaTree.Delta = deltaTree.Delta.Transform(new Ops().Retain(x).Insert("COOL "));
-    content = deltaTree.Root.ToString();
   }
 
   protected override async Task OnInitializedAsync()
@@ -277,16 +270,6 @@
 
   <div class="section">
     <div class="container">
-      <div class="field has-addons">
-        <p class="control">
-          <input class="input" type="number" @bind="x" />
-        </p>
-        <p class="control">
-          <button class="button is-danger" @onclick="InsertLetter">Test button</button>
-        </p>
-      </div>
-      <br />
-      <br />
       <div class="columns is-mobile">
         <div class="column is-narrow format-buttons">
           <FormatButton icon="format-bold" @onclick="Bold"></FormatButton>

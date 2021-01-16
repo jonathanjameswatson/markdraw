@@ -13,46 +13,50 @@ $primary: $red;
 @import '../../node_modules/bulma/bulma';
 
 #blazor-error-ui {
-    display: none;
+  display: none;
 }
 
 .navbar-item img {
-    margin-right: 6px;
-    max-height: none !important;
+  margin-right: 6px;
+  max-height: none !important;
 }
 
 .iconify {
-    font-size: 2em;
+  font-size: 2em;
 }
 
 .format-buttons {
-    position: sticky;
-    top: 0;
-    bottom: 0;
-    height: 100%;
-    max-height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: thin;
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
 
-    padding-bottom: 0px;
+  padding-bottom: 0px;
 
-    &::after {
-        content: "";
-        display: block;
-        height: $column-gap;
-        width: 100%;
-    }
+  &::after {
+    content: "";
+    display: block;
+    height: $column-gap;
+    width: 100%;
+  }
 }
 
-.content > blockquote, pre {
+.content {
+  outline: none;
+
+  & > blockquote, pre {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+  }
 }
 
 .content-container {
-    min-width: 1px;
+  min-width: 1px;
 }
 
 @import 'prism';
