@@ -12,6 +12,8 @@ $primary: $red;
 
 @import '../../node_modules/bulma/bulma';
 
+$render-button-dividers: false;
+
 #blazor-error-ui {
   display: none;
 }
@@ -26,22 +28,29 @@ $primary: $red;
 }
 
 .format-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
   position: sticky;
   top: 0;
   bottom: 0;
-  height: 100%;
-  max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
 
   padding-bottom: 0px;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   &::after {
-    content: "";
-    display: block;
     height: $column-gap;
     width: 100%;
+    flex: 0 0 $column-gap;
+    content: "";
+    display: block;
   }
 }
 
@@ -57,6 +66,10 @@ $primary: $red;
 
 .content-container {
   min-width: 1px;
+}
+
+.buttons-divider {
+  display: if($render-button-dividers, block, none);
 }
 
 @import 'prism';
