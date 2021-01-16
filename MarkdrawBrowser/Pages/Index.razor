@@ -13,6 +13,20 @@
   private int x = 1;
   private Editor editor;
 
+  private ModalOpen modal = ModalOpen.None;
+  private string modalLink = "";
+  private string modalImageURL = "";
+  private string modalImageAlt = "";
+  private string modalCodeLanguage = "";
+  private string modalCodeContents = "";
+
+  private enum ModalOpen {
+    None,
+    Image,
+    Link,
+    Code
+  }
+
   public string Markdown
   {
     get => markdown;
@@ -80,9 +94,9 @@
     await SetFormat(new TextFormat(null, true, null));
   }
 
-  public async Task Link()
+  public void Link()
   {
-    await SetFormat(new TextFormat(null, null, null));
+    modal = ModalOpen.Link;
   }
 
   public async Task Quote()
@@ -120,9 +134,9 @@
     await SetFormat(new ModifyingLineFormat(list => { }, i => (i == 0 ? i : i + 1) % 7));
   }
 
-  public async Task Image()
+  public void Image()
   {
-
+    modal = ModalOpen.Image;
   }
 
   public async Task Divider()
@@ -130,14 +144,91 @@
 
   }
 
-  public async Task Code()
+  public void Code()
   {
+    modal = ModalOpen.Code;
+  }
 
+  private void Close() {
+    modal = ModalOpen.None;
+  }
+
+  private async Task SetLink()
+  {
+    await SetFormat(new TextFormat(null, null, modalLink));
+    Close();
   }
 }
 
 <div>
   <NavBar @bind-ImportMarkdown="Markdown"></NavBar>
+
+  <div class="modal@(modal != ModalOpen.None ? " is-active" : "")">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="box">
+        @if (modal == ModalOpen.Link) {
+          <div class="field">
+            <label class="label">Link address</label>
+            <p class="control">
+              <input class="input" type="text" @bind="modalLink">
+            </p>
+          </div>
+          <div class="buttons">
+            <button class="button" @onclick="SetLink">
+              Set link
+            </button>
+            <button class="button" @onclick="Close">
+              Close
+            </button>
+          </div>
+        } else if (modal == ModalOpen.Image) {
+          <div class="field">
+            <label class="label">Image address</label>
+            <p class="control">
+              <input class="input" type="text">
+            </p>
+          </div>
+          <div class="field">
+            <label class="label">Alternative text</label>
+            <p class="control">
+              <input class="input" type="text">
+            </p>
+          </div>
+          <div class="buttons">
+            <button class="button" disabled>
+              Insert image
+            </button>
+            <button class="button" @onclick="Close">
+              Close
+            </button>
+          </div>
+        } else if (modal == ModalOpen.Code) {
+          <div class="field">
+            <label class="label">Language</label>
+            <p class="control">
+              <input class="input" type="text">
+            </p>
+          </div>
+          <div class="field">
+            <label class="label">Code</label>
+            <p class="control">
+              <textarea class="textarea"></textarea>
+            </p>
+          </div>
+          <div class="buttons">
+            <button class="button" disabled>
+              Insert code
+            </button>
+            <button class="button" @onclick="Close">
+              Close
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" @onclick="Close"></button>
+  </div>
 
   <div class="section">
     <div class="container">
@@ -156,7 +247,7 @@
           <FormatButton icon="format-bold" @onclick="Bold"></FormatButton>
           <FormatButton icon="format-italic" @onclick="Italic"></FormatButton>
           <!--<FormatButton icon="code-tags" Disabled></FormatButton>-->
-          <FormatButton icon="link" Disabled></FormatButton>
+          <FormatButton icon="link" @onclick="Link"></FormatButton>
           <hr />
           <FormatButton icon="format-quote-close" @onclick="Quote"></FormatButton>
           <FormatButton icon="format-list-bulleted" @onclick="Bullet"></FormatButton>
@@ -168,9 +259,9 @@
           <FormatButton icon="format-font-size-increase" @onclick="HeaderUp"></FormatButton>
           <FormatButton icon="format-font-size-decrease" @onclick="HeaderDown"></FormatButton>
           <hr />
-          <FormatButton icon="image" Disabled></FormatButton>
+          <FormatButton icon="image" @onclick="Image"></FormatButton>
           <FormatButton icon="minus" Disabled></FormatButton>
-          <FormatButton icon="code-not-equal-variant" Disabled></FormatButton>
+          <FormatButton icon="code-not-equal-variant" @onclick="Code"></FormatButton>
         </div>
 
         <div class="column content-container">
