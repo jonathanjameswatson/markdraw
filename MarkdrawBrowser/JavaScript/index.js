@@ -70,14 +70,14 @@ const setCursorPosition = (contentDiv) => {
     const nextLineI = node.nextElementSibling?.getAttribute("i");
 
     cursor.nextLine = nextLineI == null ? cursor.end : parseInt(nextLineI);
-  } catch {
+  } catch (e) {
     return;
   }
 }
 
 window.setUp = (editor) => {
-  editor.addEventListener("click", () => setCursorPosition(editor));
-  editor.addEventListener("keydown", () => setCursorPosition(editor));
+  editor.addEventListener("mouseup", () => setCursorPosition(editor));
+  editor.addEventListener("keyup", () => setCursorPosition(editor));
   editor.addEventListener("focus", () => setCursorPosition(editor));
 }
 

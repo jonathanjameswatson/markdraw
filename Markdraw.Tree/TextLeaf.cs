@@ -120,14 +120,14 @@ namespace Markdraw.Tree
           {
             stringBuilder.Append($@"{AddItalics(buffer)}<a href=""{link}"">");
             openLink = link;
+            buffer = new List<TextInsert>();
           }
           else if (openLink != link)
           {
             stringBuilder.Append($@"{AddItalics(buffer)}</a><a href=""{link}"">");
             openLink = link;
+            buffer = new List<TextInsert>();
           }
-
-          buffer = new List<TextInsert>();
         }
         else if (openLink != "" && link == "")
         {

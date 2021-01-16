@@ -225,5 +225,21 @@ namespace Markdraw.Tree.Test
         .ToString()
         .Is(@"<div><p>A<a href=""C"">B</a>D</p></div>");
     }
+
+    [Fact]
+    public void ItalicsAndLink_AreConvertedToHtml()
+    {
+      new Container(new List<TreeNode>() {
+        new TextLeaf(new List<TextInsert>() {
+          new TextInsert("A"),
+          new TextInsert("B", new TextFormat(false, true, "")),
+          new TextInsert("C", new TextFormat(false, true, "F")),
+          new TextInsert("D", new TextFormat(false, false, "F")),
+          new TextInsert("E")
+        }, 0)
+      })
+        .ToString()
+        .Is(@"<div><p>A<em>B</em><a href=""F""><em>C</em>D</a>E</p></div>");
+    }
   }
 }
