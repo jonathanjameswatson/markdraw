@@ -124,17 +124,38 @@
 
   public async Task Quote()
   {
-    await SetFormat(new ModifyingLineFormat(list => list.Insert(0, Indent.Quote), i => i));
+    await SetFormat(
+      new ModifyingLineFormat(
+        list => {
+          list.Insert(0, Indent.Empty(1));
+          list.Insert(0, Indent.Quote);
+        },
+        i => i)
+    );
   }
 
   public async Task Bullet()
   {
-    await SetFormat(new ModifyingLineFormat(list => list.Insert(0, Indent.Bullet), i => i));
+    await SetFormat(
+      new ModifyingLineFormat(
+        list => {
+          list.Insert(0, Indent.Empty(1));
+          list.Insert(0, Indent.Bullet);
+        },
+        i => i)
+    );
   }
 
   public async Task Number()
   {
-    await SetFormat(new ModifyingLineFormat(list => list.Insert(0, Indent.Number(2)), i => i));
+    await SetFormat(
+      new ModifyingLineFormat(
+        list => {
+          list.Insert(0, Indent.Empty(1));
+          list.Insert(0, Indent.Number(2));
+        },
+        i => i)
+    );
   }
 
   public async Task Clear()
