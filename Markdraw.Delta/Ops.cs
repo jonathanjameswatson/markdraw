@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 
 namespace Markdraw.Delta
@@ -313,6 +314,37 @@ namespace Markdraw.Delta
       }
 
       return this;
+    }
+
+    public override string ToString()
+    {
+      var stringBuilder = new StringBuilder();
+      int lastLineI = 0;
+
+      foreach (var op in _ops)
+      {
+        if (op is Insert insert)
+        {
+          if (op is LineInsert lineInsert)
+          {
+            string lineString = lineInsert.LineInsertString();
+            stringBuilder.Insert(lastLineI, lineString);
+            lastLineI = stringBuilder.Length - 1;
+          }
+
+          stringBuilder.Append(insert.InsertString());
+        }
+        else if (op is Delete delete)
+        {
+          stringBuilder.Append($"[DELETE {delete.Length}]");
+        }
+        else if (op is Retain retain)
+        {
+          stringBuilder.Append($"[RETAIN {retain.Length}]");
+        }
+      }
+
+      return stringBuilder.ToString();
     }
   }
 }

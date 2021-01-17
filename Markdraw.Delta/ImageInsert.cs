@@ -26,5 +26,10 @@ namespace Markdraw.Delta
     {
       return Url.GetHashCode();
     }
+
+    public override string InsertString()
+    {
+      return "![{Alt}]({Url})";
+    }
   }
 }

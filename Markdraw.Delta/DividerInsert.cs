@@ -11,5 +11,10 @@ namespace Markdraw.Delta
     {
       return 0;
     }
+
+    public override string InsertString()
+    {
+      return "\n***\n";
+    }
   }
 }

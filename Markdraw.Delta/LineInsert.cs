@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Markdraw.Delta
 {
   public class LineInsert : Insert
@@ -32,6 +34,54 @@ namespace Markdraw.Delta
     public override int GetHashCode()
     {
       return _format.GetHashCode();
+    }
+
+    public override string InsertString()
+    {
+      return "\n";
+    }
+
+    public string LineInsertString()
+    {
+      var stringBuilder = new StringBuilder();
+
+      foreach (var indent in Format.Indents)
+      {
+        if (indent.Type == IndentType.Bullet)
+        {
+          stringBuilder.Append("-");
+        }
+        else if (indent.Type == IndentType.Quote)
+        {
+          stringBuilder.Append(">");
+        }
+        else if (indent.Type == IndentType.Number)
+        {
+          stringBuilder.Append("1.");
+        }
+        else if (indent.Type == IndentType.Code)
+        {
+          stringBuilder.Append("    ");
+        }
+        else
+        {
+          for (int i = 0; i < indent.Length; i++)
+          {
+            stringBuilder.Append(" ");
+          }
+        }
+      }
+
+      if (Format.Header != 0)
+      {
+        for (int i = 0; i < Format.Header; i++)
+        {
+          stringBuilder.Append("#");
+        }
+        stringBuilder.Append(" ");
+      }
+
+      return stringBuilder.ToString();
     }
   }
 }

@@ -20,5 +20,10 @@ namespace Markdraw.Delta
     {
       return (Text, Tag).GetHashCode();
     }
+
+    public override string InsertString()
+    {
+      return $"`n```{Tag}\n{Text}\n```\n";
+    }
   }
 }
