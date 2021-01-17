@@ -3,7 +3,7 @@
 <br>
 </h1>
 
-<h4 align="center">Blazor markdown editor with drawing support</h4>
+<h4 align="center">Blazor Markdown rich text editor</h4>
 
 ## WIP
 
