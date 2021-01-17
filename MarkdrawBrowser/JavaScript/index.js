@@ -82,7 +82,6 @@ const setCursorPosition = (contentDiv) => {
 
 const handleChange = async (editor, event) => {
   const { data, inputType } = event;
-  console.log(event);
   if (data == null && inputType != 'insertParagraph') {
     const backwards = inputType == 'deleteContentBackward';
     await removeText(editor, backwards);

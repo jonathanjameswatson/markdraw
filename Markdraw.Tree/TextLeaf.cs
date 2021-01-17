@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
@@ -34,43 +35,55 @@ namespace Markdraw.Tree
 
     public TextLeaf(List<TextInsert> correspondingInserts) : this(correspondingInserts, 0) { }
 
-    private static string AddBold(List<TextInsert> textInserts)
+    private (string, int) AddBold(List<TextInsert> textInserts, int start)
     {
       var stringBuilder = new StringBuilder();
       bool open = false;
+      int i = start;
+      string buffer = "";
+
+      if (textInserts.Count > 0 && textInserts[0].Format.Bold == true)
+      {
+        open = true;
+      }
+
+      Func<bool, string, int, string> BoldString = (bold, text, i) =>
+      {
+        string tag = bold ? "strong" : "span";
+        if (ParentTree is not null && ParentTree.HasI)
+        {
+          return $@"<{tag} i=""{i}"">{text}</{tag}>";
+        }
+        return $@"<{tag}>{text}</{tag}>";
+      };
 
       foreach (var textInsert in textInserts)
       {
         bool bold = (bool)textInsert.Format.Bold;
 
-        if (!open && bold)
+        if (open != bold)
         {
-          stringBuilder.Append(@"<strong>");
-          open = true;
+          stringBuilder.Append(BoldString(open, buffer, i));
+          open = bold;
+          i += buffer.Length;
+          buffer = "";
         }
 
-        if (open && !bold)
-        {
-          stringBuilder.Append(@"</strong>");
-          open = false;
-        }
-
-        stringBuilder.Append(textInsert.Text);
+        buffer += textInsert.Text;
       }
 
-      if (open)
-      {
-        stringBuilder.Append(@"</strong>");
-      }
+      stringBuilder.Append(BoldString(open, buffer, i));
+      i += buffer.Length;
 
-      return stringBuilder.ToString();
+      return (stringBuilder.ToString(), i);
     }
 
-    private static string AddItalics(List<TextInsert> textInserts)
+    private (string, int) AddItalics(List<TextInsert> textInserts, int start)
     {
       var stringBuilder = new StringBuilder();
       bool open = false;
       var buffer = new List<TextInsert>();
+      int i = start;
 
       foreach (var textInsert in textInserts)
       {
@@ -78,13 +91,26 @@ namespace Markdraw.Tree
 
         if (!open && italic)
         {
-          stringBuilder.Append($@"{AddBold(buffer)}<em>");
+          (string text1, int newI1) = AddBold(buffer, i);
+
+          if (ParentTree is not null && ParentTree.HasI)
+          {
+            stringBuilder.Append($@"{text1}<em i=""{i}"">");
+          }
+          else
+          {
+            stringBuilder.Append($@"{text1}<em>");
+          }
+
+          i = newI1;
           open = true;
           buffer = new List<TextInsert>();
         }
         else if (open && !italic)
         {
-          stringBuilder.Append($@"{AddBold(buffer)}</em>");
+          (string text2, int newI2) = AddBold(buffer, i);
+          stringBuilder.Append($@"{text2}</em>");
+          i = newI2;
           open = false;
           buffer = new List<TextInsert>();
         }
@@ -92,23 +118,33 @@ namespace Markdraw.Tree
         buffer.Add(textInsert);
       }
 
+      (string text, int newI) = AddBold(buffer, i);
+      stringBuilder.Append(text);
+      i = newI;
+
       if (open)
       {
-        stringBuilder.Append($@"{AddBold(buffer)}</em>");
-      }
-      else
-      {
-        stringBuilder.Append(AddBold(buffer));
+        stringBuilder.Append(@"</em>");
       }
 
-      return stringBuilder.ToString();
+      return (stringBuilder.ToString(), i);
     }
 
-    private static string AddLinks(List<TextInsert> textInserts)
+    private string AddLinks(List<TextInsert> textInserts, int start)
     {
       var stringBuilder = new StringBuilder();
       string openLink = "";
       var buffer = new List<TextInsert>();
+      int i = start;
+
+      Func<string, int, string> LinkString = (link, i) =>
+      {
+        if (ParentTree is not null && ParentTree.HasI)
+        {
+          return $@"<a href=""{link}"" i=""{i}"">";
+        }
+        return $@"<a href=""{link}"">";
+      };
 
       foreach (var textInsert in textInserts)
       {
@@ -118,20 +154,26 @@ namespace Markdraw.Tree
         {
           if (openLink == "")
           {
-            stringBuilder.Append($@"{AddItalics(buffer)}<a href=""{link}"">");
+            (string text1, int newI1) = AddItalics(buffer, i);
+            stringBuilder.Append($@"{text1}{LinkString(link, i)}");
+            i = newI1;
             openLink = link;
             buffer = new List<TextInsert>();
           }
           else if (openLink != link)
           {
-            stringBuilder.Append($@"{AddItalics(buffer)}</a><a href=""{link}"">");
+            (string text2, int newI2) = AddItalics(buffer, i);
+            stringBuilder.Append($@"{text2}</a>{LinkString(link, i)}");
+            i = newI2;
             openLink = link;
             buffer = new List<TextInsert>();
           }
         }
         else if (openLink != "" && link == "")
         {
-          stringBuilder.Append($@"{AddItalics(buffer)}</a>");
+          (string text3, int newI3) = AddItalics(buffer, i);
+          stringBuilder.Append($@"{text3}</a>");
+          i = newI3;
           openLink = "";
           buffer = new List<TextInsert>();
         }
@@ -139,13 +181,12 @@ namespace Markdraw.Tree
         buffer.Add(textInsert);
       }
 
+      (string text, int newI) = AddItalics(buffer, i);
+      stringBuilder.Append(text);
+
       if (openLink != "")
       {
-        stringBuilder.Append($@"{AddItalics(buffer)}</a>");
-      }
-      else
-      {
-        stringBuilder.Append(AddItalics(buffer));
+        stringBuilder.Append(@"</a>");
       }
 
       return stringBuilder.ToString();
@@ -155,9 +196,9 @@ namespace Markdraw.Tree
     {
       if (ParentTree is not null && ParentTree.HasI)
       {
-        return $@"<{Tag} i=""{I}"">{AddLinks(CorrespondingInserts)}</{Tag}>";
+        return $@"<{Tag} i=""{I}"">{AddLinks(CorrespondingInserts, I)}</{Tag}>";
       }
-      return $@"<{Tag}>{AddLinks(CorrespondingInserts)}</{Tag}>";
+      return $@"<{Tag}>{AddLinks(CorrespondingInserts, I)}</{Tag}>";
     }
   }
 }
