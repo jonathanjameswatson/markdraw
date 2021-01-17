@@ -116,6 +116,13 @@ const moveCursorTo = (editor, i) => {
 
   selection.removeAllRanges();
   selection.addRange(range);
+
+  cursor.start = i;
+  cursor.end = i;
+  cursor.nextLine = parseInt(elements[elementIndex].getAttribute(i), 10);
+  if (isNaN(cursor.nextLine)) {
+    cursor.nextLine = i;
+  }
 }
 
 const insertText = async (editor, text) => {
