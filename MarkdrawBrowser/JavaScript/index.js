@@ -4,6 +4,7 @@ import 'regenerator-runtime/runtime.js';
 import rangy from 'rangy';
 
 import runPrism from './prism';
+import binarySearch from './binarySearch';
 
 const cursor = {
   start: 0,
@@ -12,6 +13,8 @@ const cursor = {
 };
 
 let dotnetReference = null;
+
+const textElementNames = ['EM', 'A', 'STRONG', 'SPAN'];
 
 const getI = (node, offset) => {
   let parentNode = node.nodeType == 3 ? node.parentNode : node;
@@ -34,15 +37,11 @@ const setCursorPosition = (contentDiv) => {
   const selection = rangy.getSelection();
   const type = selection.nativeSelection.type.toString();
 
-  if (selection.rangeCount == 0) {
-    return;
-  }
-
-  if (type == 'None') {
-    return;
-  }
-
-  if (!contentDiv.contains(selection.getRangeAt(0).commonAncestorContainer)) {
+  if (
+    selection.rangeCount == 0
+    || type == 'None'
+    || !contentDiv.contains(selection.getRangeAt(0).commonAncestorContainer)
+  ) {
     return;
   }
 
@@ -64,7 +63,10 @@ const setCursorPosition = (contentDiv) => {
       }
     }
 
-    while (node.nextElementSibling == null) {
+    while (
+      node.nextElementSibling == null
+      || textElementNames.includes(node.nextElementSibling.tagName)
+    ) {
       node = node.parentElement;
       if (node == contentDiv) {
         cursor.nextLine = cursor.end;
@@ -100,11 +102,27 @@ const handlePaste = async (editor, event) => {
 
 const moveCursorTo = (editor, i) => {
   const elements = editor.querySelectorAll('[i]');
-  const elementIndex = Array.prototype.findIndex.call(
+
+  const elementIndex = binarySearch(
     elements,
-    (element) => parseInt(element.getAttribute('i'), 10) > i
+    null,
+    (middleElement, needle, middleIndex, haystack) => {
+      const middleI = parseInt(middleElement.getAttribute('i'), 10);
+      if (middleI > i) {
+        return 1;
+      }
+      if (middleIndex == elements.length - 1 || middleIndex == 0) {
+        return 0;
+      }
+      const afterMiddleI = parseInt(elements[middleIndex + 1].getAttribute('i'), 10);
+      if (afterMiddleI > i) {
+        return 0;
+      }
+      return -1;
+    }
   );
-  const element = elements[elementIndex - 1];
+
+  const element = elements[elementIndex];
   const elementI = parseInt(element.getAttribute('i'), 10);
   const offset = i - elementI;
 
@@ -119,10 +137,19 @@ const moveCursorTo = (editor, i) => {
 
   cursor.start = i;
   cursor.end = i;
-  cursor.nextLine = parseInt(elements[elementIndex].getAttribute(i), 10);
-  if (isNaN(cursor.nextLine)) {
-    cursor.nextLine = i;
+
+  let nextIndex = elementIndex + 1;
+  let nextLine = cursor.start;
+
+  while (nextIndex < elements.length && nextLine == cursor.start) {
+    const nextElement = elements[nextIndex];
+    if (!textElementNames.contains(nextElement.nodeName)) {
+      nextLine = parseInt(thisElement.getAttribute('i'), 10);
+    }
+    nextIndex += 1;
   }
+
+  cursor.nextLine = nextLine;
 }
 
 const insertText = async (editor, text) => {
