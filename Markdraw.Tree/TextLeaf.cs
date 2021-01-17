@@ -72,8 +72,11 @@ namespace Markdraw.Tree
         buffer += textInsert.Text;
       }
 
-      stringBuilder.Append(BoldString(open, buffer, i));
-      i += buffer.Length;
+      if (buffer.Length > 0)
+      {
+        stringBuilder.Append(BoldString(open, buffer, i));
+        i += buffer.Length;
+      }
 
       return (stringBuilder.ToString(), i);
     }
