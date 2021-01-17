@@ -13,5 +13,10 @@ namespace Markdraw.Delta
     {
       return Length.GetHashCode();
     }
+
+    public override string ToString()
+    {
+      return $"[DELETE {this.Length}]";
+    }
   }
 }

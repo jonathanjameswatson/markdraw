@@ -24,5 +24,10 @@ namespace Markdraw.Delta
     {
       return (Length, _format).GetHashCode();
     }
+
+    public override string ToString()
+    {
+      return $"[RETAIN {this.Length}]";
+    }
   }
 }

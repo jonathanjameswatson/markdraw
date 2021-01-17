@@ -331,17 +331,9 @@ namespace Markdraw.Delta
             stringBuilder.Insert(lastLineI, lineString);
             lastLineI = stringBuilder.Length - 1;
           }
+        }
 
-          stringBuilder.Append(insert.InsertString());
-        }
-        else if (op is Delete delete)
-        {
-          stringBuilder.Append($"[DELETE {delete.Length}]");
-        }
-        else if (op is Retain retain)
-        {
-          stringBuilder.Append($"[RETAIN {retain.Length}]");
-        }
+        stringBuilder.Append(op.ToString());
       }
 
       return stringBuilder.ToString();

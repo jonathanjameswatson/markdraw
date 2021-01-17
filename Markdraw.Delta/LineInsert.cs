@@ -36,7 +36,7 @@ namespace Markdraw.Delta
       return _format.GetHashCode();
     }
 
-    public override string InsertString()
+    public override string ToString()
     {
       return "\n";
     }

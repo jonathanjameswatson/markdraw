@@ -14,9 +14,9 @@ namespace Markdraw.Delta
       return (1, true);
     }
 
-    public virtual string InsertString()
+    public override string ToString()
     {
-      return "???";
+      return $"[INSERT {this.Length}]";
     }
   }
 }

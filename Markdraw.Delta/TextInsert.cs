@@ -97,7 +97,7 @@ namespace Markdraw.Delta
       return (_text, _format).GetHashCode();
     }
 
-    public override string InsertString()
+    public override string ToString()
     {
       string bold = Format.Bold == true ? $"**{Text}**" : Text;
       string italic = Format.Italic == true ? $"*{bold}*" : bold;

@@ -12,7 +12,7 @@ namespace Markdraw.Delta
       return 0;
     }
 
-    public override string InsertString()
+    public override string ToString()
     {
       return "\n***\n";
     }
