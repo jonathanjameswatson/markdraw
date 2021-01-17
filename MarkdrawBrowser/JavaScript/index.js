@@ -16,18 +16,18 @@ let dotnetReference = null;
 const getI = (node, offset) => {
   let parentNode = node.nodeType == 3 ? node.parentNode : node;
 
-  while (parentNode?.getAttribute("i") == null) {
+  while (parentNode?.getAttribute('i') == null) {
     parentNode = parentNode.parentNode;
   }
 
   let totalOffset = 0;
-  if (parentNode.nodeName != "PRE") {
+  if (parentNode.nodeName != 'PRE') {
     const offsetRange = rangy.createRange();
     offsetRange.setStartAndEnd(parentNode, 0, node, offset);
     totalOffset = offsetRange.toString().length;
   }
 
-  return [parentNode, parseInt(parentNode.getAttribute("i"), 10) + totalOffset];
+  return [parentNode, parseInt(parentNode.getAttribute('i'), 10) + totalOffset];
 }
 
 const setCursorPosition = (contentDiv) => {
@@ -72,7 +72,7 @@ const setCursorPosition = (contentDiv) => {
       }
     }
 
-    const nextLineI = node.nextElementSibling?.getAttribute("i");
+    const nextLineI = node.nextElementSibling?.getAttribute('i');
 
     cursor.nextLine = nextLineI == null ? cursor.end : parseInt(nextLineI);
   } catch (e) {
@@ -81,12 +81,13 @@ const setCursorPosition = (contentDiv) => {
 }
 
 const handleChange = async (editor, event) => {
-  const { data } = event;
-  if (data == null) {
-    const backwards = event.inputType == "deleteContentBackward";
+  const { data, inputType } = event;
+  console.log(event);
+  if (data == null && inputType != 'insertParagraph') {
+    const backwards = inputType == 'deleteContentBackward';
     await removeText(editor, backwards);
   } else {
-    await insertText(editor, data);
+    await insertText(editor, data || '\n');
   }
 }
 
@@ -99,13 +100,13 @@ const handlePaste = async (editor, event) => {
 }
 
 const moveCursorTo = (editor, i) => {
-  const elements = editor.querySelectorAll("[i]");
+  const elements = editor.querySelectorAll('[i]');
   const elementIndex = Array.prototype.findIndex.call(
     elements,
-    (element) => parseInt(element.getAttribute("i"), 10) > i
+    (element) => parseInt(element.getAttribute('i'), 10) > i
   );
   const element = elements[elementIndex - 1];
-  const elementI = parseInt(element.getAttribute("i"), 10);
+  const elementI = parseInt(element.getAttribute('i'), 10);
   const offset = i - elementI;
 
   const range = document.createRange();
@@ -140,11 +141,11 @@ window.setReference = (reference) => {
 }
 
 window.setUp = (editor) => {
-  editor.addEventListener("mouseup", () => setCursorPosition(editor));
-  editor.addEventListener("keyup", () => setCursorPosition(editor));
-  editor.addEventListener("focus", () => setCursorPosition(editor));
-  editor.addEventListener("input", (event) => handleChange(editor, event));
-  editor.addEventListener("paste", (event) => handlePaste(editor, event));
+  editor.addEventListener('mouseup', () => setCursorPosition(editor));
+  editor.addEventListener('keyup', () => setCursorPosition(editor));
+  editor.addEventListener('focus', () => setCursorPosition(editor));
+  editor.addEventListener('input', (event) => handleChange(editor, event));
+  editor.addEventListener('paste', (event) => handlePaste(editor, event));
 }
 
 window.renderMarkdown = (editor, content) => {

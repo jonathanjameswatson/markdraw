@@ -209,8 +209,25 @@
 
   [JSInvokable]
   public int InsertText(String text, Cursor cursor) {
-    int i = InsertElementsWithCursor(new Ops().Insert(text), cursor);
+    var splittedText = new List<string>(text.Split("\n"));
+    var ops = new Ops();
+
+    foreach (string part in splittedText.GetRange(0, splittedText.Count - 1)) {
+      if (part.Length != 0) {
+        ops.Insert(part);
+      }
+      ops.Insert(new LineInsert());
+    }
+
+    string final = splittedText[splittedText.Count - 1];
+    if (final.Length != 0) {
+      ops.Insert(final);
+    }
+
+    int i = InsertElementsWithCursor(ops, cursor);
+
     StateHasChanged();
+
     return i;
   }
 
