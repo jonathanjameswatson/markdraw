@@ -80,36 +80,52 @@ const setCursorPosition = (contentDiv) => {
   }
 }
 
-const handleChange = async (event) => {
+const handleChange = async (editor, event) => {
   const { data } = event;
   if (data == null) {
     const backwards = event.inputType == "deleteContentBackward";
-    await removeText(backwards);
+    await removeText(editor, backwards);
   } else {
-    await insertText(data);
+    await insertText(editor, data);
   }
 }
 
-const handlePaste = async (event) => {
+const handlePaste = async (editor, event) => {
   event.preventDefault();
 
   const text = (event.clipboardData || window.clipboardData).getData('text');
 
-  await insertText(text)
+  await insertText(editor, text);
 }
 
-const moveCursorTo = (i) => {
-  console.log(i);
+const moveCursorTo = (editor, i) => {
+  const elements = editor.querySelectorAll("[i]");
+  const elementIndex = Array.prototype.findIndex.call(
+    elements,
+    (element) => parseInt(element.getAttribute("i"), 10) > i
+  );
+  const element = elements[elementIndex - 1];
+  const elementI = parseInt(element.getAttribute("i"), 10);
+  const offset = i - elementI;
+
+  const range = document.createRange();
+  const selection = window.getSelection();
+
+  range.setStart(element.firstChild, offset);
+  range.collapse(true);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
 
-const insertText = async (text) => {
+const insertText = async (editor, text) => {
   const i = await dotnetReference.invokeMethodAsync('InsertText', text, cursor);
-  moveCursorTo(i);
+  moveCursorTo(editor, i);
 }
 
-const removeText = async (backwards) => {
+const removeText = async (editor, backwards) => {
   const i = await dotnetReference.invokeMethodAsync('RemoveText', backwards, cursor);
-  moveCursorTo(i);
+  moveCursorTo(editor, i);
 }
 
 window.setReference = (reference) => {
@@ -120,8 +136,8 @@ window.setUp = (editor) => {
   editor.addEventListener("mouseup", () => setCursorPosition(editor));
   editor.addEventListener("keyup", () => setCursorPosition(editor));
   editor.addEventListener("focus", () => setCursorPosition(editor));
-  editor.addEventListener("input", handleChange);
-  editor.addEventListener("paste", handlePaste);
+  editor.addEventListener("input", (event) => handleChange(editor, event));
+  editor.addEventListener("paste", (event) => handlePaste(editor, event));
 }
 
 window.renderMarkdown = (editor, content) => {

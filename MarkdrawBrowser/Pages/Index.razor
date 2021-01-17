@@ -81,7 +81,7 @@
     content = deltaTree.Root.ToString();
   }
 
-  public void InsertElementsWithCursor(Ops inserts, Cursor cursorPos) {
+  public int InsertElementsWithCursor(Ops inserts, Cursor cursorPos) {
     var transformation = new Ops();
 
     if (cursorPos.start > 0)
@@ -98,6 +98,8 @@
 
     deltaTree.Delta = deltaTree.Delta.Transform(transformation);
     content = deltaTree.Root.ToString();
+
+    return cursorPos.start + inserts.Characters;
   }
 
   public async Task InsertElements(Ops inserts) {
@@ -207,13 +209,31 @@
 
   [JSInvokable]
   public int InsertText(String text, Cursor cursor) {
-    InsertElementsWithCursor(new Ops().Insert(text),cursor);
-    return cursor.start + text.Length;
+    int i = InsertElementsWithCursor(new Ops().Insert(text), cursor);
+    StateHasChanged();
+    return i;
   }
 
   [JSInvokable]
   public int RemoveText(bool backwards, Cursor cursor) {
-    return backwards ? cursor.start - 1 : cursor.start;
+    var transformation = new Ops();
+    int i = cursor.end;
+
+    int range = cursor.end - cursor.start;
+    int retainAmount = range == 0 && backwards ? cursor.start - 1 : cursor.start;
+
+    if (retainAmount > 0)
+    {
+      transformation.Retain(retainAmount);
+    }
+
+    transformation.Delete(Math.Max(range, 1));
+
+    deltaTree.Delta = deltaTree.Delta.Transform(transformation);
+    content = deltaTree.Root.ToString();
+    StateHasChanged();
+
+    return Math.Max(0, retainAmount);
   }
 }
 
