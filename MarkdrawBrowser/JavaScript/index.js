@@ -129,7 +129,7 @@ const moveCursorTo = (editor, i) => {
   const range = document.createRange();
   const selection = window.getSelection();
 
-  range.setStart(element.firstChild, offset);
+  range.setStart(element.firstChild, Math.min(element.textContent.length, offset));
   range.collapse(true);
 
   selection.removeAllRanges();
@@ -143,8 +143,8 @@ const moveCursorTo = (editor, i) => {
 
   while (nextIndex < elements.length && nextLine == cursor.start) {
     const nextElement = elements[nextIndex];
-    if (!textElementNames.contains(nextElement.nodeName)) {
-      nextLine = parseInt(thisElement.getAttribute('i'), 10);
+    if (!textElementNames.includes(nextElement.nodeName)) {
+      nextLine = parseInt(nextElement.getAttribute('i'), 10);
     }
     nextIndex += 1;
   }
