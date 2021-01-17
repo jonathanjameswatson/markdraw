@@ -165,5 +165,18 @@ namespace Markdraw.Delta.Test
         .Insert(new LineInsert())
       );
     }
+
+    [Fact]
+    public void Insert_InsertsWithNewLine()
+    {
+      new Ops()
+      .Insert("AAA")
+      .Insert(new LineInsert())
+      .Transform(new Ops().Retain(3).Insert("A"))
+      .Is(new Ops()
+        .Insert("AAAA")
+        .Insert(new LineInsert())
+      );
+    }
   }
 }
