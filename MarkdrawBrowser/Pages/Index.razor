@@ -19,6 +19,8 @@
   private string modalCodeLanguage = "";
   private string modalCodeContents = "";
 
+  private DotNetObjectReference<Index> indexRef;
+
   private enum ModalOpen {
     None,
     Image,
@@ -39,6 +41,8 @@
 
   protected override async Task OnInitializedAsync()
   {
+    indexRef = DotNetObjectReference.Create(this);
+    await JS.InvokeVoidAsync("setReference", indexRef);
     deltaTree = new DeltaTree(markdown);
     var url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
     Markdown = await Http.GetStringAsync(url);
@@ -77,8 +81,7 @@
     content = deltaTree.Root.ToString();
   }
 
-  public async Task InsertElements(Ops inserts) {
-    var cursorPos = await GetCursor();
+  public void InsertElementsWithCursor(Ops inserts, Cursor cursorPos) {
     var transformation = new Ops();
 
     if (cursorPos.start > 0)
@@ -95,6 +98,11 @@
 
     deltaTree.Delta = deltaTree.Delta.Transform(transformation);
     content = deltaTree.Root.ToString();
+  }
+
+  public async Task InsertElements(Ops inserts) {
+    var cursorPos = await GetCursor();
+    InsertElementsWithCursor(inserts, cursorPos);
   }
 
   public async Task Bold()
@@ -195,6 +203,17 @@
         .Insert(new LineInsert())
     );
     Close();
+  }
+
+  [JSInvokable]
+  public int InsertText(String text, Cursor cursor) {
+    InsertElementsWithCursor(new Ops().Insert(text),cursor);
+    return cursor.start + text.Length;
+  }
+
+  [JSInvokable]
+  public int RemoveText(bool backwards, Cursor cursor) {
+    return backwards ? cursor.start - 1 : cursor.start;
   }
 }
 

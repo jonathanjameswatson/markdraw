@@ -1,3 +1,6 @@
+import 'core-js/stable';
+import 'regenerator-runtime/runtime.js';
+
 import rangy from 'rangy';
 
 import runPrism from './prism';
@@ -7,6 +10,8 @@ const cursor = {
   end: 0,
   nextLine: 0,
 };
+
+let dotnetReference = null;
 
 const getI = (node, offset) => {
   let parentNode = node.nodeType == 3 ? node.parentNode : node;
@@ -75,10 +80,48 @@ const setCursorPosition = (contentDiv) => {
   }
 }
 
+const handleChange = async (event) => {
+  const { data } = event;
+  if (data == null) {
+    const backwards = event.inputType == "deleteContentBackward";
+    await removeText(backwards);
+  } else {
+    await insertText(data);
+  }
+}
+
+const handlePaste = async (event) => {
+  event.preventDefault();
+
+  const text = (event.clipboardData || window.clipboardData).getData('text');
+
+  await insertText(text)
+}
+
+const moveCursorTo = (i) => {
+  console.log(i);
+}
+
+const insertText = async (text) => {
+  const i = await dotnetReference.invokeMethodAsync('InsertText', text, cursor);
+  moveCursorTo(i);
+}
+
+const removeText = async (backwards) => {
+  const i = await dotnetReference.invokeMethodAsync('RemoveText', backwards, cursor);
+  moveCursorTo(i);
+}
+
+window.setReference = (reference) => {
+  dotnetReference = reference;
+}
+
 window.setUp = (editor) => {
   editor.addEventListener("mouseup", () => setCursorPosition(editor));
   editor.addEventListener("keyup", () => setCursorPosition(editor));
   editor.addEventListener("focus", () => setCursorPosition(editor));
+  editor.addEventListener("input", handleChange);
+  editor.addEventListener("paste", handlePaste);
 }
 
 window.renderMarkdown = (editor, content) => {
