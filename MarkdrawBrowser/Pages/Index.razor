@@ -252,10 +252,14 @@
 
     return Math.Max(0, retainAmount);
   }
+
+  public string ExportMarkdown() {
+    return deltaTree.Delta.ToString();
+  }
 }
 
 <div>
-  <NavBar @bind-ImportMarkdown="Markdown"></NavBar>
+  <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown"></NavBar>
 
   <div class="modal@(modal != ModalOpen.None ? " is-active" : "")">
     <div class="modal-background"></div>

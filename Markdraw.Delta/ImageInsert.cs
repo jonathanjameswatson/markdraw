@@ -29,7 +29,7 @@ namespace Markdraw.Delta
 
     public override string ToString()
     {
-      return "![{Alt}]({Url})";
+      return $"![{Alt}]({Url})";
     }
   }
 }

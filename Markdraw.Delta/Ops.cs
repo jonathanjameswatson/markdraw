@@ -319,21 +319,26 @@ namespace Markdraw.Delta
     public override string ToString()
     {
       var stringBuilder = new StringBuilder();
-      int lastLineI = 0;
+      var buffer = new StringBuilder();
 
       foreach (var op in _ops)
       {
-        if (op is Insert insert)
+        if (op is LineInsert lineInsert)
         {
-          if (op is LineInsert lineInsert)
-          {
-            string lineString = lineInsert.LineInsertString();
-            stringBuilder.Insert(lastLineI, lineString);
-            lastLineI = stringBuilder.Length - 1;
-          }
+          stringBuilder.Append(lineInsert.LineInsertString());
+          stringBuilder.Append(buffer.ToString());
+          stringBuilder.Append(lineInsert.ToString());
+          buffer.Clear();
         }
+        else
+        {
+          buffer.Append(op.ToString());
+        }
+      }
 
-        stringBuilder.Append(op.ToString());
+      if (buffer.Length != 0)
+      {
+        stringBuilder.Append(buffer.ToString());
       }
 
       return stringBuilder.ToString();

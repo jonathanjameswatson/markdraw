@@ -26,7 +26,7 @@
             <button class="button" @onclick="Import">
               Import
             </button>
-            <button class="button" disabled>
+            <button class="button" @onclick="Export">
               Export
             </button>
           </div>
@@ -35,24 +35,38 @@
     </div>
   </div>
 
-  <div class="modal@(modal == ModalOpen.Import ? " is-active" : "")">
+  <div class="modal@(modal != ModalOpen.Neither ? " is-active" : "")">
     <div class="modal-background"></div>
       <div class="modal-content">
         <div class="box">
-          <div class="field">
-            <label class="label">Markdown</label>
-            <p class="control">
-              <textarea class="textarea" placeholder="Input markdown" @bind="temporaryMarkdown"></textarea>
-            </p>
-          </div>
-          <div class="buttons">
-            <button class="button" @onclick="SetMarkdown">
-              Import and close
-            </button>
-            <button class="button" @onclick="Close">
-              Close
-            </button>
-          </div>
+          @if (modal == ModalOpen.Import) {
+            <div class="field">
+              <label class="label">Markdown</label>
+              <p class="control">
+                <textarea class="textarea" placeholder="Input markdown" @bind="temporaryMarkdown"></textarea>
+              </p>
+            </div>
+            <div class="buttons">
+              <button class="button" @onclick="SetMarkdown">
+                Import and close
+              </button>
+              <button class="button" @onclick="Close">
+                Close
+              </button>
+            </div>
+          } else if (modal == ModalOpen.Export) {
+            <div class="field">
+              <label class="label">Markdown</label>
+              <p class="control">
+                <textarea class="textarea" @bind="exportMarkdown" readonly></textarea>
+              </p>
+            </div>
+            <div class="buttons">
+              <button class="button" @onclick="Close">
+                Close
+              </button>
+            </div>
+          }
         </div>
       </div>
       <button class="modal-close is-large" aria-label="close" @onclick="Close"></button>
@@ -83,11 +97,14 @@
   }
 
   private void Export() {
-   modal = ModalOpen.Export;
+    exportMarkdown = ExportMarkdown();
+    modal = ModalOpen.Export;
   }
 
   private string markdown;
   private string temporaryMarkdown;
+
+  private string exportMarkdown;
 
   [Parameter]
   public string ImportMarkdown
@@ -109,4 +126,7 @@
 
   [Parameter]
   public EventCallback<string> ImportMarkdownChanged { get; set; }
+
+  [Parameter]
+  public Func<string> ExportMarkdown { get; set; }
 }
