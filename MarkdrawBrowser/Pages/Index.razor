@@ -243,6 +243,8 @@
     string final = splittedText[splittedText.Count - 1];
     if (final.Length != 0) {
       ops.Insert(final);
+    } else {
+      ops.Insert(" ");
     }
 
     int i = InsertElementsWithCursor(ops, cursor);
