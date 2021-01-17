@@ -214,7 +214,11 @@ namespace Markdraw.Tree
 
     public virtual string InsideOpeningTag(int i)
     {
-      return $@"<li i=""{i}"">";
+      if (ParentTree is not null && ParentTree.HasI)
+      {
+        return $@"<li i=""{i}"">";
+      }
+      return "<li>";
     }
 
     public override string ToString()
