@@ -18,7 +18,7 @@ namespace Markdraw.Tree
     {
       if (ParentTree is not null && ParentTree.HasI)
       {
-        return $@"<hr i=""{I}"" />"; ;
+        return $@"<hr i=""{I}"" contenteditable=""false"" />"; ;
       }
       return @"<hr />";
     }
