@@ -38,7 +38,7 @@ namespace Markdraw.Delta
 
     public override string ToString()
     {
-      return "\n";
+      return @"[\n]";
     }
 
     public string LineInsertString()

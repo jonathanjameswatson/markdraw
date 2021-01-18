@@ -337,7 +337,7 @@ namespace Markdraw.Delta
         {
           stringBuilder.Append(lineInsert.LineInsertString());
           stringBuilder.Append(buffer.ToString());
-          stringBuilder.Append(lineInsert.ToString());
+          stringBuilder.Append("\n");
           buffer.Clear();
         }
         else
