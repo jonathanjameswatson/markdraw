@@ -270,7 +270,7 @@ namespace Markdraw.Delta
           {
             InsertOp(opIndex, op);
 
-            if (opIndex == Length)
+            if (opIndex == Length - 1)
             {
               MergeBack(Length - 1);
             }
@@ -285,6 +285,16 @@ namespace Markdraw.Delta
             }
 
             opIndex += 1;
+
+            if (opIndex < Length - 1)
+            {
+              int? beforeLength = MergeBack(opIndex);
+              if (beforeLength is not null)
+              {
+                opIndex -= 1;
+                opCharacterIndex += (int)beforeLength;
+              }
+            }
           }
           else
           {

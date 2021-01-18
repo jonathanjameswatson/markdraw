@@ -84,6 +84,8 @@
   public int InsertElementsWithCursor(Ops inserts, Cursor cursorPos) {
     var transformation = new Ops();
 
+    int characters = inserts.Characters;
+
     if (cursorPos.start > 0)
     {
       transformation.Retain(cursorPos.start);
@@ -99,7 +101,7 @@
     deltaTree.Delta = deltaTree.Delta.Transform(transformation);
     content = deltaTree.Root.ToString();
 
-    return cursorPos.start + inserts.Characters;
+    return cursorPos.start + characters;
   }
 
   public async Task InsertElements(Ops inserts) {
@@ -243,13 +245,13 @@
     string final = splittedText[splittedText.Count - 1];
     if (final.Length != 0) {
       ops.Insert(final);
-    } else {
-      ops.Insert(" ");
     }
 
     int i = InsertElementsWithCursor(ops, cursor);
 
     StateHasChanged();
+
+    Console.WriteLine(i);
 
     return i;
   }
