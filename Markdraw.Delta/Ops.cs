@@ -353,5 +353,46 @@ namespace Markdraw.Delta
 
       return stringBuilder.ToString();
     }
+
+    public T GetFirstFormat<T>(int start) where T : Format
+    {
+      if (start < 0)
+      {
+        throw new ArgumentOutOfRangeException("Start cannot be negative");
+      }
+
+      int opIndex = 0;
+      int pos = 0;
+
+      while (pos <= start)
+      {
+        pos += _ops[opIndex].Length;
+        opIndex += 1;
+      }
+
+      opIndex -= 1;
+
+      while (opIndex < _ops.Count)
+      {
+        var op = _ops[opIndex];
+        if (op is TextInsert textInsert)
+        {
+          if (textInsert.Format is T t)
+          {
+            return t;
+          }
+        }
+        else if (op is LineInsert lineInsert)
+        {
+          if (lineInsert.Format is T t)
+          {
+            return t;
+          }
+        }
+        opIndex += 1;
+      }
+
+      return null;
+    }
   }
 }
