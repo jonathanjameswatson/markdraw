@@ -88,7 +88,7 @@ const handleChange = async (editor, event) => {
     const backwards = inputType == 'deleteContentBackward';
     await removeText(editor, backwards);
   } else {
-    await insertText(editor, data || '\n ');
+    await insertText(editor, data || '\n\n ');
   }
 }
 
@@ -101,7 +101,6 @@ const handlePaste = async (editor, event) => {
 }
 
 const moveCursorTo = (editor, i) => {
-  console.log(i);
   const elements = editor.querySelectorAll('[i]');
 
   const elementIndex = binarySearch(

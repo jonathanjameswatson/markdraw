@@ -99,7 +99,8 @@ namespace Markdraw.Delta
 
     public override string ToString()
     {
-      string bold = Format.Bold == true ? $"**{Text}**" : Text;
+      string trimmed = Text.TrimStart();
+      string bold = Format.Bold == true ? $"**{trimmed}**" : trimmed;
       string italic = Format.Italic == true ? $"*{bold}*" : bold;
       return Format.Link != "" ? $"[{italic}]({Format.Link})" : italic;
     }
