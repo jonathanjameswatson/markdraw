@@ -40,7 +40,7 @@ namespace Markdraw.Tree
       var stringBuilder = new StringBuilder();
       bool open = false;
       int i = start;
-      string buffer = "";
+      var buffer = new StringBuilder();
 
       if (textInserts.Count > 0 && textInserts[0].Format.Bold == true)
       {
@@ -63,18 +63,18 @@ namespace Markdraw.Tree
 
         if (open != bold)
         {
-          stringBuilder.Append(BoldString(open, buffer, i));
+          stringBuilder.Append(BoldString(open, buffer.ToString(), i));
           open = bold;
           i += buffer.Length;
-          buffer = "";
+          buffer.Clear();
         }
 
-        buffer += textInsert.Text;
+        buffer.Append(textInsert.Text);
       }
 
       if (buffer.Length > 0)
       {
-        stringBuilder.Append(BoldString(open, buffer, i));
+        stringBuilder.Append(BoldString(open, buffer.ToString(), i));
         i += buffer.Length;
       }
 
