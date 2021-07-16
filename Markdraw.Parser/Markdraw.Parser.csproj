@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Markdraw.Delta\Markdraw.Delta.csproj" />
+    <ProjectReference Include="..\Markdraw.Tree\Markdraw.Tree.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUglify" Version="1.13.12" />
+  </ItemGroup>
+
+</Project>
