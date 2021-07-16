@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Parser", "Markdraw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markdraw.Parser.Test", "Markdraw.Parser.Test\Markdraw.Parser.Test.csproj", "{3BA47FD2-E1E9-48C1-8040-9C1EA7BFF830}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpecFileGen", "SpecFileGen\SpecFileGen.csproj", "{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,5 +144,17 @@ Global
 		{3BA47FD2-E1E9-48C1-8040-9C1EA7BFF830}.Release|x64.Build.0 = Release|Any CPU
 		{3BA47FD2-E1E9-48C1-8040-9C1EA7BFF830}.Release|x86.ActiveCfg = Release|Any CPU
 		{3BA47FD2-E1E9-48C1-8040-9C1EA7BFF830}.Release|x86.Build.0 = Release|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Debug|x64.Build.0 = Debug|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Release|x64.Build.0 = Release|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D278FEA-DBFA-47F7-96F7-3AC4AB128AAE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
