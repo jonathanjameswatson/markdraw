@@ -5,11 +5,7 @@ namespace Markdraw.Tree
 {
   public class NumbersContainer : Container
   {
-    public override string OpeningTag
-    {
-      get => ParentTree is not null && ParentTree.HasI ? $"<ol i={I}>" : "<ol>";
-    }
-    public override string ClosingTag { get => @"</ol>"; }
+    public override string Tag { get => "ol"; }
     public override bool WrapAllInside { get => true; }
 
     public NumbersContainer(int depth, Ops ops) : base(depth, ops) { }

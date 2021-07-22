@@ -16,10 +16,6 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      if (ParentTree is not null && ParentTree.HasI)
-      {
-        return $@"<hr i=""{I}"" contenteditable=""false"" />"; ;
-      }
       return @"<hr />";
     }
   }

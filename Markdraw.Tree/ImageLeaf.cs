@@ -16,10 +16,6 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      if (ParentTree is not null && ParentTree.HasI)
-      {
-        return $@"<img src=""{CorrespondingInsert.Url}"" alt=""{CorrespondingInsert.Alt}"" i=""{I}"" contenteditable=""false"" />"; ;
-      }
       return $@"<img src=""{CorrespondingInsert.Url}"" alt=""{CorrespondingInsert.Alt}"" />";
     }
   }

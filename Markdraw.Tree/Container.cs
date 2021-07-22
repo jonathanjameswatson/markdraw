@@ -7,12 +7,8 @@ namespace Markdraw.Tree
 {
   public class Container : TreeNode, IEnumerable<TreeNode>
   {
-    public virtual string OpeningTag
-    {
-      get => ParentTree is not null && ParentTree.HasI ? $"<div i={I}>" : "<div>";
-    }
-    public virtual string InsideClosingTag { get => "</li>"; }
-    public virtual string ClosingTag { get => "</div>"; }
+    public virtual string Tag { get => "div"; }
+    public virtual string InsideTag { get => "li"; }
     public virtual bool WrapAllInside { get => false; }
 
     private List<TreeNode> _elementsInside;
@@ -212,37 +208,28 @@ namespace Markdraw.Tree
       return ElementsInside.GetEnumerator();
     }
 
-    public virtual string InsideOpeningTag(int i)
-    {
-      if (ParentTree is not null && ParentTree.HasI)
-      {
-        return $@"<li i=""{i}"">";
-      }
-      return "<li>";
-    }
-
     public override string ToString()
     {
       var stringBuilder = new StringBuilder();
 
-      stringBuilder.Append(OpeningTag);
+      stringBuilder.Append($@"<{Tag}>");
 
       foreach (var child in ElementsInside)
       {
         if (WrapAllInside)
         {
-          stringBuilder.Append(InsideOpeningTag(child.I));
+          stringBuilder.Append($@"<{InsideTag}>");
         }
 
         stringBuilder.Append(child.ToString());
 
         if (WrapAllInside)
         {
-          stringBuilder.Append(InsideClosingTag);
+          stringBuilder.Append($@"</{InsideTag}>");
         }
       }
 
-      stringBuilder.Append(ClosingTag);
+      stringBuilder.Append($@"</{Tag}>");
 
       return stringBuilder.ToString();
     }
