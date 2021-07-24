@@ -164,7 +164,7 @@ namespace Markdraw.Tree
         {
           if (textBuffer.Count != 0)
           {
-            var textLeaf = new TextLeaf(textBuffer, header, ParentTree, i);
+            var textLeaf = new TextLeaf(textBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i);
             _elementsInside.Add(textLeaf);
             textBuffer = new List<TextInsert>();
             i += textLeaf.Length;
@@ -189,7 +189,7 @@ namespace Markdraw.Tree
 
       if (textBuffer.Count != 0)
       {
-        var textLeaf = new TextLeaf(textBuffer, header, ParentTree, i);
+        var textLeaf = new TextLeaf(textBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i);
         _elementsInside.Add(textLeaf);
         i += textLeaf.Length;
       }

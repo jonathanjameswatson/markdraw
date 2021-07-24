@@ -23,17 +23,22 @@ namespace Markdraw.Tree
         _correspondingInserts = value;
       }
     }
+
+    public bool AddSpans { get => ParentTree is not null && ParentTree.AddSpans; }
+
     public string Tag { get; set; }
 
-    public TextLeaf(List<TextInsert> correspondingInserts, int header) : this(correspondingInserts, header, null, 0) { }
+    public TextLeaf(List<TextInsert> correspondingInserts, string tag) : this(correspondingInserts, tag, null, 0) { }
 
-    public TextLeaf(List<TextInsert> correspondingInserts, int header, DeltaTree deltaTree, int i) : base(deltaTree, i)
+    public TextLeaf(List<TextInsert> correspondingInserts, int header) : this(correspondingInserts, header == 0 ? "p" : $"h{header}", null, 0) { }
+
+    public TextLeaf(List<TextInsert> correspondingInserts, string tag, DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
       CorrespondingInserts = correspondingInserts;
-      Tag = header == 0 ? "p" : $"h{header}";
+      Tag = tag;
     }
 
-    public TextLeaf(List<TextInsert> correspondingInserts) : this(correspondingInserts, 0) { }
+    public TextLeaf(List<TextInsert> correspondingInserts) : this(correspondingInserts, "p") { }
 
     private (string, int) AddBold(List<TextInsert> textInserts, int start)
     {
@@ -49,12 +54,18 @@ namespace Markdraw.Tree
 
       Func<bool, string, int, string> BoldString = (bold, text, i) =>
       {
-        string tag = bold ? "strong" : "span";
-        if (ParentTree is not null && ParentTree.HasI)
+        if (AddSpans)
         {
-          return $@"<{tag} i=""{i}"">{text}</{tag}>";
+          string tag = bold ? "strong" : "span";
+          return $@"<{tag}>{text}</{tag}>";
         }
-        return $@"<{tag}>{text}</{tag}>";
+
+        if (bold)
+        {
+          return $@"<strong>{text}</strong>";
+        }
+
+        return text;
       };
 
       foreach (var textInsert in textInserts)
@@ -96,7 +107,7 @@ namespace Markdraw.Tree
         {
           (string text1, int newI1) = AddBold(buffer, i);
 
-          if (ParentTree is not null && ParentTree.HasI)
+          if (ParentTree is not null && ParentTree.AddSpans)
           {
             stringBuilder.Append($@"{text1}<em i=""{i}"">");
           }
@@ -142,10 +153,6 @@ namespace Markdraw.Tree
 
       Func<string, int, string> LinkString = (link, i) =>
       {
-        if (ParentTree is not null && ParentTree.HasI)
-        {
-          return $@"<a href=""{link}"" i=""{i}"">";
-        }
         return $@"<a href=""{link}"">";
       };
 
@@ -197,10 +204,6 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      if (ParentTree is not null && ParentTree.HasI)
-      {
-        return $@"<{Tag} i=""{I}"">{AddLinks(CorrespondingInserts, I)}</{Tag}>";
-      }
       return $@"<{Tag}>{AddLinks(CorrespondingInserts, I)}</{Tag}>";
     }
   }

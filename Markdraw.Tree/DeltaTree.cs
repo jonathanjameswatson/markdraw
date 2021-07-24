@@ -17,18 +17,18 @@ namespace Markdraw.Tree
       }
     }
     public Container Root { get => _root; }
-    public bool HasI { get; set; }
+    public bool AddSpans { get; set; }
 
     public DeltaTree(string markdown = "")
     {
       Delta = MarkdownToDeltaConverter.Parse(markdown);
-      HasI = true;
+      AddSpans = true;
     }
 
     public DeltaTree(Ops ops)
     {
       Delta = ops;
-      HasI = true;
+      AddSpans = true;
     }
 
     public void SetWithMarkdown(string markdown)
