@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using Markdraw.Delta;
 using Xunit;
 
@@ -48,21 +48,20 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("Test")
-            .Insert(new LineInsert(new LineFormat(new List<Indent>(), 1)))
+            .Insert(new LineInsert(new LineFormat { Header = 1 }))
             .Insert(new CodeInsert("line1\nline2", "code"))
             .Insert(new LineInsert())
             .Insert("Italic", TextFormat.ItalicPreset)
             .Insert(" test")
             .Insert(
               new LineInsert(
-                new LineFormat(
-                  new List<Indent>() {
+                new LineFormat {
+                  Indents = ImmutableList.Create(
                     Indent.Number(2),
                     Indent.Empty(1),
                     Indent.Quote,
                     Indent.Empty(1)
-                  },
-                  0)
+                  )}
                 )
               )
         );

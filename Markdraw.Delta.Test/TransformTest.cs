@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using Xunit;
 
 namespace Markdraw.Delta.Test
@@ -22,7 +22,11 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsText()
     {
-      var turnBold = new TextFormat(true, null, null);
+      var turnBold = new TextFormat() {
+        Bold = true,
+        Italic = null,
+        Link = null
+      };
 
       new Ops()
         .Insert("A")
@@ -41,32 +45,34 @@ namespace Markdraw.Delta.Test
 
       new Ops()
         .Insert("A")
-        .Insert("A", (TextFormat)TextFormat.BoldPreset.Clone())
+        .Insert("A", TextFormat.BoldPreset)
         .Transform(new Ops().Retain(1, turnBold))
         .Is(new Ops().Insert("AA", TextFormat.BoldPreset));
 
       new Ops()
         .Insert("A")
-        .Insert("A", (TextFormat)TextFormat.BoldPreset.Clone())
+        .Insert("A", TextFormat.BoldPreset)
         .Transform(new Ops().Retain(2, turnBold))
         .Is(new Ops().Insert("AA", TextFormat.BoldPreset));
 
       new Ops()
-        .Insert("A", (TextFormat)TextFormat.BoldPreset.Clone())
-        .Insert("A", (TextFormat)TextFormat.ItalicPreset.Clone())
+        .Insert("A", TextFormat.BoldPreset)
+        .Insert("A", TextFormat.ItalicPreset)
         .Transform(new Ops().Retain(2, turnBold))
         .Is(new Ops()
           .Insert("A", TextFormat.BoldPreset)
-          .Insert("A", new TextFormat(true, true, ""))
+          .Insert("A", new TextFormat { Bold = true, Italic = true })
         );
 
       new Ops()
-      .Insert("AA", (TextFormat)TextFormat.BoldPreset.Clone())
-      .Insert("AA", (TextFormat)TextFormat.ItalicPreset.Clone())
+      .Insert("AA", TextFormat.BoldPreset)
+      .Insert("AA", TextFormat.ItalicPreset)
       .Transform(new Ops().Retain(1).Retain(2, turnBold))
       .Is(new Ops()
         .Insert("AA", TextFormat.BoldPreset)
-        .Insert("A", new TextFormat(true, true, ""))
+        .Insert("A", new TextFormat {
+          Bold = true, Italic = true
+        })
         .Insert("A", TextFormat.ItalicPreset)
       );
 
@@ -83,7 +89,7 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsLines()
     {
-      var turnQuote = new LineFormat(new List<Indent>() { Indent.Quote, Indent.Empty(1) }, null);
+      var turnQuote = new LineFormat() { Indents = ImmutableList.Create(Indent.Quote, Indent.Empty(1)), Header = null };
 
       new Ops()
         .Insert(new LineInsert())
@@ -140,19 +146,21 @@ namespace Markdraw.Delta.Test
         .Is(new Ops().Insert("A").Insert("A", TextFormat.BoldPreset).Insert("A"));
 
       new Ops()
-        .Insert("AB", new TextFormat(false, false, "C"))
+        .Insert("AB", new TextFormat { Link = "C" })
         .Transform(new Ops().Retain(1).Insert("D"))
         .Is(
           new Ops()
-            .Insert("A", new TextFormat(false, false, "C"))
+            .Insert("A", new TextFormat { Link = "C" })
             .Insert("D")
-            .Insert("B", new TextFormat(false, false, "C")));
+            .Insert("B", new TextFormat { Link = "C"}));
     }
 
     [Fact]
     public void Retain_FormatsTextWithNewLine()
     {
-      var turnBold = new TextFormat(true, null, null);
+      var turnBold = new TextFormat {
+        Bold = true, Italic = null, Link = null
+      };
 
       new Ops()
       .Insert("AAA")

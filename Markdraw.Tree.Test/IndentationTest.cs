@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Markdraw.Delta;
 using Xunit;
 
@@ -142,7 +143,7 @@ namespace Markdraw.Tree.Test
             new TextLeaf(new List<TextInsert>() {
               new TextInsert("C")
             }),
-            new QuoteContainer(new List<TreeNode>() {})
+            new QuoteContainer(new List<TreeNode>())
           })
         );
     }
@@ -157,24 +158,21 @@ namespace Markdraw.Tree.Test
             .Insert(new LineInsert(LineFormat.NumberPreset))
             .Insert("B")
             .Insert(new LineInsert(
-              new LineFormat(
-                new List<Indent>() { Indent.Number(2), Indent.Bullet },
-                0
-              )
+              new LineFormat {
+                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet)
+              }
             ))
             .Insert("C")
             .Insert(new LineInsert(
-              new LineFormat(
-                new List<Indent>() { Indent.Number(2), Indent.Bullet, Indent.Quote },
-                0
-              )
+              new LineFormat {
+                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet, Indent.Quote)
+              }
             ))
             .Insert("D")
             .Insert(new LineInsert(
-              new LineFormat(
-                new List<Indent>() { Indent.Number(2), Indent.Bullet },
-                0
-              )
+              new LineFormat {
+                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet)
+              }
             ))
         )
         .Is(
@@ -209,10 +207,9 @@ namespace Markdraw.Tree.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(
-                new List<Indent>() { Indent.Number(2), Indent.Bullet, Indent.Quote },
-                0
-              )
+              new LineFormat {
+                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet, Indent.Quote)
+              }
             ))
         )
         .Is(
@@ -238,10 +235,9 @@ namespace Markdraw.Tree.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat(
-                new List<Indent>() { Indent.Number(2), Indent.Bullet, Indent.Quote },
-                0
-              )
+              new LineFormat {
+                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet, Indent.Quote)
+              }
             ))
             .Insert("B")
             .Insert(new LineInsert(LineFormat.NumberPreset))

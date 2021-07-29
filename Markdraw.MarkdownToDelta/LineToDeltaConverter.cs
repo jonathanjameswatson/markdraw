@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using Markdraw.Delta;
 
@@ -8,23 +9,23 @@ namespace Markdraw.MarkdownToDelta
 {
   public static class LineToDeltaConverter
   {
-    private static readonly Regex indentRegex = new Regex(
+    private static readonly Regex IndentRegex = new Regex(
       @"^(?<indent>(?<whitespace>\s+)|(?<quotes>>)|(?<horizontalrule>(?<hrstart>\*|\-|_)(?:\s{0,3}\k<hrstart>){2}\s*$)|(?<bullet>[\*\-+](?=\s))|(?<number>\d{1,9}[.)](?=\s)))?(?<text>.*)$",
       RegexOptions.Compiled
     );
-    private static readonly Regex headerRegex = new Regex(
+    private static readonly Regex HeaderRegex = new Regex(
       @"^(?<header>#{1,6}(?=\s))?\s*(?<text>.*)$",
       RegexOptions.Compiled
     );
-    private static readonly Regex linkAndImageRegex = new Regex(
+    private static readonly Regex LinkAndImageRegex = new Regex(
       @"(?<!\\)(?<escapedbackslashes>(?:\\\\)+)?(?<image>!?)\[(?<text>[^\[]*?)(?<!\\)(?:\\\\)*\]\((?<url>.*?(?<!\\)(?:\\\\)*)\)",
       RegexOptions.Compiled
     );
-    private static readonly Regex nonCapturingLinkAndImageRegex = new Regex(
+    private static readonly Regex NonCapturingLinkAndImageRegex = new Regex(
       @"(?<!\\)(?<escapedbackslashes>(?:\\\\)+)?(?:!?)\[(?:[^\[]*?)(?<!\\)(?:\\\\)*\]\((?:.*?(?<!\\)(?:\\\\)*)\)",
       RegexOptions.Compiled
     );
-    private static readonly Regex asciiPunctuationRegex = new Regex(
+    private static readonly Regex AsciiPunctuationRegex = new Regex(
       @"[!""#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}~]",
       RegexOptions.Compiled
     );
@@ -32,10 +33,11 @@ namespace Markdraw.MarkdownToDelta
     public static Ops Parse(string line)
     {
       var ops = new Ops();
-      var lineFormat = new LineFormat();
+      var header = 0;
+      var indents = new List<Indent>();
 
-      string text = line;
-      var indentMatch = indentRegex.Match(text);
+      var text = line;
+      var indentMatch = IndentRegex.Match(text);
 
       int? codeMatch = null;
 
@@ -45,7 +47,7 @@ namespace Markdraw.MarkdownToDelta
 
         if (indentMatch.Groups["whitespace"].Success)
         {
-          int length = indentMatch.Groups["whitespace"].Length;
+          var length = indentMatch.Groups["whitespace"].Length;
           if (length % 4 == 0)
           {
             indentType = Indent.Code;
@@ -62,7 +64,7 @@ namespace Markdraw.MarkdownToDelta
         }
         else if (indentMatch.Groups["horizontalrule"].Success)
         {
-          return ops.Insert(new DividerInsert()).Insert(new LineInsert(lineFormat));
+          return ops.Insert(new DividerInsert()).Insert(new LineInsert(new LineFormat { Indents = indents.ToImmutableList() }));
         }
         else if (indentMatch.Groups["bullet"].Success)
         {
@@ -75,7 +77,7 @@ namespace Markdraw.MarkdownToDelta
 
         if (indentType is not null)
         {
-          lineFormat.Indents.Add(indentType);
+          indents.Add(indentType);
         }
         text = indentMatch.Groups["text"].Value;
 
@@ -85,16 +87,16 @@ namespace Markdraw.MarkdownToDelta
           break;
         }
 
-        indentMatch = indentRegex.Match(text);
+        indentMatch = IndentRegex.Match(text);
       }
 
       if (codeMatch is null)
       {
-        var headerMatch = headerRegex.Match(text);
+        var headerMatch = HeaderRegex.Match(text);
 
         if (headerMatch.Groups["header"].Success)
         {
-          lineFormat.Header = headerMatch.Groups["header"].Value.Length;
+          header = headerMatch.Groups["header"].Value.Length;
         }
 
         text = headerMatch.Groups["text"].Value;
@@ -103,8 +105,11 @@ namespace Markdraw.MarkdownToDelta
       var textOps = LinksAndImagesWithTextToDelta(text);
 
       ops.InsertMany(textOps);
-
-      ops.Insert(new LineInsert(lineFormat));
+      
+      ops.Insert(new LineInsert(new LineFormat {
+        Indents = indents.ToImmutableList(),
+        Header = header
+      }));
 
       return ops;
     }
@@ -112,11 +117,11 @@ namespace Markdraw.MarkdownToDelta
     private static Ops LinksAndImagesWithTextToDelta(string text)
     {
       var ops = new Ops();
-      var matches = linkAndImageRegex.Matches(text);
-      var nonMatches = nonCapturingLinkAndImageRegex.Split(text);
-      int i = 0;
+      var matches = LinkAndImageRegex.Matches(text);
+      var nonMatches = NonCapturingLinkAndImageRegex.Split(text);
+      var i = 0;
 
-      foreach (string nonMatch in nonMatches)
+      foreach (var nonMatch in nonMatches)
       {
         ops.InsertMany(TextToDelta(nonMatch));
 
@@ -132,13 +137,17 @@ namespace Markdraw.MarkdownToDelta
           {
             var linksOps = TextToDelta(match.Groups["text"].Value);
 
-            int characters = linksOps.Characters;
+            var characters = linksOps.Characters;
             if (characters > 0)
             {
               linksOps.Transform(
                 new Ops().Retain(
                   characters,
-                  new TextFormat(null, null, match.Groups["url"].Value)
+                  new TextFormat {
+                    Bold = null,
+                    Italic = null,
+                    Link = match.Groups["url"].Value
+                  }
                 )
               );
             }
@@ -158,16 +167,16 @@ namespace Markdraw.MarkdownToDelta
       var opsList = new List<Ops>();
       Delimiter delimiterStack = null;
 
-      int i = -1;
-      int opStart = 0;
-      int delimiterStart = 0;
-      bool cancelled = false;
+      var i = -1;
+      var opStart = 0;
+      var delimiterStart = 0;
+      var cancelled = false;
       char? preceding = null;
-      int consecutiveDelimiters = 0;
-      int previousConsecutiveDelimiters = 0;
-      char delimiterType = '*';
+      var consecutiveDelimiters = 0;
+      var previousConsecutiveDelimiters = 0;
+      var delimiterType = '*';
 
-      foreach (char x in text)
+      foreach (var x in text)
       {
         i += 1;
         previousConsecutiveDelimiters = consecutiveDelimiters;
@@ -192,7 +201,7 @@ namespace Markdraw.MarkdownToDelta
 
         if (consecutiveDelimiters == 0 && previousConsecutiveDelimiters != 0)
         {
-          string textToInsert = text.Substring(opStart, delimiterStart - opStart);
+          var textToInsert = text.Substring(opStart, delimiterStart - opStart);
           if (textToInsert != "")
           {
             var textOps = new Ops().Insert(textToInsert);
@@ -236,7 +245,7 @@ namespace Markdraw.MarkdownToDelta
 
       if (consecutiveDelimiters == 0)
       {
-        string textToInsert = text.Substring(opStart, text.Length - opStart);
+        var textToInsert = text.Substring(opStart, text.Length - opStart);
         if (textToInsert != "")
         {
           var textOps = new Ops().Insert(textToInsert);
@@ -245,7 +254,7 @@ namespace Markdraw.MarkdownToDelta
       }
       else
       {
-        string textToInsert = text.Substring(opStart, delimiterStart - opStart);
+        var textToInsert = text.Substring(opStart, delimiterStart - opStart);
         if (textToInsert != "")
         {
           var textOps = new Ops().Insert(textToInsert);
@@ -314,7 +323,7 @@ namespace Markdraw.MarkdownToDelta
         );
 
         var opener = currentDelimiter.Previous;
-        bool found = false;
+        var found = false;
         while (opener is not null && !currentOpenerBottoms.Contains(opener))
         {
           if ((
@@ -343,21 +352,21 @@ namespace Markdraw.MarkdownToDelta
           )
           {
             emphasis = EmphasisType.Bold;
-            newFormat = new TextFormat(true, null, null);
+            newFormat = new TextFormat { Bold = true, Italic = null, Link = null };
           }
           else
           {
             emphasis = EmphasisType.Italic;
-            newFormat = new TextFormat(null, true, null);
+            newFormat = new TextFormat { Bold = null, Italic = true, Link = null };
           }
 
           currentDelimiter.RemoveCharacters(emphasis);
           opener.RemoveCharacters(emphasis);
 
-          for (int j = opener.DelimiterOpsIndex + 1; j < currentDelimiter.DelimiterOpsIndex; j++)
+          for (var j = opener.DelimiterOpsIndex + 1; j < currentDelimiter.DelimiterOpsIndex; j++)
           {
             var toFormat = opsList[j];
-            int characters = toFormat.Characters;
+            var characters = toFormat.Characters;
             if (characters > 0)
             {
               toFormat.Transform(

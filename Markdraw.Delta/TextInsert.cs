@@ -4,16 +4,11 @@ namespace Markdraw.Delta
 {
   public class TextInsert : Insert
   {
-    public override int Length
-    {
-      get => _text.Length;
-    }
+    public override int Length => Text.Length;
 
-    private string _text;
-    public string Text { get => _text; }
+    public string Text { get; private set; }
 
-    private TextFormat _format;
-    public TextFormat Format { get => _format; }
+    public TextFormat Format { get; private set; }
 
     public TextInsert(string text, TextFormat format)
     {
@@ -22,8 +17,8 @@ namespace Markdraw.Delta
         throw new ArgumentException("TextInsert cannot be empty");
       }
 
-      _text = text;
-      _format = format;
+      Text = text;
+      Format = format;
     }
 
     public TextInsert(string text) : this(text, new TextFormat()) { }
@@ -32,26 +27,26 @@ namespace Markdraw.Delta
     {
       if (format is TextFormat textFormat)
       {
-        _format.Merge(textFormat);
+        Format = Format.Merge(textFormat);
       }
     }
 
     public override (int, bool) Subtract(int amount)
     {
-      int n = Length;
+      var n = Length;
       if (amount >= n)
       {
         return (n, true);
       }
-      _text = _text.Substring(0, n - amount);
+      Text = Text[..(n - amount)];
       return (amount, false);
     }
 
     public TextInsert Merge(TextInsert before)
     {
-      if (_format.Equals(before._format))
+      if (Format.Equals(before.Format))
       {
-        before._text += _text;
+        before.Text += Text;
         return before;
       }
       else
@@ -62,9 +57,9 @@ namespace Markdraw.Delta
 
     public TextInsert Merge(TextInsert middle, TextInsert before)
     {
-      if (_format.Equals(middle._format))
+      if (Format.Equals(middle.Format))
       {
-        before._text += middle._text + _text;
+        before.Text += middle.Text + Text;
         return before;
       }
       else
@@ -75,26 +70,26 @@ namespace Markdraw.Delta
 
     public bool DeleteUpTo(int position)
     {
-      _text = _text.Substring(position, Length - position);
+      Text = Text.Substring(position, Length - position);
       return Length == 0;
     }
 
     public TextInsert SplitAt(int position)
     {
-      string startText = _text.Substring(0, position);
-      string endText = _text.Substring(position);
-      _text = startText;
-      return new TextInsert(endText, (TextFormat)_format.Clone());
+      var startText = Text[..position];
+      var endText = Text[position..];
+      Text = startText;
+      return new TextInsert(endText, Format);
     }
 
     public override bool Equals(object obj)
     {
-      return obj is TextInsert x && x._text == _text && x._format.Equals(_format);
+      return obj is TextInsert x && x.Text == Text && x.Format.Equals(Format);
     }
 
     public override int GetHashCode()
     {
-      return (_text, _format).GetHashCode();
+      return (Text, Format).GetHashCode();
     }
 
     public override string ToString()

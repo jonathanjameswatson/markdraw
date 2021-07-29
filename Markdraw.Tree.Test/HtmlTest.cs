@@ -218,7 +218,7 @@ namespace Markdraw.Tree.Test
       new Container(new List<TreeNode>() {
         new TextLeaf(new List<TextInsert>() {
           new TextInsert("A"),
-          new TextInsert("B", new TextFormat(false, false, "C")),
+          new TextInsert("B", new TextFormat { Link = "C" }),
           new TextInsert("D")
         }, 0)
       })
@@ -232,9 +232,9 @@ namespace Markdraw.Tree.Test
       new Container(new List<TreeNode>() {
         new TextLeaf(new List<TextInsert>() {
           new TextInsert("A"),
-          new TextInsert("B", new TextFormat(false, true, "")),
-          new TextInsert("C", new TextFormat(false, true, "F")),
-          new TextInsert("D", new TextFormat(false, false, "F")),
+          new TextInsert("B", new TextFormat { Italic = true }),
+          new TextInsert("C", new TextFormat { Italic = true, Link = "F" }),
+          new TextInsert("D", new TextFormat { Link = "F" }),
           new TextInsert("E")
         }, 0)
       })

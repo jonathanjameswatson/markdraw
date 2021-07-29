@@ -1,5 +1,3 @@
-using System;
-
 namespace Markdraw.Delta
 {
   public enum IndentType
@@ -11,22 +9,20 @@ namespace Markdraw.Delta
     Empty
   }
 
-  public class Indent
+  public record Indent
   {
-    public IndentType Type { get; set; }
-    public int Length { get; set; }
 
-    public static Indent Quote { get => new Indent(IndentType.Quote); }
-    public static Indent Bullet { get => new Indent(IndentType.Bullet); }
-    public static Indent Code { get => new Indent(IndentType.Code); }
-
-    private Indent(IndentType indentType, int length)
+    private Indent(IndentType indentType, int length = 1)
     {
       Type = indentType;
       Length = length;
     }
+    public IndentType Type { get; }
+    public int Length { get; }
 
-    private Indent(IndentType indentType) : this(indentType, 1) { }
+    public static Indent Quote => new(IndentType.Quote);
+    public static Indent Bullet => new(IndentType.Bullet);
+    public static Indent Code => new(IndentType.Code);
 
     public static Indent Number(int length)
     {
@@ -46,39 +42,6 @@ namespace Markdraw.Delta
     public bool IsEmpty()
     {
       return Type == IndentType.Empty;
-    }
-
-    public override bool Equals(object obj)
-    {
-      return obj is Indent indent && indent.Type == Type && indent.Length == Length;
-    }
-
-    public override int GetHashCode()
-    {
-      return (Type, Length).GetHashCode();
-    }
-
-    public static bool operator ==(Indent lhs, Indent rhs)
-    {
-      if (Object.ReferenceEquals(lhs, null))
-      {
-        if (Object.ReferenceEquals(rhs, null))
-        {
-          // null == null = true.
-          return true;
-        }
-
-        // Only the left side is null.
-        return false;
-      }
-
-      // Equals handles case of null on right side.
-      return lhs.Equals(rhs);
-    }
-
-    public static bool operator !=(Indent lhs, Indent rhs)
-    {
-      return !(lhs == rhs);
     }
   }
 }

@@ -1,61 +1,64 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Markdraw.Delta
 {
-  public class LineFormat : Format
+  public record LineFormat : Format
   {
-    public List<Indent> Indents { get; set; }
-    public List<Indent> NonEmptyIndents { get => Indents.Where(indent => !indent.IsEmpty()).ToList(); }
+    public ImmutableList<Indent> Indents { get; init; } = ImmutableList<Indent>.Empty;
+    public ImmutableList<Indent> NonEmptyIndents => Indents.Where(indent => !indent.IsEmpty()).ToImmutableList();
 
-    private int? _header = 0;
-    public int? Header
+    public int? Header { get; init; } = 0;
+
+    public static readonly LineFormat QuotePreset = new() {
+      Indents = ImmutableList.Create(
+        Indent.Quote, Indent.Empty(1)
+      )
+    };
+    public static readonly LineFormat BulletPreset = new() {
+      Indents = ImmutableList.Create(Indent.Bullet, Indent.Empty(1))
+    };
+    public static readonly LineFormat NumberPreset = new() {
+      Indents = ImmutableList.Create(Indent.Number(2), Indent.Empty(1))
+    };
+    public static readonly LineFormat CodePreset = new() {
+      Indents = ImmutableList.Create(
+        Indent.Code
+      )
+    };
+
+    public LineFormat Merge(LineFormat other)
     {
-      get { return _header; }
-      set { _header = value is null ? null : Math.Clamp((int)value, 0, 6); }
+      return new LineFormat() {
+        Indents = other.Indents ?? Indents,
+        Header = other.Header ?? Header
+      };
     }
 
-    public static LineFormat QuotePreset = new LineFormat(new List<Indent>() { Indent.Quote, Indent.Empty(1) }, 0);
-    public static LineFormat BulletPreset = new LineFormat(new List<Indent>() { Indent.Bullet, Indent.Empty(1) }, 0);
-    public static LineFormat NumberPreset = new LineFormat(new List<Indent>() { Indent.Number(2), Indent.Empty(1) }, 0);
-    public static LineFormat CodePreset = new LineFormat(new List<Indent>() { Indent.Code }, 0);
-
-    public LineFormat(List<Indent> indents, int? header)
+    public LineFormat Modify(ModifyingLineFormat other)
     {
-      Indents = indents;
-      Header = header;
+      Debug.Assert(Header != null, nameof(Header) + " != null");
+      return new LineFormat() {
+        Indents = other.IndentsFunction(Indents), Header = other.HeaderFunction((int)Header)
+      };
     }
 
-    public LineFormat()
+    public virtual bool Equals(LineFormat other)
     {
-      Indents = new List<Indent>();
-      Header = 0;
-    }
-
-    public void Merge(LineFormat other)
-    {
-      Indents = other.Indents is null ? Indents : other.Indents;
-      Header = other.Header is null ? Header : other.Header;
-    }
-
-    public void Modify(ModifyingLineFormat other)
-    {
-      other.IndentsFunction(Indents);
-      Header = other.HeaderFunction((int)Header);
-    }
-
-    public override bool Equals(object obj)
-    {
-      return (obj is LineFormat lineFormat
-              && Indents.SequenceEqual(lineFormat.Indents)
-              && Header == lineFormat.Header
-             );
+      return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
     }
 
     public override int GetHashCode()
     {
-      return (Indents, Header).GetHashCode();
+      var hash = new HashCode();
+      foreach (var indent in Indents)
+      {
+        hash.Add(indent);
+      }
+      hash.Add(Header);
+      return hash.ToHashCode();
     }
   }
 }

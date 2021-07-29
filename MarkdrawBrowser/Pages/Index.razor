@@ -3,6 +3,7 @@
 @using Markdraw.Tree;
 @using System.Threading.Tasks;
 @using System.Collections.Generic;
+@using System.Collections.Immutable
 @inject HttpClient Http;
 @inject IJSRuntime JS;
 
@@ -44,7 +45,7 @@
     indexRef = DotNetObjectReference.Create(this);
     await JS.InvokeVoidAsync("setReference", indexRef);
     deltaTree = new DeltaTree(markdown);
-    var url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
+    const string url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
     Markdown = await Http.GetStringAsync(url);
   }
 
@@ -55,12 +56,12 @@
     public int nextLine { get; set; }
   }
 
-  public async Task<Cursor> GetCursor()
+  private async Task<Cursor> GetCursor()
   {
     return await JS.InvokeAsync<Cursor>("getCursor");
   }
 
-  public async Task SetFormat(Format format)
+  private async Task SetFormat(Format format)
   {
     var cursorPos = await GetCursor();
     var transformation = new Ops();
@@ -70,7 +71,7 @@
       transformation.Retain(cursorPos.start);
     }
 
-    int end = format is ModifyingLineFormat || format is LineFormat ? cursorPos.nextLine : cursorPos.end;
+    var end = format is ModifyingLineFormat || format is LineFormat ? cursorPos.nextLine : cursorPos.end;
 
     if (end - cursorPos.start != 0)
     {
@@ -81,10 +82,10 @@
     content = deltaTree.Root.ToString();
   }
 
-  public int InsertElementsWithCursor(Ops inserts, Cursor cursorPos) {
+  private int InsertElementsWithCursor(Ops inserts, Cursor cursorPos) {
     var transformation = new Ops();
 
-    int characters = inserts.Characters;
+    var characters = inserts.Characters;
 
     if (cursorPos.start > 0)
     {
@@ -104,88 +105,78 @@
     return cursorPos.start + characters;
   }
 
-  public async Task InsertElements(Ops inserts) {
+  private async Task InsertElements(Ops inserts) {
     var cursorPos = await GetCursor();
     InsertElementsWithCursor(inserts, cursorPos);
   }
 
-  public async Task Bold()
+  private async Task Bold()
   {
-    await SetFormat(new TextFormat(true, null, null));
+    await SetFormat(new TextFormat { Bold = true, Italic = null, Link = null });
   }
 
-  public async Task Italic()
+  private async Task Italic()
   {
-    await SetFormat(new TextFormat(null, true, null));
+    await SetFormat(new TextFormat { Bold = null, Italic = true, Link = null });
   }
 
-  public void Link()
+  private void Link()
   {
     modal = ModalOpen.Link;
   }
 
-  public async Task Quote()
+  private async Task Quote()
   {
     await SetFormat(
-      new ModifyingLineFormat(
-        list => {
-          list.Insert(0, Indent.Empty(1));
-          list.Insert(0, Indent.Quote);
-        },
-        i => i)
+      new ModifyingLineFormat {
+        IndentsFunction = list => list.Insert(0, Indent.Empty(1)).Insert(0, Indent.Quote)
+      }
     );
   }
 
-  public async Task Bullet()
+  private async Task Bullet()
   {
     await SetFormat(
-      new ModifyingLineFormat(
-        list => {
-          list.Insert(0, Indent.Empty(1));
-          list.Insert(0, Indent.Bullet);
-        },
-        i => i)
+      new ModifyingLineFormat {
+        IndentsFunction = list => list.Insert(0, Indent.Empty(1)).Insert(0, Indent.Bullet)
+      }
     );
   }
 
-  public async Task Number()
+  private async Task Number()
   {
     await SetFormat(
-      new ModifyingLineFormat(
-        list => {
-          list.Insert(0, Indent.Empty(1));
-          list.Insert(0, Indent.Number(2));
-        },
-        i => i)
-    );
+      new ModifyingLineFormat {
+        IndentsFunction = list => list.Insert(0, Indent.Empty(1)).Insert(0, Indent.Number(2))
+      });
   }
 
-  public async Task Clear()
+  private async Task Clear()
   {
-    await SetFormat(new TextFormat(false, false, ""));
+    await SetFormat(new TextFormat());
   }
 
   public async Task ClearLine()
   {
-    await SetFormat(new ModifyingLineFormat(list => list.Clear(), i => i));
+    await SetFormat(new ModifyingLineFormat { IndentsFunction = _ => ImmutableList<Indent>.Empty });
   }
 
-  public async Task HeaderUp()
+  private async Task HeaderUp()
   {
-    await SetFormat(new ModifyingLineFormat(list => { }, i => Math.Max((i + 6) % 7, 1)));
+    await SetFormat(new ModifyingLineFormat { HeaderFunction = i => Math.Max((i + 6) % 7, 1) });
   }
 
-  public async Task HeaderDown()
+  private async Task HeaderDown()
   {
-    await SetFormat(new ModifyingLineFormat(list => { }, i => (i == 0 ? i : i + 1) % 7));
+    await SetFormat(new ModifyingLineFormat { HeaderFunction = i => (i == 0 ? i : i + 1) % 7 });
   }
 
-  public void Image()
+  private void Image()
   {
     modal = ModalOpen.Image;
   }
 
-  public async Task Divider()
+  private async Task Divider()
   {
     await InsertElements(
       new Ops()
@@ -195,7 +186,7 @@
     );
   }
 
-  public void Code()
+  private void Code()
   {
     modal = ModalOpen.Code;
   }
@@ -206,7 +197,7 @@
 
   private async Task SetLink()
   {
-    await SetFormat(new TextFormat(null, null, modalLink));
+    await SetFormat(new TextFormat { Link = modalLink });
     Close();
   }
 
@@ -231,16 +222,14 @@
   }
 
   [JSInvokable]
-  public int InsertText(String text, Cursor cursor) {
-    var splittedText = new List<string>(text.Split("\n"));
+  public int InsertText(string text, Cursor cursor) {
+    var splitText = new List<string>(text.Split("\n"));
     var lastTextFormat = deltaTree.Delta.GetFirstFormat<TextFormat>(cursor.start);
     LineFormat lastLineFormat = null;
     var ops = new Ops();
 
-    foreach (string part in splittedText.GetRange(0, splittedText.Count - 1)) {
-      if (lastLineFormat == null) {
-        lastLineFormat = deltaTree.Delta.GetFirstFormat<LineFormat>(cursor.start);
-      }
+    foreach (var part in splitText.GetRange(0, splitText.Count - 1)) {
+      lastLineFormat ??= deltaTree.Delta.GetFirstFormat<LineFormat>(cursor.start);
 
       if (part.Length != 0) {
         ops.Insert(part, lastTextFormat);
@@ -249,12 +238,12 @@
       ops.Insert(new LineInsert(lastLineFormat));
     }
 
-    string final = splittedText[splittedText.Count - 1];
+    var final = splitText[splitText.Count - 1];
     if (final.Length != 0) {
       ops.Insert(final, lastTextFormat);
     }
 
-    int i = InsertElementsWithCursor(ops, cursor);
+    var i = InsertElementsWithCursor(ops, cursor);
 
     StateHasChanged();
 
@@ -264,10 +253,9 @@
   [JSInvokable]
   public int RemoveText(bool backwards, Cursor cursor) {
     var transformation = new Ops();
-    int i = cursor.end;
 
-    int range = cursor.end - cursor.start;
-    int retainAmount = range == 0 && backwards ? cursor.start - 1 : cursor.start;
+    var range = cursor.end - cursor.start;
+    var retainAmount = range == 0 && backwards ? cursor.start - 1 : cursor.start;
 
     if (retainAmount > 0)
     {
@@ -283,7 +271,7 @@
     return Math.Max(0, retainAmount);
   }
 
-  public string ExportMarkdown() {
+  private string ExportMarkdown() {
     return deltaTree.Delta.ToString();
   }
 }

@@ -4,36 +4,36 @@ namespace Markdraw.Delta
 {
   public class LineInsert : Insert
   {
-    private LineFormat _format;
-    public LineFormat Format { get => _format; }
+    public LineFormat Format { get; private set; }
 
     public LineInsert(LineFormat format)
     {
-      _format = format;
+      Format = format;
     }
 
     public LineInsert() : this(new LineFormat()) { }
 
     public override void SetFormat(Format format)
     {
-      if (format is LineFormat lineFormat)
+      switch (format)
       {
-        _format.Merge(lineFormat);
-      }
-      else if (format is ModifyingLineFormat modifyingLineFormat)
-      {
-        _format.Modify(modifyingLineFormat);
+        case LineFormat lineFormat:
+          Format = Format.Merge(lineFormat);
+          break;
+        case ModifyingLineFormat modifyingLineFormat:
+          Format = Format.Modify(modifyingLineFormat);
+          break;
       }
     }
 
     public override bool Equals(object obj)
     {
-      return obj is LineInsert x && x._format.Equals(_format);
+      return obj is LineInsert x && x.Format.Equals(Format);
     }
 
     public override int GetHashCode()
     {
-      return _format.GetHashCode();
+      return Format.GetHashCode();
     }
 
     public override string ToString()
@@ -47,27 +47,27 @@ namespace Markdraw.Delta
 
       foreach (var indent in Format.Indents)
       {
-        if (indent.Type == IndentType.Bullet)
+        switch (indent.Type)
         {
-          stringBuilder.Append("-");
-        }
-        else if (indent.Type == IndentType.Quote)
-        {
-          stringBuilder.Append(">");
-        }
-        else if (indent.Type == IndentType.Number)
-        {
-          stringBuilder.Append("1.");
-        }
-        else if (indent.Type == IndentType.Code)
-        {
-          stringBuilder.Append("    ");
-        }
-        else
-        {
-          for (int i = 0; i < indent.Length; i++)
+          case IndentType.Bullet:
+            stringBuilder.Append('-');
+            break;
+          case IndentType.Quote:
+            stringBuilder.Append('>');
+            break;
+          case IndentType.Number:
+            stringBuilder.Append("1.");
+            break;
+          case IndentType.Code:
+            stringBuilder.Append("    ");
+            break;
+          default:
           {
-            stringBuilder.Append(" ");
+            for (int i = 0; i < indent.Length; i++)
+            {
+              stringBuilder.Append(' ');
+            }
+            break;
           }
         }
       }
@@ -76,9 +76,9 @@ namespace Markdraw.Delta
       {
         for (int i = 0; i < Format.Header; i++)
         {
-          stringBuilder.Append("#");
+          stringBuilder.Append('#');
         }
-        stringBuilder.Append(" ");
+        stringBuilder.Append(' ');
       }
 
       return stringBuilder.ToString();
