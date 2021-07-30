@@ -1,28 +1,30 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
 // Modified from https://github.com/xoofx/markdig/tree/master/src/SpecFileGen
 namespace SpecFileGen
 {
-  internal class Program
+  internal static class Program
   {
     private static readonly string ProgramDirectory =
       Path.GetFullPath(
         Path.Combine(
-          Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+          Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(),
           "../../../"));
 
-    private static readonly string specName = "CommonMark v. 0.29";
-    private static readonly string fileName = "CommonMark.md";
+    private const string SpecName = "CommonMark v. 0.29";
+    private const string FileName = "CommonMark.md";
 
     private static readonly StringBuilder StringBuilder = new(1 << 20);// 1 MB
 
     private static void Main()
     {
-      var inputPath = Path.Combine(ProgramDirectory, "../Markdraw.Parser.Test") + "/" + fileName;
+      var inputPath = Path.Combine(ProgramDirectory, "../Markdraw.Parser.Test") + "/" + FileName;
       var source = ParseSpecification(File.ReadAllText(inputPath)).Replace("\r\n", "\n", StringComparison.Ordinal);
 
       var outputPath = Path.ChangeExtension(inputPath, "generated.cs");
@@ -48,8 +50,8 @@ namespace SpecFileGen
       Write("// ");
       Line(new string('-', 32));
       Write("// ");
-      Write(new string(' ', 16 - specName.Length / 2));
-      Line(specName);
+      Write(new string(' ', 16 - SpecName.Length / 2));
+      Line(SpecName);
       Write("// ");
       Line(new string('-', 32));
       Line();
@@ -67,7 +69,6 @@ namespace SpecFileGen
       var name = "";
       var compressedName = "";
       var number = 0;
-      int commentOffset = 0, commentEnd = 0, markdownOffset = 0, markdownEnd = 0, htmlOffset = 0, htmlEnd = 0;
       var first = true;
       LinkedList<(string Heading, string Compressed, int Level)> headings = new();
       var nameBuilder = new StringBuilder(64);
@@ -75,7 +76,8 @@ namespace SpecFileGen
       var i = 0;
       while (i < lines.Length)
       {
-        commentOffset = commentEnd = i;
+        int commentEnd;
+        var commentOffset = commentEnd = i;
         while (!lines[i].Equals("```````````````````````````````` example", StringComparison.Ordinal))
         {
           var line = lines[i];
@@ -84,20 +86,21 @@ namespace SpecFileGen
             var level = line.IndexOf(' ', StringComparison.Ordinal);
             while (headings.Count != 0)
             {
+              Debug.Assert(headings.Last != null, "headings.Last != null");
               if (headings.Last.Value.Level < level) break;
               headings.RemoveLast();
             }
-            var heading = line.Substring(level + 1);
+            var heading = line[(level + 1)..];
             headings.AddLast((heading, CompressedName(heading), level));
 
-            foreach (var (Heading, _, _) in headings)
-              nameBuilder.Append(Heading + " / ");
+            foreach (var (nextHeading, _, _) in headings)
+              nameBuilder.Append(nextHeading + " / ");
             nameBuilder.Length -= 3;
             name = nameBuilder.ToString();
             nameBuilder.Length = 0;
 
-            foreach (var (_, Compressed, _) in headings)
-              nameBuilder.Append(Compressed);
+            foreach (var (_, compressed, _) in headings)
+              nameBuilder.Append(compressed);
             compressedName = nameBuilder.ToString();
             nameBuilder.Length = 0;
 
@@ -108,31 +111,28 @@ namespace SpecFileGen
           if (!IsEmpty(line))
             commentEnd = i;
 
-          if (i == lines.Length)
+          if (i != lines.Length) continue;
+          if (commentOffset != commentEnd)
           {
-            if (commentOffset != commentEnd)
+            while (commentOffset < commentEnd && IsEmpty(lines[commentOffset])) commentOffset++;
+            for (i = commentOffset; i < commentEnd; i++)
             {
-              while (commentOffset < commentEnd && IsEmpty(lines[commentOffset])) commentOffset++;
-              for (i = commentOffset; i < commentEnd; i++)
-              {
-                var nextLine = lines[i];
-                Indent(2);
-                Write(nextLine == "" ? "//" : "// ");
-                Line(nextLine);
-              }
+              var nextLine = lines[i];
+              Indent(2);
+              Write(nextLine == "" ? "//" : "// ");
+              Line(nextLine);
             }
-            goto End;
           }
+          goto End;
         }
-        ;
 
-        markdownOffset = ++i;
+        var markdownOffset = ++i;
         while (!(lines[i].Length == 1 && lines[i][0] == '.')) i++;
-        markdownEnd = i++;
+        var markdownEnd = i++;
 
-        htmlOffset = i;
+        var htmlOffset = i;
         while (!lines[i].Equals("````````````````````````````````", StringComparison.Ordinal)) i++;
-        htmlEnd = i++;
+        var htmlEnd = i++;
 
         if (nameChanged)
         {
@@ -278,11 +278,7 @@ namespace SpecFileGen
     }
     private static bool IsEmpty(string str)
     {
-      for (var i = 0; i < str.Length; i++)
-      {
-        if (str[i] != ' ') return false;
-      }
-      return true;
+      return str.All(t => t == ' ');
     }
   }
 }
