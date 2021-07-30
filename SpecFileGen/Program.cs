@@ -11,14 +11,14 @@ namespace SpecFileGen
 {
   internal static class Program
   {
+
+    private const string SpecName = "CommonMark v. 0.29";
+    private const string FileName = "CommonMark.md";
     private static readonly string ProgramDirectory =
       Path.GetFullPath(
         Path.Combine(
           Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(),
           "../../../"));
-
-    private const string SpecName = "CommonMark v. 0.29";
-    private const string FileName = "CommonMark.md";
 
     private static readonly StringBuilder StringBuilder = new(1 << 20);// 1 MB
 
@@ -267,14 +267,12 @@ namespace SpecFileGen
     }
     private static string CompressedName(string name)
     {
-      var compressedName = "";
-      foreach (var part in name.Replace(',', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries))
-      {
-        compressedName += char.IsLower(part[0])
-          ? char.ToUpper(part[0]) + (part.Length > 1 ? part.Substring(1) : "")
-          : part;
-      }
-      return compressedName;
+      return name.Replace(',', ' ')
+        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Aggregate("",
+          (current, part) =>
+            current + (char.IsLower(part[0]) ? char.ToUpper(part[0]) + (part.Length > 1 ? part[1..] : "") : part)
+        );
     }
     private static bool IsEmpty(string str)
     {
