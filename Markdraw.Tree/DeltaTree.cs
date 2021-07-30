@@ -24,7 +24,7 @@ namespace Markdraw.Tree
       set
       {
         _delta = value;
-        Root = new Container(0, Delta, this, 0);
+        Root = new Container(0, Delta, this);
       }
     }
     public Container Root { get; private set; }

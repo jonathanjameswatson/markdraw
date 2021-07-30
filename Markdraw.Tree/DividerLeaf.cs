@@ -5,13 +5,11 @@ namespace Markdraw.Tree
   public class DividerLeaf : Leaf
   {
 
-    public DividerLeaf(DividerInsert dividerInsert) : this(dividerInsert, null, 0) {}
-
-    public DividerLeaf(DividerInsert dividerInsert, DeltaTree deltaTree, int i) : base(deltaTree, i)
+    public DividerLeaf(DividerInsert dividerInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
     {
       CorrespondingInsert = dividerInsert;
     }
-    public override DividerInsert CorrespondingInsert { get; }
+    protected override DividerInsert CorrespondingInsert { get; }
 
     public override string ToString()
     {

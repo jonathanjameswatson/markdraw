@@ -13,7 +13,7 @@ namespace Markdraw.Tree
     public BulletsContainer(List<TreeNode> elementsInside) : base(elementsInside) {}
 
     public BulletsContainer(List<TreeNode> elementsInside, DeltaTree deltaTree, int i) : base(elementsInside, deltaTree, i) {}
-    public override string Tag => "ul";
-    public override bool WrapAllInside => true;
+    protected override string Tag => "ul";
+    protected override bool WrapAllInside => true;
   }
 }

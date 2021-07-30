@@ -7,9 +7,9 @@ namespace Markdraw.Tree
 
     protected Leaf(DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
-      _length = 1;
+      Length = 1;
     }
-    public abstract Insert CorrespondingInsert { get; }
+    protected abstract Insert CorrespondingInsert { get; }
 
     public override bool Equals(object obj)
     {

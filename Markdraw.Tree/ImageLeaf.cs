@@ -5,13 +5,11 @@ namespace Markdraw.Tree
   public class ImageLeaf : Leaf
   {
 
-    public ImageLeaf(ImageInsert imageInsert) : this(imageInsert, null, 0) {}
-
-    public ImageLeaf(ImageInsert imageInsert, DeltaTree deltaTree, int i) : base(deltaTree, i)
+    public ImageLeaf(ImageInsert imageInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
     {
       CorrespondingInsert = imageInsert;
     }
-    public override ImageInsert CorrespondingInsert { get; }
+    protected override ImageInsert CorrespondingInsert { get; }
 
     public override string ToString()
     {

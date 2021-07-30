@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Markdraw.Delta;
@@ -11,31 +11,28 @@ namespace Markdraw.Tree
 
     private List<TextInsert> _correspondingInserts;
 
-    public TextLeaf(List<TextInsert> correspondingInserts, string tag) : this(correspondingInserts, tag, null, 0) {}
+    public TextLeaf(List<TextInsert> correspondingInserts, int header) : this(correspondingInserts, header == 0 ? "p" : $"h{header}") {}
 
-    public TextLeaf(List<TextInsert> correspondingInserts, int header) : this(correspondingInserts, header == 0 ? "p" : $"h{header}", null, 0) {}
-
-    public TextLeaf(List<TextInsert> correspondingInserts, string tag, DeltaTree deltaTree, int i) : base(deltaTree, i)
+    public TextLeaf(List<TextInsert> correspondingInserts, string tag = "p", DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
     {
       CorrespondingInserts = correspondingInserts;
       Tag = tag;
     }
 
-    public TextLeaf(List<TextInsert> correspondingInserts) : this(correspondingInserts, "p") {}
-    public override Insert CorrespondingInsert => CorrespondingInserts?[0];
-    public List<TextInsert> CorrespondingInserts
+    protected override Insert CorrespondingInsert => CorrespondingInserts?[0];
+    private List<TextInsert> CorrespondingInserts
     {
       get => _correspondingInserts;
       set
       {
-        _length = value.Aggregate(0, (acc, textInsert) => acc + textInsert.Length);
+        Length = value.Aggregate(0, (acc, textInsert) => acc + textInsert.Length);
         _correspondingInserts = value;
       }
     }
 
-    public bool AddSpans => ParentTree is not null && ParentTree.AddSpans;
+    private bool AddSpans => ParentTree is not null && ParentTree.AddSpans;
 
-    public string Tag { get; set; }
+    private string Tag { get; set; }
 
     private (string, int) AddBold(List<TextInsert> textInserts, int start)
     {
@@ -49,28 +46,21 @@ namespace Markdraw.Tree
         open = true;
       }
 
-      Func<bool, string, int, string> BoldString = (bold, text, i) => {
-        if (AddSpans)
-        {
-          var tag = bold ? "strong" : "span";
-          return $@"<{tag}>{text}</{tag}>";
-        }
-
-        if (bold)
-        {
-          return $@"<strong>{text}</strong>";
-        }
-
-        return text;
-      };
+      string BoldString(bool bold, string text)
+      {
+        if (!AddSpans) return bold ? $@"<strong>{text}</strong>" : text;
+        var tag = bold ? "strong" : "span";
+        return $@"<{tag}>{text}</{tag}>";
+      }
 
       foreach (var textInsert in textInserts)
       {
+        Debug.Assert(textInsert.Format.Bold != null, "textInsert.Format.Bold != null");
         var bold = (bool)textInsert.Format.Bold;
 
         if (open != bold)
         {
-          stringBuilder.Append(BoldString(open, buffer.ToString(), i));
+          stringBuilder.Append(BoldString(open, buffer.ToString()));
           open = bold;
           i += buffer.Length;
           buffer.Clear();
@@ -81,7 +71,7 @@ namespace Markdraw.Tree
 
       if (buffer.Length > 0)
       {
-        stringBuilder.Append(BoldString(open, buffer.ToString(), i));
+        stringBuilder.Append(BoldString(open, buffer.ToString()));
         i += buffer.Length;
       }
 
@@ -97,11 +87,12 @@ namespace Markdraw.Tree
 
       foreach (var textInsert in textInserts)
       {
+        Debug.Assert(textInsert.Format.Italic != null, "textInsert.Format.Italic != null");
         var italic = (bool)textInsert.Format.Italic;
 
         if (!open && italic)
         {
-          (var text1, var newI1) = AddBold(buffer, i);
+          var (text1, newI1) = AddBold(buffer, i);
 
           if (ParentTree is not null && ParentTree.AddSpans)
           {
@@ -118,7 +109,7 @@ namespace Markdraw.Tree
         }
         else if (open && !italic)
         {
-          (var text2, var newI2) = AddBold(buffer, i);
+          var (text2, newI2) = AddBold(buffer, i);
           stringBuilder.Append($@"{text2}</em>");
           i = newI2;
           open = false;
@@ -128,7 +119,7 @@ namespace Markdraw.Tree
         buffer.Add(textInsert);
       }
 
-      (var text, var newI) = AddBold(buffer, i);
+      var (text, newI) = AddBold(buffer, i);
       stringBuilder.Append(text);
       i = newI;
 
@@ -147,9 +138,7 @@ namespace Markdraw.Tree
       var buffer = new List<TextInsert>();
       var i = start;
 
-      Func<string, int, string> LinkString = (link, i) => {
-        return $@"<a href=""{link}"">";
-      };
+      string LinkString(string link) => $@"<a href=""{link}"">";
 
       foreach (var textInsert in textInserts)
       {
@@ -159,16 +148,16 @@ namespace Markdraw.Tree
         {
           if (openLink == "")
           {
-            (var text1, var newI1) = AddItalics(buffer, i);
-            stringBuilder.Append($@"{text1}{LinkString(link, i)}");
+            var (text1, newI1) = AddItalics(buffer, i);
+            stringBuilder.Append($@"{text1}{LinkString(link)}");
             i = newI1;
             openLink = link;
             buffer = new List<TextInsert>();
           }
           else if (openLink != link)
           {
-            (var text2, var newI2) = AddItalics(buffer, i);
-            stringBuilder.Append($@"{text2}</a>{LinkString(link, i)}");
+            var (text2, newI2) = AddItalics(buffer, i);
+            stringBuilder.Append($@"{text2}</a>{LinkString(link)}");
             i = newI2;
             openLink = link;
             buffer = new List<TextInsert>();
@@ -176,7 +165,7 @@ namespace Markdraw.Tree
         }
         else if (openLink != "" && link == "")
         {
-          (var text3, var newI3) = AddItalics(buffer, i);
+          var (text3, newI3) = AddItalics(buffer, i);
           stringBuilder.Append($@"{text3}</a>");
           i = newI3;
           openLink = "";
@@ -186,7 +175,7 @@ namespace Markdraw.Tree
         buffer.Add(textInsert);
       }
 
-      (var text, var newI) = AddItalics(buffer, i);
+      var (text, _) = AddItalics(buffer, i);
       stringBuilder.Append(text);
 
       if (openLink != "")
