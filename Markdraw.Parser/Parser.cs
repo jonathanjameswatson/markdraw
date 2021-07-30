@@ -10,7 +10,7 @@ namespace Markdraw.Parser
   {
     public static string Parse(string markdown)
     {
-      string html = DeltaTree.Parse(markdown).ToString();
+      var html = DeltaTree.Parse(markdown).ToString();
       return Inner(Prettify(html));
     }
 
@@ -26,7 +26,9 @@ namespace Markdraw.Parser
 
     public static string Inner(string html)
     {
-      return String.Join("\n", html.Split(new[] { "\n" },
+      return string.Join("\n", html.Split(new[] {
+          "\n"
+        },
         StringSplitOptions.None).Skip(1).SkipLast(1).Select(s => s.Substring(2)));
     }
   }

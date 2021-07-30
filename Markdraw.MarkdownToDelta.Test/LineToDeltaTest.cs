@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using Markdraw.Delta;
 using Xunit;
@@ -75,7 +74,9 @@ namespace Markdraw.MarkdownToDelta.Test
         .Parse("***A***")
         .Is(
           new Ops()
-            .Insert("A", new TextFormat { Bold = true, Italic = true })
+            .Insert("A", new TextFormat {
+              Bold = true, Italic = true
+            })
             .Insert(new LineInsert())
         );
 
@@ -83,7 +84,9 @@ namespace Markdraw.MarkdownToDelta.Test
         .Parse("___A___")
         .Is(
           new Ops()
-            .Insert("A", new TextFormat { Bold = true, Italic = true })
+            .Insert("A", new TextFormat {
+              Bold = true, Italic = true
+            })
             .Insert(new LineInsert())
         );
     }
@@ -200,7 +203,9 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("A ", TextFormat.BoldPreset)
-            .Insert("B", new TextFormat { Bold = true, Italic = true })
+            .Insert("B", new TextFormat {
+              Bold = true, Italic = true
+            })
             .Insert(new LineInsert())
         );
     }
@@ -213,7 +218,9 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("A ", TextFormat.ItalicPreset)
-            .Insert("B", new TextFormat { Bold = true, Italic = true })
+            .Insert("B", new TextFormat {
+              Bold = true, Italic = true
+            })
             .Insert(new LineInsert())
         );
     }
@@ -283,7 +290,9 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat { Indents = ImmutableList.Create(Indent.Quote) }
+              new LineFormat {
+                Indents = ImmutableList.Create(Indent.Quote)
+              }
             ))
         );
     }
@@ -311,7 +320,7 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert(
               new LineInsert(
                 new LineFormat {
-                  Indents =  ImmutableList.Create(
+                  Indents = ImmutableList.Create(
                     Indent.Quote,
                     Indent.Empty(1),
                     Indent.Number(2),
@@ -321,14 +330,14 @@ namespace Markdraw.MarkdownToDelta.Test
                   )
                 }
               ))
-          );
+        );
 
-    LineToDeltaConverter
+      LineToDeltaConverter
         .Parse("-  >  1.  A")
         .Is(
           new Ops()
             .Insert("A")
-            .Insert(new LineInsert (
+            .Insert(new LineInsert(
               new LineFormat {
                 Indents = ImmutableList.Create(
                   Indent.Bullet,
@@ -340,7 +349,7 @@ namespace Markdraw.MarkdownToDelta.Test
                 )
               }
             ))
-          );
+        );
 
       LineToDeltaConverter
         .Parse(">>> A")
@@ -385,7 +394,9 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat { Header = 1 })
+              new LineFormat {
+                Header = 1
+              })
             )
         );
 
@@ -395,7 +406,9 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("A")
             .Insert(new LineInsert(
-              new LineFormat { Header = 6 })
+              new LineFormat {
+                Header = 6
+              })
             )
         );
 
@@ -418,12 +431,11 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Quote, Indent.Empty(1)),
-                Header = 1
+                Indents = ImmutableList.Create(Indent.Quote, Indent.Empty(1)), Header = 1
               }
             ))
         );
-      
+
       LineToDeltaConverter
         .Parse("* # A")
         .Is(
@@ -431,8 +443,7 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Bullet, Indent.Empty(1)),
-                Header = 1
+                Indents = ImmutableList.Create(Indent.Bullet, Indent.Empty(1)), Header = 1
               }
             ))
         );
@@ -444,8 +455,7 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Number(2), Indent.Empty(1)),
-                Header = 1
+                Indents = ImmutableList.Create(Indent.Number(2), Indent.Empty(1)), Header = 1
               }
             ))
         );
@@ -468,7 +478,9 @@ namespace Markdraw.MarkdownToDelta.Test
           new Ops()
             .Insert("> A")
             .Insert(new LineInsert(
-              new LineFormat { Header = 1 })
+              new LineFormat {
+                Header = 1
+              })
             )
         );
     }
@@ -481,7 +493,9 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("A")
-            .Insert("B", new TextFormat { Link = "C" })
+            .Insert("B", new TextFormat {
+              Link = "C"
+            })
             .Insert("D")
             .Insert(new LineInsert())
         );
@@ -491,9 +505,13 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("A")
-            .Insert("B", new TextFormat { Link = "C" })
+            .Insert("B", new TextFormat {
+              Link = "C"
+            })
             .Insert("D")
-            .Insert("E", new TextFormat { Link = "F" })
+            .Insert("E", new TextFormat {
+              Link = "F"
+            })
             .Insert("G")
             .Insert(new LineInsert())
         );
@@ -523,7 +541,9 @@ namespace Markdraw.MarkdownToDelta.Test
             .Insert("A")
             .Insert(new ImageInsert("C", "C"))
             .Insert("D")
-            .Insert("E", new TextFormat { Link = "F" })
+            .Insert("E", new TextFormat {
+              Link = "F"
+            })
             .Insert(new LineInsert())
         );
     }
@@ -535,7 +555,9 @@ namespace Markdraw.MarkdownToDelta.Test
         .Parse("[***A***](B)")
         .Is(
           new Ops()
-            .Insert("A", new TextFormat { Bold = true, Italic = true, Link = "B" })
+            .Insert("A", new TextFormat {
+              Bold = true, Italic = true, Link = "B"
+            })
             .Insert(new LineInsert())
         );
     }

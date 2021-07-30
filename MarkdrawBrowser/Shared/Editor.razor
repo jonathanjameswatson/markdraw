@@ -1,21 +1,20 @@
-@using System.Threading.Tasks;
 @inject IJSRuntime JS;
 
 <div @ref="editor" contenteditable="true" id="markdraw-editor" class="content"></div>
 
 @code {
-  ElementReference editor;
+    ElementReference editor;
 
-  [Parameter]
-  public string Content { get; set; }
+    [Parameter]
+    public string Content { get; set; }
 
-  protected override async Task OnAfterRenderAsync(bool firstRender)
-  {
-    if (firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-      await JS.InvokeVoidAsync("setUp", editor);
-    }
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("setUp", editor);
+        }
 
-    await JS.InvokeVoidAsync("renderMarkdown", editor, Content);
-  }
+        await JS.InvokeVoidAsync("renderMarkdown", editor, Content);
+    }
 }

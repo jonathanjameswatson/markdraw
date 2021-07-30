@@ -2,14 +2,14 @@ namespace Markdraw.Delta
 {
   public class CodeInsert : EmbedInsert
   {
-    public string Text { get; set; }
-    public string Tag { get; set; }
 
     public CodeInsert(string text = "", string tag = "")
     {
       Text = text;
       Tag = tag;
     }
+    public string Text { get; set; }
+    public string Tag { get; set; }
 
     public override bool Equals(object obj)
     {

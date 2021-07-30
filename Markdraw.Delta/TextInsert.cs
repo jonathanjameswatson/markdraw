@@ -4,11 +4,6 @@ namespace Markdraw.Delta
 {
   public class TextInsert : Insert
   {
-    public override int Length => Text.Length;
-
-    public string Text { get; private set; }
-
-    public TextFormat Format { get; private set; }
 
     public TextInsert(string text, TextFormat format)
     {
@@ -21,7 +16,12 @@ namespace Markdraw.Delta
       Format = format;
     }
 
-    public TextInsert(string text) : this(text, new TextFormat()) { }
+    public TextInsert(string text) : this(text, new TextFormat()) {}
+    public override int Length => Text.Length;
+
+    public string Text { get; private set; }
+
+    public TextFormat Format { get; private set; }
 
     public override void SetFormat(Format format)
     {
@@ -49,10 +49,7 @@ namespace Markdraw.Delta
         before.Text += Text;
         return before;
       }
-      else
-      {
-        return null;
-      }
+      return null;
     }
 
     public TextInsert Merge(TextInsert middle, TextInsert before)
@@ -62,10 +59,7 @@ namespace Markdraw.Delta
         before.Text += middle.Text + Text;
         return before;
       }
-      else
-      {
-        return null;
-      }
+      return null;
     }
 
     public bool DeleteUpTo(int position)
@@ -94,9 +88,9 @@ namespace Markdraw.Delta
 
     public override string ToString()
     {
-      string trimmed = Text.TrimStart();
-      string bold = Format.Bold == true ? $"**{trimmed}**" : trimmed;
-      string italic = Format.Italic == true ? $"*{bold}*" : bold;
+      var trimmed = Text.TrimStart();
+      var bold = Format.Bold == true ? $"**{trimmed}**" : trimmed;
+      var italic = Format.Italic == true ? $"*{bold}*" : bold;
       return Format.Link != "" ? $"[{italic}]({Format.Link})" : italic;
     }
   }

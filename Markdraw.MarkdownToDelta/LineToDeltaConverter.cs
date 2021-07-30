@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Markdraw.Delta;
 
@@ -9,23 +9,23 @@ namespace Markdraw.MarkdownToDelta
 {
   public static class LineToDeltaConverter
   {
-    private static readonly Regex IndentRegex = new Regex(
+    private static readonly Regex IndentRegex = new(
       @"^(?<indent>(?<whitespace>\s+)|(?<quotes>>)|(?<horizontalrule>(?<hrstart>\*|\-|_)(?:\s{0,3}\k<hrstart>){2}\s*$)|(?<bullet>[\*\-+](?=\s))|(?<number>\d{1,9}[.)](?=\s)))?(?<text>.*)$",
       RegexOptions.Compiled
     );
-    private static readonly Regex HeaderRegex = new Regex(
+    private static readonly Regex HeaderRegex = new(
       @"^(?<header>#{1,6}(?=\s))?\s*(?<text>.*)$",
       RegexOptions.Compiled
     );
-    private static readonly Regex LinkAndImageRegex = new Regex(
+    private static readonly Regex LinkAndImageRegex = new(
       @"(?<!\\)(?<escapedbackslashes>(?:\\\\)+)?(?<image>!?)\[(?<text>[^\[]*?)(?<!\\)(?:\\\\)*\]\((?<url>.*?(?<!\\)(?:\\\\)*)\)",
       RegexOptions.Compiled
     );
-    private static readonly Regex NonCapturingLinkAndImageRegex = new Regex(
+    private static readonly Regex NonCapturingLinkAndImageRegex = new(
       @"(?<!\\)(?<escapedbackslashes>(?:\\\\)+)?(?:!?)\[(?:[^\[]*?)(?<!\\)(?:\\\\)*\]\((?:.*?(?<!\\)(?:\\\\)*)\)",
       RegexOptions.Compiled
     );
-    private static readonly Regex AsciiPunctuationRegex = new Regex(
+    private static readonly Regex AsciiPunctuationRegex = new(
       @"[!""#$%&'()*+,\-.\/:;<=>?@[\\\]^_`{|}~]",
       RegexOptions.Compiled
     );
@@ -64,7 +64,9 @@ namespace Markdraw.MarkdownToDelta
         }
         else if (indentMatch.Groups["horizontalrule"].Success)
         {
-          return ops.Insert(new DividerInsert()).Insert(new LineInsert(new LineFormat { Indents = indents.ToImmutableList() }));
+          return ops.Insert(new DividerInsert()).Insert(new LineInsert(new LineFormat {
+            Indents = indents.ToImmutableList()
+          }));
         }
         else if (indentMatch.Groups["bullet"].Success)
         {
@@ -105,10 +107,9 @@ namespace Markdraw.MarkdownToDelta
       var textOps = LinksAndImagesWithTextToDelta(text);
 
       ops.InsertMany(textOps);
-      
+
       ops.Insert(new LineInsert(new LineFormat {
-        Indents = indents.ToImmutableList(),
-        Header = header
+        Indents = indents.ToImmutableList(), Header = header
       }));
 
       return ops;
@@ -144,9 +145,7 @@ namespace Markdraw.MarkdownToDelta
                 new Ops().Retain(
                   characters,
                   new TextFormat {
-                    Bold = null,
-                    Italic = null,
-                    Link = match.Groups["url"].Value
+                    Bold = null, Italic = null, Link = match.Groups["url"].Value
                   }
                 )
               );
@@ -182,8 +181,8 @@ namespace Markdraw.MarkdownToDelta
         previousConsecutiveDelimiters = consecutiveDelimiters;
 
         if (!cancelled && (
-          (consecutiveDelimiters == 0 && (x == '*' || x == '_'))
-          || (consecutiveDelimiters > 0 && x == delimiterType)
+          consecutiveDelimiters == 0 && (x == '*' || x == '_')
+          || consecutiveDelimiters > 0 && x == delimiterType
         ))
         {
           consecutiveDelimiters += 1;
@@ -212,7 +211,7 @@ namespace Markdraw.MarkdownToDelta
             text.Substring(delimiterStart, previousConsecutiveDelimiters)
           );
           opsList.Add(delimiterOps);
-          delimiterStack = (new Delimiter(
+          delimiterStack = new Delimiter(
             delimiterOps,
             opsList.Count - 1,
             delimiterType,
@@ -220,7 +219,7 @@ namespace Markdraw.MarkdownToDelta
             preceding,
             x,
             delimiterStack
-          ));
+          );
           if (delimiterStack.Previous is not null)
           {
             delimiterStack.Previous.Next = delimiterStack;
@@ -281,10 +280,11 @@ namespace Markdraw.MarkdownToDelta
       }
 
       var openersBottom = new Dictionary<ValueTuple<EmphasisType, DelimiterType>, Delimiter>();
-      foreach (var emphasis in new List<EmphasisType>() { EmphasisType.Italic, EmphasisType.Bold })
+      foreach (var emphasis in new List<EmphasisType> {
+        EmphasisType.Italic, EmphasisType.Bold
+      })
       {
-        foreach (var delimiter in new List<DelimiterType>()
-        {
+        foreach (var delimiter in new List<DelimiterType> {
           DelimiterType.Asterisk, DelimiterType.Underscore
         })
         {
@@ -327,13 +327,9 @@ namespace Markdraw.MarkdownToDelta
         while (opener is not null && !currentOpenerBottoms.Contains(opener))
         {
           if ((
-              (
-                possibleEmphasis.Contains(EmphasisType.Bold) &&
-                opener.OpenerOrCloser[EmphasisType.Bold].HasFlag(OpenerOrCloserType.Opener)
-              ) || (
-                possibleEmphasis.Contains(EmphasisType.Italic) &&
-                opener.OpenerOrCloser[EmphasisType.Italic].HasFlag(OpenerOrCloserType.Opener)
-              )
+              possibleEmphasis.Contains(EmphasisType.Bold) &&
+              opener.OpenerOrCloser[EmphasisType.Bold].HasFlag(OpenerOrCloserType.Opener) || possibleEmphasis.Contains(EmphasisType.Italic) &&
+              opener.OpenerOrCloser[EmphasisType.Italic].HasFlag(OpenerOrCloserType.Opener)
             ) && opener.DelimiterChar == currentDelimiter.DelimiterChar
           )
           {
@@ -352,12 +348,16 @@ namespace Markdraw.MarkdownToDelta
           )
           {
             emphasis = EmphasisType.Bold;
-            newFormat = new TextFormat { Bold = true, Italic = null, Link = null };
+            newFormat = new TextFormat {
+              Bold = true, Italic = null, Link = null
+            };
           }
           else
           {
             emphasis = EmphasisType.Italic;
-            newFormat = new TextFormat { Bold = null, Italic = true, Link = null };
+            newFormat = new TextFormat {
+              Bold = null, Italic = true, Link = null
+            };
           }
 
           currentDelimiter.RemoveCharacters(emphasis);

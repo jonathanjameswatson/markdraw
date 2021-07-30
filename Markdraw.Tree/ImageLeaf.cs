@@ -4,15 +4,14 @@ namespace Markdraw.Tree
 {
   public class ImageLeaf : Leaf
   {
-    private ImageInsert _correspondingInsert;
-    public override ImageInsert CorrespondingInsert { get => _correspondingInsert; }
 
-    public ImageLeaf(ImageInsert imageInsert) : this(imageInsert, null, 0) { }
+    public ImageLeaf(ImageInsert imageInsert) : this(imageInsert, null, 0) {}
 
     public ImageLeaf(ImageInsert imageInsert, DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
-      _correspondingInsert = imageInsert;
+      CorrespondingInsert = imageInsert;
     }
+    public override ImageInsert CorrespondingInsert { get; }
 
     public override string ToString()
     {

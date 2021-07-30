@@ -4,16 +4,16 @@ namespace Markdraw.Tree
 {
   public abstract class Leaf : TreeNode
   {
-    public abstract Insert CorrespondingInsert { get; }
 
     protected Leaf(DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
       _length = 1;
     }
+    public abstract Insert CorrespondingInsert { get; }
 
     public override bool Equals(object obj)
     {
-      return obj is Leaf x && x.CorrespondingInsert.Equals(this.CorrespondingInsert);
+      return obj is Leaf x && x.CorrespondingInsert.Equals(CorrespondingInsert);
     }
 
     public override int GetHashCode()

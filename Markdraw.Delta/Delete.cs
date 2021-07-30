@@ -2,7 +2,7 @@ namespace Markdraw.Delta
 {
   public class Delete : LengthOp
   {
-    public Delete(int length) : base(length) { }
+    public Delete(int length) : base(length) {}
 
     public override bool Equals(object obj)
     {
@@ -16,7 +16,7 @@ namespace Markdraw.Delta
 
     public override string ToString()
     {
-      return $"[DELETE {this.Length}]";
+      return $"[DELETE {Length}]";
     }
   }
 }

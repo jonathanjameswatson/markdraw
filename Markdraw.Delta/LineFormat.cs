@@ -7,10 +7,6 @@ namespace Markdraw.Delta
 {
   public record LineFormat : Format
   {
-    public ImmutableList<Indent> Indents { get; init; } = ImmutableList<Indent>.Empty;
-    public ImmutableList<Indent> NonEmptyIndents => Indents.Where(indent => !indent.IsEmpty()).ToImmutableList();
-
-    public int? Header { get; init; } = 0;
 
     public static readonly LineFormat QuotePreset = new() {
       Indents = ImmutableList.Create(
@@ -28,26 +24,29 @@ namespace Markdraw.Delta
         Indent.Code
       )
     };
+    public ImmutableList<Indent> Indents { get; init; } = ImmutableList<Indent>.Empty;
+    public ImmutableList<Indent> NonEmptyIndents => Indents.Where(indent => !indent.IsEmpty()).ToImmutableList();
+
+    public int? Header { get; init; } = 0;
+
+    public virtual bool Equals(LineFormat other)
+    {
+      return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
+    }
 
     public LineFormat Merge(LineFormat other)
     {
-      return new LineFormat() {
-        Indents = other.Indents ?? Indents,
-        Header = other.Header ?? Header
+      return new LineFormat {
+        Indents = other.Indents ?? Indents, Header = other.Header ?? Header
       };
     }
 
     public LineFormat Modify(ModifyingLineFormat other)
     {
       Debug.Assert(Header != null, nameof(Header) + " != null");
-      return new LineFormat() {
+      return new LineFormat {
         Indents = other.IndentsFunction(Indents), Header = other.HeaderFunction((int)Header)
       };
-    }
-
-    public virtual bool Equals(LineFormat other)
-    {
-      return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
     }
 
     public override int GetHashCode()

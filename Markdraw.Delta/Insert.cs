@@ -2,12 +2,9 @@ namespace Markdraw.Delta
 {
   public abstract class Insert : IOp
   {
-    public virtual int Length
-    {
-      get => 1;
-    }
+    public virtual int Length => 1;
 
-    public virtual void SetFormat(Format format) { }
+    public virtual void SetFormat(Format format) {}
 
     public virtual (int, bool) Subtract(int amount)
     {
@@ -16,7 +13,7 @@ namespace Markdraw.Delta
 
     public override string ToString()
     {
-      return $"[INSERT {this.Length}]";
+      return $"[INSERT {Length}]";
     }
   }
 }

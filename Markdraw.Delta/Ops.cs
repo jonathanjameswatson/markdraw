@@ -188,184 +188,184 @@ namespace Markdraw.Delta
         switch (op)
         {
           case Retain retain:
+          {
+            var format = retain.Format;
+            var shouldFormat = format is not null;
+
+            if (shouldFormat && opCharacterIndex != 0 && _ops[opIndex] is TextInsert before)
             {
-              var format = retain.Format;
-              var shouldFormat = format is not null;
+              var after = before.SplitAt(opCharacterIndex);
+              InsertOp(opIndex + 1, after);
+              opIndex += 1;
+              opCharacterIndex = 0;
+            }
 
-              if (shouldFormat && opCharacterIndex != 0 && _ops[opIndex] is TextInsert before)
+            while (length > 0)
+            {
+              var next = _ops[opIndex];
+              if (next is Insert nextInsert)
               {
-                var after = before.SplitAt(opCharacterIndex);
-                InsertOp(opIndex + 1, after);
-                opIndex += 1;
-                opCharacterIndex = 0;
-              }
+                var lengthRemaining = nextInsert.Length - opCharacterIndex;
+                var advanced = Math.Min(lengthRemaining, length);
 
-              while (length > 0)
-              {
-                var next = _ops[opIndex];
-                if (next is Insert nextInsert)
+                opCharacterIndex = (opCharacterIndex + advanced) % nextInsert.Length;
+                length -= advanced;
+
+                if (opCharacterIndex != 0)
                 {
-                  var lengthRemaining = nextInsert.Length - opCharacterIndex;
-                  var advanced = Math.Min(lengthRemaining, length);
-
-                  opCharacterIndex = (opCharacterIndex + advanced) % nextInsert.Length;
-                  length -= advanced;
-
-                  if (opCharacterIndex != 0)
-                  {
-                    if (shouldFormat)
-                    {
-                      var textInsert = nextInsert as TextInsert;
-                      var after = textInsert.SplitAt(opCharacterIndex);
-                      opCharacterIndex = 0;
-                      InsertOp(opIndex + 1, after);
-                    }
-                  }
-
                   if (shouldFormat)
                   {
-                    nextInsert.SetFormat(format);
+                    var textInsert = nextInsert as TextInsert;
+                    var after = textInsert.SplitAt(opCharacterIndex);
+                    opCharacterIndex = 0;
+                    InsertOp(opIndex + 1, after);
+                  }
+                }
 
-                    if (opIndex >= 1)
+                if (shouldFormat)
+                {
+                  nextInsert.SetFormat(format);
+
+                  if (opIndex >= 1)
+                  {
+                    var beforeLength = MergeBack(opIndex);
+                    if (beforeLength is not null)
                     {
-                      var beforeLength = MergeBack(opIndex);
-                      if (beforeLength is not null)
-                      {
-                        opIndex -= 1;
-                      }
+                      opIndex -= 1;
                     }
                   }
-
-                  if (opCharacterIndex == 0)
-                  {
-                    opIndex += 1;
-                  }
                 }
-                else
+
+                if (opCharacterIndex == 0)
                 {
-                  throw new InvalidOperationException("Only a list of inserts should be transformed.");
+                  opIndex += 1;
                 }
-              }
-
-              if (shouldFormat && opIndex < Length && opIndex >= 1)
-              {
-                var beforeLength = MergeBack(opIndex);
-                if (beforeLength is not null)
-                {
-                  opCharacterIndex += (int)beforeLength;
-                  opIndex -= 1;
-                }
-              }
-
-              break;
-            }
-          case Delete _:
-            {
-              while (length > 0)
-              {
-                var next = _ops[opIndex];
-                if (next is Insert nextInsert)
-                {
-                  if (nextInsert is TextInsert nextTextInsert)
-                  {
-                    if (opCharacterIndex != 0)
-                    {
-                      var after = nextTextInsert.SplitAt(opCharacterIndex);
-                      opCharacterIndex = 0;
-                      opIndex += 1;
-                      InsertOp(opIndex, after);
-                      nextTextInsert = after;
-                    }
-
-                    var lengthRemaining = nextTextInsert.Length - opCharacterIndex;
-                    var toDelete = Math.Min(lengthRemaining, length);
-                    var deleted = nextTextInsert.DeleteUpTo(toDelete);
-                    length -= toDelete;
-
-                    if (deleted)
-                    {
-                      _ops.RemoveAt(opIndex);
-                    }
-
-                    opCharacterIndex = deleted ? 0 : opCharacterIndex;
-                  }
-                  else
-                  {
-                    _ops.RemoveAt(opIndex);
-                    length -= 1;
-                  }
-                }
-                else
-                {
-                  throw new InvalidOperationException("Only a list of inserts should be transformed.");
-                }
-
-                var beforeLength = MergeBack(opIndex);
-                if (beforeLength is null) continue;
-                opIndex -= 1;
-                opCharacterIndex += (int)beforeLength;
-              }
-
-              break;
-            }
-          case Insert _ when opCharacterIndex == 0:
-            {
-              InsertOp(opIndex, op);
-
-              if (opIndex == Length - 1)
-              {
-                MergeBack(Length - 1);
               }
               else
               {
-                var beforeLength = MergeBack(opIndex);
-                if (beforeLength is not null)
-                {
-                  opIndex -= 1;
-                  opCharacterIndex += (int)beforeLength;
-                }
+                throw new InvalidOperationException("Only a list of inserts should be transformed.");
               }
-
-              opIndex += 1;
-
-              if (opIndex < Length - 1)
-              {
-                var beforeLength = MergeBack(opIndex);
-                if (beforeLength is not null)
-                {
-                  opIndex -= 1;
-                  opCharacterIndex += (int)beforeLength;
-                }
-              }
-
-              break;
             }
-          case Insert _:
-            {
-              if (_ops[opIndex] is TextInsert before)
-              {
-                var after = before.SplitAt(opCharacterIndex);
-                InsertOp(opIndex + 1, op);
-                InsertOp(opIndex + 2, after);
-                opIndex += 2;
-                opCharacterIndex = 0;
 
-                if (op is TextInsert middle)
+            if (shouldFormat && opIndex < Length && opIndex >= 1)
+            {
+              var beforeLength = MergeBack(opIndex);
+              if (beforeLength is not null)
+              {
+                opCharacterIndex += (int)beforeLength;
+                opIndex -= 1;
+              }
+            }
+
+            break;
+          }
+          case Delete _:
+          {
+            while (length > 0)
+            {
+              var next = _ops[opIndex];
+              if (next is Insert nextInsert)
+              {
+                if (nextInsert is TextInsert nextTextInsert)
                 {
-                  var beforeAndMiddleLength = before.Length + middle.Length;
-                  var merged = after.Merge(middle, before);
-                  if (merged is not null)
+                  if (opCharacterIndex != 0)
+                  {
+                    var after = nextTextInsert.SplitAt(opCharacterIndex);
+                    opCharacterIndex = 0;
+                    opIndex += 1;
+                    InsertOp(opIndex, after);
+                    nextTextInsert = after;
+                  }
+
+                  var lengthRemaining = nextTextInsert.Length - opCharacterIndex;
+                  var toDelete = Math.Min(lengthRemaining, length);
+                  var deleted = nextTextInsert.DeleteUpTo(toDelete);
+                  length -= toDelete;
+
+                  if (deleted)
                   {
                     _ops.RemoveAt(opIndex);
-                    _ops.RemoveAt(opIndex - 1);
-                    opIndex -= 2;
-                    opCharacterIndex += beforeAndMiddleLength;
                   }
+
+                  opCharacterIndex = deleted ? 0 : opCharacterIndex;
+                }
+                else
+                {
+                  _ops.RemoveAt(opIndex);
+                  length -= 1;
                 }
               }
+              else
+              {
+                throw new InvalidOperationException("Only a list of inserts should be transformed.");
+              }
 
-              break;
+              var beforeLength = MergeBack(opIndex);
+              if (beforeLength is null) continue;
+              opIndex -= 1;
+              opCharacterIndex += (int)beforeLength;
             }
+
+            break;
+          }
+          case Insert _ when opCharacterIndex == 0:
+          {
+            InsertOp(opIndex, op);
+
+            if (opIndex == Length - 1)
+            {
+              MergeBack(Length - 1);
+            }
+            else
+            {
+              var beforeLength = MergeBack(opIndex);
+              if (beforeLength is not null)
+              {
+                opIndex -= 1;
+                opCharacterIndex += (int)beforeLength;
+              }
+            }
+
+            opIndex += 1;
+
+            if (opIndex < Length - 1)
+            {
+              var beforeLength = MergeBack(opIndex);
+              if (beforeLength is not null)
+              {
+                opIndex -= 1;
+                opCharacterIndex += (int)beforeLength;
+              }
+            }
+
+            break;
+          }
+          case Insert _:
+          {
+            if (_ops[opIndex] is TextInsert before)
+            {
+              var after = before.SplitAt(opCharacterIndex);
+              InsertOp(opIndex + 1, op);
+              InsertOp(opIndex + 2, after);
+              opIndex += 2;
+              opCharacterIndex = 0;
+
+              if (op is TextInsert middle)
+              {
+                var beforeAndMiddleLength = before.Length + middle.Length;
+                var merged = after.Merge(middle, before);
+                if (merged is not null)
+                {
+                  _ops.RemoveAt(opIndex);
+                  _ops.RemoveAt(opIndex - 1);
+                  opIndex -= 2;
+                  opCharacterIndex += beforeAndMiddleLength;
+                }
+              }
+            }
+
+            break;
+          }
         }
       }
 
@@ -382,7 +382,7 @@ namespace Markdraw.Delta
     /// <returns>
     ///   The first <see cref="Format" /> of type <typeparamref name="T" /> found or <see langword="null" /> if this does
     ///   not exist.
-    ///  </returns>
+    /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="start" /> is negative.</exception>
     public T GetFirstFormat<T>(int start) where T : Format
     {

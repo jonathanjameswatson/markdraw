@@ -22,10 +22,8 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsText()
     {
-      var turnBold = new TextFormat() {
-        Bold = true,
-        Italic = null,
-        Link = null
+      var turnBold = new TextFormat {
+        Bold = true, Italic = null, Link = null
       };
 
       new Ops()
@@ -61,35 +59,39 @@ namespace Markdraw.Delta.Test
         .Transform(new Ops().Retain(2, turnBold))
         .Is(new Ops()
           .Insert("A", TextFormat.BoldPreset)
-          .Insert("A", new TextFormat { Bold = true, Italic = true })
+          .Insert("A", new TextFormat {
+            Bold = true, Italic = true
+          })
         );
 
       new Ops()
-      .Insert("AA", TextFormat.BoldPreset)
-      .Insert("AA", TextFormat.ItalicPreset)
-      .Transform(new Ops().Retain(1).Retain(2, turnBold))
-      .Is(new Ops()
         .Insert("AA", TextFormat.BoldPreset)
-        .Insert("A", new TextFormat {
-          Bold = true, Italic = true
-        })
-        .Insert("A", TextFormat.ItalicPreset)
-      );
+        .Insert("AA", TextFormat.ItalicPreset)
+        .Transform(new Ops().Retain(1).Retain(2, turnBold))
+        .Is(new Ops()
+          .Insert("AA", TextFormat.BoldPreset)
+          .Insert("A", new TextFormat {
+            Bold = true, Italic = true
+          })
+          .Insert("A", TextFormat.ItalicPreset)
+        );
 
       new Ops()
-      .Insert("AAA")
-      .Transform(new Ops().Retain(1).Retain(1, turnBold))
-      .Is(new Ops()
-        .Insert("A")
-        .Insert("A", TextFormat.BoldPreset)
-        .Insert("A")
-      );
+        .Insert("AAA")
+        .Transform(new Ops().Retain(1).Retain(1, turnBold))
+        .Is(new Ops()
+          .Insert("A")
+          .Insert("A", TextFormat.BoldPreset)
+          .Insert("A")
+        );
     }
 
     [Fact]
     public void Retain_FormatsLines()
     {
-      var turnQuote = new LineFormat() { Indents = ImmutableList.Create(Indent.Quote, Indent.Empty(1)), Header = null };
+      var turnQuote = new LineFormat {
+        Indents = ImmutableList.Create(Indent.Quote, Indent.Empty(1)), Header = null
+      };
 
       new Ops()
         .Insert(new LineInsert())
@@ -146,13 +148,19 @@ namespace Markdraw.Delta.Test
         .Is(new Ops().Insert("A").Insert("A", TextFormat.BoldPreset).Insert("A"));
 
       new Ops()
-        .Insert("AB", new TextFormat { Link = "C" })
+        .Insert("AB", new TextFormat {
+          Link = "C"
+        })
         .Transform(new Ops().Retain(1).Insert("D"))
         .Is(
           new Ops()
-            .Insert("A", new TextFormat { Link = "C" })
+            .Insert("A", new TextFormat {
+              Link = "C"
+            })
             .Insert("D")
-            .Insert("B", new TextFormat { Link = "C"}));
+            .Insert("B", new TextFormat {
+              Link = "C"
+            }));
     }
 
     [Fact]
@@ -163,39 +171,39 @@ namespace Markdraw.Delta.Test
       };
 
       new Ops()
-      .Insert("AAA")
-      .Insert(new LineInsert())
-      .Transform(new Ops().Retain(1).Retain(1, turnBold))
-      .Is(new Ops()
-        .Insert("A")
-        .Insert("A", TextFormat.BoldPreset)
-        .Insert("A")
+        .Insert("AAA")
         .Insert(new LineInsert())
-      );
+        .Transform(new Ops().Retain(1).Retain(1, turnBold))
+        .Is(new Ops()
+          .Insert("A")
+          .Insert("A", TextFormat.BoldPreset)
+          .Insert("A")
+          .Insert(new LineInsert())
+        );
     }
 
     [Fact]
     public void Insert_InsertsWithNewLine()
     {
       new Ops()
-      .Insert("AAA")
-      .Insert(new LineInsert())
-      .Transform(new Ops().Retain(3).Insert("A"))
-      .Is(new Ops()
-        .Insert("AAAA")
+        .Insert("AAA")
         .Insert(new LineInsert())
-      );
+        .Transform(new Ops().Retain(3).Insert("A"))
+        .Is(new Ops()
+          .Insert("AAAA")
+          .Insert(new LineInsert())
+        );
 
       new Ops()
-      .Insert("AAA")
-      .Insert(new LineInsert())
-      .Transform(new Ops().Retain(1).Insert(new LineInsert()).Insert("B"))
-      .Is(new Ops()
-        .Insert("A")
+        .Insert("AAA")
         .Insert(new LineInsert())
-        .Insert("BAA")
-        .Insert(new LineInsert())
-      );
+        .Transform(new Ops().Retain(1).Insert(new LineInsert()).Insert("B"))
+        .Is(new Ops()
+          .Insert("A")
+          .Insert(new LineInsert())
+          .Insert("BAA")
+          .Insert(new LineInsert())
+        );
     }
   }
 }

@@ -6,18 +6,6 @@ namespace Markdraw.Tree
   public class DeltaTree
   {
     private Ops _delta;
-    private Container _root;
-    public Ops Delta
-    {
-      get => _delta;
-      set
-      {
-        _delta = value;
-        _root = new Container(0, Delta, this, 0);
-      }
-    }
-    public Container Root { get => _root; }
-    public bool AddSpans { get; set; }
 
     public DeltaTree(string markdown = "")
     {
@@ -30,6 +18,18 @@ namespace Markdraw.Tree
       Delta = ops;
       AddSpans = true;
     }
+    public Ops Delta
+    {
+      get => _delta;
+      set
+      {
+        _delta = value;
+        Root = new Container(0, Delta, this, 0);
+      }
+    }
+    public Container Root { get; private set; }
+
+    public bool AddSpans { get; set; }
 
     public void SetWithMarkdown(string markdown)
     {
@@ -38,7 +38,7 @@ namespace Markdraw.Tree
 
     public static Container Parse(string markdown)
     {
-      Ops ops = MarkdownToDeltaConverter.Parse(markdown);
+      var ops = MarkdownToDeltaConverter.Parse(markdown);
       return new Container(0, ops);
     }
 

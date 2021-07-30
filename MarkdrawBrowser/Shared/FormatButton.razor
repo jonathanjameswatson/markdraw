@@ -1,23 +1,24 @@
 <div class="field">
-  <button class="button" disabled="@Disabled" @onclick="onclick">
-    <span class="icon is-small">
-      <i class="iconify" data-icon="mdi-@(Icon)"></i>
-    </span>
-  </button>
+    <button class="button" disabled="@Disabled" @onclick="onclick">
+        <span class="icon is-small">
+            <i class="iconify" data-icon="mdi-@(Icon)"></i>
+        </span>
+    </button>
 </div>
 
 @code {
-  [Parameter]
-  public string Icon { get; set; }
 
-  [Parameter]
-  public bool Disabled { get; set; }
+    [Parameter]
+    public string Icon { get; set; }
 
-  [Parameter]
-  public EventCallback<MouseEventArgs> onclick { get; set; }
+    [Parameter]
+    public bool Disabled { get; set; }
 
-  protected override void OnInitialized()
-  {
-    Icon = Icon ?? "";
-  }
+    [Parameter]
+    public EventCallback<MouseEventArgs> onclick { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Icon = Icon ?? "";
+    }
 }

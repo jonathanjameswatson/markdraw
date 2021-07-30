@@ -2,8 +2,6 @@ namespace Markdraw.Delta
 {
   public class ImageInsert : EmbedInsert
   {
-    public string Url { get; set; }
-    public string Alt { get; set; }
 
     public ImageInsert()
     {
@@ -16,6 +14,8 @@ namespace Markdraw.Delta
       Url = url;
       Alt = alt;
     }
+    public string Url { get; set; }
+    public string Alt { get; set; }
 
     public override bool Equals(object obj)
     {

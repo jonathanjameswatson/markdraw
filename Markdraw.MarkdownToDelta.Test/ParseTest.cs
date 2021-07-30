@@ -48,7 +48,9 @@ namespace Markdraw.MarkdownToDelta.Test
         .Is(
           new Ops()
             .Insert("Test")
-            .Insert(new LineInsert(new LineFormat { Header = 1 }))
+            .Insert(new LineInsert(new LineFormat {
+              Header = 1
+            }))
             .Insert(new CodeInsert("line1\nline2", "code"))
             .Insert(new LineInsert())
             .Insert("Italic", TextFormat.ItalicPreset)
@@ -61,9 +63,10 @@ namespace Markdraw.MarkdownToDelta.Test
                     Indent.Empty(1),
                     Indent.Quote,
                     Indent.Empty(1)
-                  )}
-                )
+                  )
+                }
               )
+            )
         );
     }
   }

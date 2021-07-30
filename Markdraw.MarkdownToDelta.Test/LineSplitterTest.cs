@@ -10,7 +10,9 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("") });
+        .Is(new List<LineOrFenced> {
+          new("")
+        });
     }
 
     [Fact]
@@ -18,7 +20,9 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("```")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("", true, null) });
+        .Is(new List<LineOrFenced> {
+          new("", true)
+        });
     }
 
     [Fact]
@@ -26,7 +30,9 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("```python")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("", true, "python") });
+        .Is(new List<LineOrFenced> {
+          new("", true, "python")
+        });
     }
 
     [Fact]
@@ -34,7 +40,9 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("```\nLine 1\nLine 2\n```")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("Line 1\nLine 2", true, null) });
+        .Is(new List<LineOrFenced> {
+          new("Line 1\nLine 2", true)
+        });
     }
 
     [Fact]
@@ -42,7 +50,9 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("```\nLine 1\nLine 2```")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("Line 1\nLine 2", true, null) });
+        .Is(new List<LineOrFenced> {
+          new("Line 1\nLine 2", true)
+        });
     }
 
     [Fact]
@@ -50,15 +60,21 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("~~~\nLine 1\nLine 2\n~~~")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("Line 1\nLine 2", true, null) });
+        .Is(new List<LineOrFenced> {
+          new("Line 1\nLine 2", true)
+        });
 
       LineSplitter
         .Split("~~~\nLine 1\nLine 2\n```")
-        .IsNot(new List<LineOrFenced>() { new LineOrFenced("Line 1\nLine 2", true, null) });
+        .IsNot(new List<LineOrFenced> {
+          new("Line 1\nLine 2", true)
+        });
 
       LineSplitter
         .Split("~`~\nLine 1\nLine 2\n~`~")
-        .IsNot(new List<LineOrFenced>() { new LineOrFenced("Line 1\nLine 2", true, null) });
+        .IsNot(new List<LineOrFenced> {
+          new("Line 1\nLine 2", true)
+        });
     }
 
     [Fact]
@@ -66,7 +82,9 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("````\nLine 1\nLine 2\n````")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("Line 1\nLine 2", true, null) });
+        .Is(new List<LineOrFenced> {
+          new("Line 1\nLine 2", true)
+        });
     }
 
     [Fact]
@@ -74,7 +92,9 @@ namespace Markdraw.MarkdownToDelta.Test
     {
       LineSplitter
         .Split("````\nLine 1```\nLine 2\n````")
-        .Is(new List<LineOrFenced>() { new LineOrFenced("Line 1```\nLine 2", true, null) });
+        .Is(new List<LineOrFenced> {
+          new("Line 1```\nLine 2", true)
+        });
     }
   }
 }

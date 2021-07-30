@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Markdraw.Delta;
 
 namespace Markdraw.MarkdownToDelta
@@ -13,11 +10,11 @@ namespace Markdraw.MarkdownToDelta
 
       var ops = new Ops();
 
-      foreach (LineOrFenced lineOrFenced in linesAndFences)
+      foreach (var lineOrFenced in linesAndFences)
       {
         if (lineOrFenced.Fenced)
         {
-          ops.Insert(new CodeInsert(lineOrFenced.Contents, lineOrFenced.InfoString)); // format infostring?
+          ops.Insert(new CodeInsert(lineOrFenced.Contents, lineOrFenced.InfoString));// format infostring?
           // ops.Insert(new LineInsert());
         }
         else

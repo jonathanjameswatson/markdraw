@@ -4,14 +4,14 @@ namespace Markdraw.Delta
 {
   public class LineInsert : Insert
   {
-    public LineFormat Format { get; private set; }
 
     public LineInsert(LineFormat format)
     {
       Format = format;
     }
 
-    public LineInsert() : this(new LineFormat()) { }
+    public LineInsert() : this(new LineFormat()) {}
+    public LineFormat Format { get; private set; }
 
     public override void SetFormat(Format format)
     {
@@ -63,7 +63,7 @@ namespace Markdraw.Delta
             break;
           default:
           {
-            for (int i = 0; i < indent.Length; i++)
+            for (var i = 0; i < indent.Length; i++)
             {
               stringBuilder.Append(' ');
             }
@@ -74,7 +74,7 @@ namespace Markdraw.Delta
 
       if (Format.Header != 0)
       {
-        for (int i = 0; i < Format.Header; i++)
+        for (var i = 0; i < Format.Header; i++)
         {
           stringBuilder.Append('#');
         }

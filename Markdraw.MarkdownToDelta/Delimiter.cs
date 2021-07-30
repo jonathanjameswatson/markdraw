@@ -1,6 +1,6 @@
 using System;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Markdraw.Delta;
 
 namespace Markdraw.MarkdownToDelta
@@ -28,25 +28,25 @@ namespace Markdraw.MarkdownToDelta
 
   public class Delimiter
   {
+
+    private static readonly Regex whitespaceRegex = new(@"\s", RegexOptions.Compiled);
+    private static readonly Regex punctuationRegex = new(@"[^\w\s]", RegexOptions.Compiled);
+    public DelimiterType DelimiterChar;
     public Ops DelimiterOps;
     public int DelimiterOpsIndex;
-    public DelimiterType DelimiterChar;
+    private readonly bool followingPunctuation;
+    private readonly bool followingWhitespace;
+
+    private readonly bool leftFlanking;
+    public Delimiter Next;
     public int Number = 1;
     public Dictionary<EmphasisType, OpenerOrCloserType> OpenerOrCloser;
+    private readonly bool precedingPunctuation;
+
+    private readonly bool precedingWhitespace;
 
     public Delimiter Previous;
-    public Delimiter Next;
-
-    private static Regex whitespaceRegex = new Regex(@"\s", RegexOptions.Compiled);
-    private static Regex punctuationRegex = new Regex(@"[^\w\s]", RegexOptions.Compiled);
-
-    bool precedingWhitespace;
-    bool followingWhitespace;
-    bool precedingPunctuation;
-    bool followingPunctuation;
-
-    bool leftFlanking;
-    bool rightFlanking;
+    private readonly bool rightFlanking;
 
     public Delimiter(Ops delimiterOps, int delimiterOpsIndex, char delimiterType, int number, char? preceding, char? following, Delimiter previous)
     {
@@ -57,24 +57,24 @@ namespace Markdraw.MarkdownToDelta
       Previous = previous;
       Next = null;
 
-      precedingWhitespace = preceding is null ? true : whitespaceRegex.IsMatch(((string)preceding.ToString()));
-      followingWhitespace = following is null ? true : whitespaceRegex.IsMatch(((string)following.ToString()));
-      precedingPunctuation = preceding is null ? false : punctuationRegex.IsMatch(((string)preceding.ToString()));
-      followingPunctuation = following is null ? false : punctuationRegex.IsMatch(((string)following.ToString()));
+      precedingWhitespace = preceding is null ? true : whitespaceRegex.IsMatch(preceding.ToString());
+      followingWhitespace = following is null ? true : whitespaceRegex.IsMatch(following.ToString());
+      precedingPunctuation = preceding is null ? false : punctuationRegex.IsMatch(preceding.ToString());
+      followingPunctuation = following is null ? false : punctuationRegex.IsMatch(following.ToString());
 
       leftFlanking = false;
       rightFlanking = false;
 
       if (!followingWhitespace && (
-        !followingPunctuation || (followingPunctuation && (precedingPunctuation || precedingWhitespace))
-       ))
+        !followingPunctuation || followingPunctuation && (precedingPunctuation || precedingWhitespace)
+      ))
       {
         leftFlanking = true;
       }
 
       if (!precedingWhitespace && (
-        !precedingPunctuation || (precedingPunctuation && (followingPunctuation || followingWhitespace))
-       ))
+        !precedingPunctuation || precedingPunctuation && (followingPunctuation || followingWhitespace)
+      ))
       {
         rightFlanking = true;
       }
@@ -114,7 +114,7 @@ namespace Markdraw.MarkdownToDelta
       }
       else
       {
-        if (leftFlanking && (!rightFlanking || (rightFlanking && precedingPunctuation)))
+        if (leftFlanking && (!rightFlanking || rightFlanking && precedingPunctuation))
         {
           OpenerOrCloser[EmphasisType.Italic] = OpenerOrCloser[EmphasisType.Italic] | OpenerOrCloserType.Opener;
           if (Number > 1)
@@ -122,7 +122,7 @@ namespace Markdraw.MarkdownToDelta
             OpenerOrCloser[EmphasisType.Bold] = OpenerOrCloser[EmphasisType.Bold] | OpenerOrCloserType.Opener;
           }
         }
-        if (rightFlanking && (!leftFlanking || (leftFlanking && precedingPunctuation)))
+        if (rightFlanking && (!leftFlanking || leftFlanking && precedingPunctuation))
         {
           OpenerOrCloser[EmphasisType.Italic] = OpenerOrCloser[EmphasisType.Italic] | OpenerOrCloserType.Closer;
           if (Number > 1)
@@ -135,7 +135,7 @@ namespace Markdraw.MarkdownToDelta
 
     public void RemoveCharacters(EmphasisType emphasis)
     {
-      int n = emphasis == EmphasisType.Bold ? 2 : 1;
+      var n = emphasis == EmphasisType.Bold ? 2 : 1;
       Number -= n;
       DelimiterOps.Transform(new Ops().Delete(n));
       SetOpenerOrCloser();

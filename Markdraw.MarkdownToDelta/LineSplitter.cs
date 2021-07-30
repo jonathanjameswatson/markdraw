@@ -33,11 +33,11 @@ namespace Markdraw.MarkdownToDelta
 
   public static class LineSplitter
   {
-    private static readonly Regex fenceOpenRegex = new Regex(
+    private static readonly Regex fenceOpenRegex = new(
       @"^\s{0,3}(?<fencing>(?<fencetype>`|~)\k<fencetype>{2,})\s*?(?<infostring>[^\s`][^`]*)?$",
       RegexOptions.Compiled
     );
-    private static readonly Regex fenceCloseRegex = new Regex(
+    private static readonly Regex fenceCloseRegex = new(
       @"^(?<text>.*?)(?<fencing>(?<fencetype>`|~)\k<fencetype>{2,})\s*$",
       RegexOptions.Compiled
     );
@@ -48,10 +48,10 @@ namespace Markdraw.MarkdownToDelta
       var linesAndFences = new List<LineOrFenced>();
 
       int? fencedIndex = null;
-      char fenceType = '`';
-      int fenceLength = 0;
+      var fenceType = '`';
+      var fenceLength = 0;
 
-      foreach (string line in lines)
+      foreach (var line in lines)
       {
         if (fencedIndex is null)
         {

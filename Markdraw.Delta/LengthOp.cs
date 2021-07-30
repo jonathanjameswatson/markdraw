@@ -6,6 +6,11 @@ namespace Markdraw.Delta
   {
     private int _length;
 
+    public LengthOp(int length)
+    {
+      Length = length;
+    }
+
     public int Length
     {
       get => _length;
@@ -17,11 +22,6 @@ namespace Markdraw.Delta
         }
         _length = value;
       }
-    }
-
-    public LengthOp(int length)
-    {
-      Length = length;
     }
   }
 }
