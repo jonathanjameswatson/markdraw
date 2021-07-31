@@ -34,34 +34,34 @@ namespace Markdraw.Tree
 
     private string Tag { get; set; }
 
-    private (string, int) AddBold(List<TextInsert> textInserts, int start)
+    private (string, int) AddCode(List<TextInsert> textInserts, int start)
     {
       var stringBuilder = new StringBuilder();
       var open = false;
       var i = start;
       var buffer = new StringBuilder();
 
-      if (textInserts.Count > 0 && textInserts[0].Format.Bold == true)
+      if (textInserts.Count > 0 && textInserts[0].Format.Code == true)
       {
         open = true;
       }
 
-      string BoldString(bool bold, string text)
+      string CodeString(bool code, string text)
       {
-        if (!AddSpans) return bold ? $@"<strong>{text}</strong>" : text;
-        var tag = bold ? "strong" : "span";
+        if (!AddSpans) return code ? $@"<code>{text}</code>" : text;
+        var tag = code ? "code" : "span";
         return $@"<{tag}>{text}</{tag}>";
       }
 
       foreach (var textInsert in textInserts)
       {
-        Debug.Assert(textInsert.Format.Bold != null, "textInsert.Format.Bold != null");
-        var bold = (bool)textInsert.Format.Bold;
+        Debug.Assert(textInsert.Format.Code != null, "textInsert.Format.Code != null");
+        var code = (bool)textInsert.Format.Code;
 
-        if (open != bold)
+        if (open != code)
         {
-          stringBuilder.Append(BoldString(open, buffer.ToString()));
-          open = bold;
+          stringBuilder.Append(CodeString(open, buffer.ToString()));
+          open = code;
           i += buffer.Length;
           buffer.Clear();
         }
@@ -69,10 +69,64 @@ namespace Markdraw.Tree
         buffer.Append(textInsert.Text);
       }
 
-      if (buffer.Length > 0)
+      if (buffer.Length <= 0) return (stringBuilder.ToString(), i);
+      stringBuilder.Append(CodeString(open, buffer.ToString()));
+      i += buffer.Length;
+
+      return (stringBuilder.ToString(), i);
+    }
+
+    private (string, int) AddBold(List<TextInsert> textInserts, int start)
+    {
+      var stringBuilder = new StringBuilder();
+      var open = false;
+      var buffer = new List<TextInsert>();
+      var i = start;
+
+      foreach (var textInsert in textInserts)
       {
-        stringBuilder.Append(BoldString(open, buffer.ToString()));
-        i += buffer.Length;
+        Debug.Assert(textInsert.Format.Bold != null, "textInsert.Format.Bold != null");
+        var bold = (bool)textInsert.Format.Bold;
+
+        switch (open)
+        {
+          case false when bold:
+          {
+            var (text1, newI1) = AddCode(buffer, i);
+
+            if (ParentTree is not null && ParentTree.AddSpans)
+            {
+              stringBuilder.Append($@"{text1}<em i=""{i}"">");
+            }
+            else
+            {
+              stringBuilder.Append($@"{text1}<em>");
+            }
+
+            i = newI1;
+            open = true;
+            buffer = new List<TextInsert>();
+            break;
+          }
+          case true when !bold:
+            var (text2, newI2) = AddCode(buffer, i);
+            stringBuilder.Append($@"{text2}</em>");
+            i = newI2;
+            open = false;
+            buffer = new List<TextInsert>();
+            break;
+        }
+
+        buffer.Add(textInsert);
+      }
+
+      var (text, newI) = AddCode(buffer, i);
+      stringBuilder.Append(text);
+      i = newI;
+
+      if (open)
+      {
+        stringBuilder.Append(@"</em>");
       }
 
       return (stringBuilder.ToString(), i);
@@ -90,30 +144,33 @@ namespace Markdraw.Tree
         Debug.Assert(textInsert.Format.Italic != null, "textInsert.Format.Italic != null");
         var italic = (bool)textInsert.Format.Italic;
 
-        if (!open && italic)
+        switch (open)
         {
-          var (text1, newI1) = AddBold(buffer, i);
-
-          if (ParentTree is not null && ParentTree.AddSpans)
+          case false when italic:
           {
-            stringBuilder.Append($@"{text1}<em i=""{i}"">");
-          }
-          else
-          {
-            stringBuilder.Append($@"{text1}<em>");
-          }
+            var (text1, newI1) = AddBold(buffer, i);
 
-          i = newI1;
-          open = true;
-          buffer = new List<TextInsert>();
-        }
-        else if (open && !italic)
-        {
-          var (text2, newI2) = AddBold(buffer, i);
-          stringBuilder.Append($@"{text2}</em>");
-          i = newI2;
-          open = false;
-          buffer = new List<TextInsert>();
+            if (ParentTree is not null && ParentTree.AddSpans)
+            {
+              stringBuilder.Append($@"{text1}<em i=""{i}"">");
+            }
+            else
+            {
+              stringBuilder.Append($@"{text1}<em>");
+            }
+
+            i = newI1;
+            open = true;
+            buffer = new List<TextInsert>();
+            break;
+          }
+          case true when !italic:
+            var (text2, newI2) = AddBold(buffer, i);
+            stringBuilder.Append($@"{text2}</em>");
+            i = newI2;
+            open = false;
+            buffer = new List<TextInsert>();
+            break;
         }
 
         buffer.Add(textInsert);
