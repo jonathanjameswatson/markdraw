@@ -83,6 +83,9 @@ namespace Markdraw.MarkdownToDelta
             case FencedCodeBlock fencedCodeBlock:
               ops.Insert(new CodeInsert(fencedCodeBlock.Lines.ToString(), fencedCodeBlock.Info));
               break;
+            case CodeBlock codeBlock:
+              ops.Insert(new CodeInsert(codeBlock.Lines.ToString()));
+              break;
             case HeadingBlock headingBlock:
               InsertText(ops, headingBlock.Inline);
               header = headingBlock.Level;
