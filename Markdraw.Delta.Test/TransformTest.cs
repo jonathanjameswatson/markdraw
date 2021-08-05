@@ -1,4 +1,7 @@
 using System.Collections.Immutable;
+using Markdraw.Delta.Formats;
+using Markdraw.Delta.Indents;
+using Markdraw.Delta.Operations.Inserts;
 using Xunit;
 
 namespace Markdraw.Delta.Test
@@ -90,8 +93,14 @@ namespace Markdraw.Delta.Test
     public void Retain_FormatsLines()
     {
       var turnQuote = new LineFormat {
-        Indents = ImmutableList.Create(Indent.Quote, Indent.Empty(1)), Header = null
+        Indents = ImmutableList.Create<Indent>(Indent.Quote), Header = null
       };
+
+      new LineInsert(new LineFormat() {
+        Indents = ImmutableList.Create<Indent>(Indent.Quote)
+      }).Is(new LineInsert(new LineFormat() {
+        Indents = ImmutableList.Create<Indent>(Indent.Quote)
+      }));
 
       new Ops()
         .Insert(new LineInsert())

@@ -1,6 +1,6 @@
 using System;
 
-namespace Markdraw.Delta
+namespace Markdraw.Delta.Operations
 {
   public abstract class LengthOp : IOp
   {

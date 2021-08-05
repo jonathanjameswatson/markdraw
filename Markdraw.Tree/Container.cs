@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Markdraw.Delta;
+using Markdraw.Delta.Indents;
+using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Tree
 {
@@ -24,7 +26,7 @@ namespace Markdraw.Tree
         {
           case LineInsert lineInsert:
           {
-            var indents = lineInsert.Format.NonEmptyIndents;
+            var indents = lineInsert.Format.Indents;
             var header = lineInsert.Format.Header ?? 0;
             var numberOfIndents = indents.Count;
             var goneForward = numberOfIndents > depth;
@@ -129,27 +131,13 @@ namespace Markdraw.Tree
 
     private int AddContainer(Indent indent, Ops ops, int depth, int start)
     {
-      Container newContainer;
-      if (indent == Indent.Quote)
-      {
-        newContainer = new QuoteContainer(depth, ops, ParentTree, start);
-      }
-      else if (indent == Indent.Bullet)
-      {
-        newContainer = new BulletsContainer(depth, ops, ParentTree, start);
-      }
-      else if (indent.IsNumber())
-      {
-        newContainer = new NumbersContainer(depth, ops, ParentTree, start);
-      }
-      else if (indent == Indent.Code)
-      {
-        newContainer = new QuoteContainer(depth, ops, ParentTree, start);// fix this
-      }
-      else
-      {
-        newContainer = new Container(depth, ops, ParentTree, start);
-      }
+      Container newContainer = indent switch {
+        QuoteIndent => new QuoteContainer(depth, ops, ParentTree, start),
+        BulletIndent => new BulletsContainer(depth, ops, ParentTree, start),
+        NumberIndent => new NumbersContainer(depth, ops, ParentTree, start),
+        CodeIndent => new QuoteContainer(depth, ops, ParentTree, start),
+        _ => new Container(depth, ops, ParentTree, start)
+      };
 
       ElementsInside.Add(newContainer);
 

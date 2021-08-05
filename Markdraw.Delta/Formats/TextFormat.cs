@@ -1,4 +1,4 @@
-namespace Markdraw.Delta
+namespace Markdraw.Delta.Formats
 {
   public record TextFormat : Format
   {

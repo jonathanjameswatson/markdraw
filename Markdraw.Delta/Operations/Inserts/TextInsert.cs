@@ -1,6 +1,7 @@
 using System;
+using Markdraw.Delta.Formats;
 
-namespace Markdraw.Delta
+namespace Markdraw.Delta.Operations.Inserts
 {
   public class TextInsert : Insert
   {

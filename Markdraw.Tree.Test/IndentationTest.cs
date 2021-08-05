@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Markdraw.Delta;
+using Markdraw.Delta.Formats;
+using Markdraw.Delta.Indents;
+using Markdraw.Delta.Operations.Inserts;
 using Xunit;
 
 namespace Markdraw.Tree.Test
@@ -159,19 +162,19 @@ namespace Markdraw.Tree.Test
             .Insert("B")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet)
+                Indents = ImmutableList.Create<Indent>(Indent.Number(2), Indent.LooseBullet)
               }
             ))
             .Insert("C")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet, Indent.Quote)
+                Indents = ImmutableList.Create<Indent>(Indent.Number(2), Indent.LooseBullet, Indent.Quote)
               }
             ))
             .Insert("D")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet)
+                Indents = ImmutableList.Create<Indent>(Indent.Number(2), Indent.LooseBullet)
               }
             ))
         )
@@ -208,7 +211,7 @@ namespace Markdraw.Tree.Test
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet, Indent.Quote)
+                Indents = ImmutableList.Create<Indent>(Indent.Number(2), Indent.LooseBullet, Indent.Quote)
               }
             ))
         )
@@ -236,7 +239,7 @@ namespace Markdraw.Tree.Test
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat {
-                Indents = ImmutableList.Create(Indent.Number(2), Indent.Bullet, Indent.Quote)
+                Indents = ImmutableList.Create<Indent>(Indent.Number(2), Indent.LooseBullet, Indent.Quote)
               }
             ))
             .Insert("B")

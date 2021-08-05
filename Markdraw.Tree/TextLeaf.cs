@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Markdraw.Delta;
+using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Tree
 {

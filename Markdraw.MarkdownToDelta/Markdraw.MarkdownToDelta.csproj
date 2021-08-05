@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Markdraw.Delta\Markdraw.Delta.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.25.0" />
+  </ItemGroup>
+
 </Project>

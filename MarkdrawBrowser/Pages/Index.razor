@@ -2,6 +2,9 @@
 @using Markdraw.Tree
 @using Markdraw.Delta
 @using System.Collections.Immutable
+@using Markdraw.Delta.Formats
+@using Markdraw.Delta.Indents
+@using Markdraw.Delta.Operations.Inserts
 @inject HttpClient Http;
 @inject IJSRuntime JS;
 
@@ -134,7 +137,7 @@
     {
         await SetFormat(
             new ModifyingLineFormat {
-                IndentsFunction = list => list.Insert(0, Indent.Empty(1)).Insert(0, Indent.Quote)
+                IndentsFunction = list => list.Insert(0, Indent.Quote)
             }
             );
     }
@@ -143,7 +146,7 @@
     {
         await SetFormat(
             new ModifyingLineFormat {
-                IndentsFunction = list => list.Insert(0, Indent.Empty(1)).Insert(0, Indent.Bullet)
+                IndentsFunction = list => list.Insert(0, Indent.LooseBullet)
             }
             );
     }
@@ -152,7 +155,7 @@
     {
         await SetFormat(
             new ModifyingLineFormat {
-                IndentsFunction = list => list.Insert(0, Indent.Empty(1)).Insert(0, Indent.Number(2))
+                IndentsFunction = list => list.Insert(0, Indent.Number(2))
             });
     }
 

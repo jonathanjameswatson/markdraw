@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Markdraw.Delta.Formats;
+using Markdraw.Delta.Operations;
+using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Delta
 {
@@ -58,7 +61,7 @@ namespace Markdraw.Delta
     }
 
     /// <summary>
-    ///   Adds a <see cref="Delta.Insert" /> to the end of this sequence of operations, which is then normalised.
+    ///   Adds a <see cref="Operations.Inserts.Insert" /> to the end of this sequence of operations, which is then normalised.
     /// </summary>
     /// <param name="insert">The insert to be added.</param>
     /// <returns></returns>
@@ -93,12 +96,12 @@ namespace Markdraw.Delta
     }
 
     /// <summary>
-    ///   Inserts a sequence of <see cref="Delta.Insert" />s to this sequence of operations, which is returned.
+    ///   Inserts a sequence of <see cref="Operations.Inserts.Insert" />s to this sequence of operations, which is returned.
     /// </summary>
-    /// <param name="inserts">Another sequence of operations that must only contain <see cref="Delta.Insert" />s.</param>
+    /// <param name="inserts">Another sequence of operations that must only contain <see cref="Operations.Inserts.Insert" />s.</param>
     /// <returns>This sequence of operations.</returns>
     /// <exception cref="ArgumentException">
-    ///   Occurs if any non-<see cref="Delta.Insert" />s are found in <paramref name="inserts" />
+    ///   Occurs if any non-<see cref="Operations.Inserts.Insert" />s are found in <paramref name="inserts" />
     /// </exception>
     public Ops InsertMany(Ops inserts)
     {
@@ -118,9 +121,9 @@ namespace Markdraw.Delta
     }
 
     /// <summary>
-    ///   Adds a <see cref="Delta.Delete" /> with a given length to the end of this sequence of operations.
+    ///   Adds a <see cref="Operations.Delete" /> with a given length to the end of this sequence of operations.
     /// </summary>
-    /// <param name="amount">The length of the <see cref="Delta.Delete" />.</param>
+    /// <param name="amount">The length of the <see cref="Operations.Delete" />.</param>
     /// <returns>This sequence of operations.</returns>
     public Ops Delete(int amount)
     {
@@ -129,9 +132,9 @@ namespace Markdraw.Delta
     }
 
     /// <summary>
-    ///   Adds a <see cref="Delta.Retain" /> with a given length and no formatting to the end of this sequence of operations.
+    ///   Adds a <see cref="Operations.Retain" /> with a given length and no formatting to the end of this sequence of operations.
     /// </summary>
-    /// <param name="amount">The length of the <see cref="Delta.Retain" />.</param>
+    /// <param name="amount">The length of the <see cref="Operations.Retain" />.</param>
     /// <returns>This sequence of operations.</returns>
     public Ops Retain(int amount)
     {
@@ -140,10 +143,10 @@ namespace Markdraw.Delta
     }
 
     /// <summary>
-    ///   Adds a <see cref="Delta.Retain" /> with a given length and format to the end of this sequence of operations.
+    ///   Adds a <see cref="Operations.Retain" /> with a given length and format to the end of this sequence of operations.
     /// </summary>
-    /// <param name="amount">The length of the <see cref="Delta.Retain" />.</param>
-    /// <param name="format">The format of the <see cref="Delta.Retain" />.</param>
+    /// <param name="amount">The length of the <see cref="Operations.Retain" />.</param>
+    /// <param name="format">The format of the <see cref="Operations.Retain" />.</param>
     /// <returns>This sequence of operations.</returns>
     public Ops Retain(int amount, Format format)
     {

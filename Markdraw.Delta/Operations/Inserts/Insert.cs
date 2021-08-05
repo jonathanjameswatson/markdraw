@@ -1,4 +1,6 @@
-namespace Markdraw.Delta
+using Markdraw.Delta.Formats;
+
+namespace Markdraw.Delta.Operations.Inserts
 {
   public abstract class Insert : IOp
   {

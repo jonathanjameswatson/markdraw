@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Immutable;
+using Markdraw.Delta.Indents;
 
-namespace Markdraw.Delta
+namespace Markdraw.Delta.Formats
 {
   public record ModifyingLineFormat : Format
   {

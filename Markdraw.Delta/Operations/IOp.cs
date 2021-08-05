@@ -1,4 +1,4 @@
-namespace Markdraw.Delta
+namespace Markdraw.Delta.Operations
 {
   public interface IOp
   {

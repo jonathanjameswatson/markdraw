@@ -1,6 +1,8 @@
 using System.Text;
+using Markdraw.Delta.Formats;
+using Markdraw.Delta.Indents;
 
-namespace Markdraw.Delta
+namespace Markdraw.Delta.Operations.Inserts
 {
   public class LineInsert : Insert
   {
@@ -38,7 +40,7 @@ namespace Markdraw.Delta
 
     public override string ToString()
     {
-      return @"[\n]";
+      return $@"[\n {Format}]";
     }
 
     public string LineInsertString()
@@ -47,39 +49,33 @@ namespace Markdraw.Delta
 
       foreach (var indent in Format.Indents)
       {
-        switch (indent.Type)
+        switch (indent)
         {
-          case IndentType.Bullet:
+          case BulletIndent:
             stringBuilder.Append('-');
             break;
-          case IndentType.Quote:
+          case QuoteIndent:
             stringBuilder.Append('>');
             break;
-          case IndentType.Number:
+          case NumberIndent:
             stringBuilder.Append("1.");
             break;
-          case IndentType.Code:
+          case CodeIndent:
             stringBuilder.Append("    ");
             break;
-          default:
-          {
-            for (var i = 0; i < indent.Length; i++)
-            {
-              stringBuilder.Append(' ');
-            }
+          case ContinueIndent:
+            stringBuilder.Append(" "); //last
             break;
-          }
         }
       }
 
-      if (Format.Header != 0)
+      if (Format.Header == 0) return stringBuilder.ToString();
+
+      for (var i = 0; i < Format.Header; i++)
       {
-        for (var i = 0; i < Format.Header; i++)
-        {
-          stringBuilder.Append('#');
-        }
-        stringBuilder.Append(' ');
+        stringBuilder.Append('#');
       }
+      stringBuilder.Append(' ');
 
       return stringBuilder.ToString();
     }

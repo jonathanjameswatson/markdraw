@@ -3,31 +3,27 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Markdraw.Delta.Indents;
 
-namespace Markdraw.Delta
+namespace Markdraw.Delta.Formats
 {
   public record LineFormat : Format
   {
 
     public static readonly LineFormat QuotePreset = new() {
-      Indents = ImmutableList.Create(
-        Indent.Quote, Indent.Empty(1)
-      )
+      Indents = ImmutableList.Create<Indent>(Indent.Quote)
     };
     public static readonly LineFormat BulletPreset = new() {
-      Indents = ImmutableList.Create(Indent.Bullet, Indent.Empty(1))
+      Indents = ImmutableList.Create<Indent>(Indent.LooseBullet)
     };
     public static readonly LineFormat NumberPreset = new() {
-      Indents = ImmutableList.Create(Indent.Number(2), Indent.Empty(1))
+      Indents = ImmutableList.Create<Indent>(Indent.LooseNumber)
     };
     public static readonly LineFormat CodePreset = new() {
-      Indents = ImmutableList.Create(
-        Indent.Code
-      )
+      Indents = ImmutableList.Create<Indent>(Indent.Code)
     };
     private int? _hashCode;
     public ImmutableList<Indent> Indents { get; init; } = ImmutableList<Indent>.Empty;
-    public ImmutableList<Indent> NonEmptyIndents => Indents.Where(indent => !indent.IsEmpty()).ToImmutableList();
 
     public int? Header { get; init; } = 0;
 

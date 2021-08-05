@@ -1,4 +1,4 @@
-using Markdraw.Delta;
+using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Tree
 {
