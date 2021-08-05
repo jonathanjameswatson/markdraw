@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Markdraw.Delta;
 using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Tree
@@ -191,19 +192,24 @@ namespace Markdraw.Tree
     private string AddLinks(List<TextInsert> textInserts, int start)
     {
       var stringBuilder = new StringBuilder();
-      var openLink = "";
+      var openLink = new Link();
       var buffer = new List<TextInsert>();
       var i = start;
 
-      string LinkString(string link) => $@"<a href=""{link}"">";
+      string LinkString(Link link)
+      {
+        var (url, title) = link;
+        var titleString = title == "" ? "" : $@" title=""{title}""";
+        return $@"<a href=""{url}""{titleString}>";
+      }
 
       foreach (var textInsert in textInserts)
       {
         var link = textInsert.Format.Link;
 
-        if (link != "")
+        if (link.Url != "")
         {
-          if (openLink == "")
+          if (openLink.Url == "")
           {
             var (text1, newI1) = AddItalics(buffer, i);
             stringBuilder.Append($@"{text1}{LinkString(link)}");
@@ -220,12 +226,12 @@ namespace Markdraw.Tree
             buffer = new List<TextInsert>();
           }
         }
-        else if (openLink != "" && link == "")
+        else if (openLink.Url != "" && link.Url == "")
         {
           var (text3, newI3) = AddItalics(buffer, i);
           stringBuilder.Append($@"{text3}</a>");
           i = newI3;
-          openLink = "";
+          openLink = new Link();
           buffer = new List<TextInsert>();
         }
 
@@ -235,7 +241,7 @@ namespace Markdraw.Tree
       var (text, _) = AddItalics(buffer, i);
       stringBuilder.Append(text);
 
-      if (openLink != "")
+      if (openLink.Url != "")
       {
         stringBuilder.Append(@"</a>");
       }

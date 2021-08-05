@@ -221,7 +221,7 @@ namespace Markdraw.Tree.Test
           new TextLeaf(new List<TextInsert> {
             new("A"),
             new("B", new TextFormat {
-              Link = "C"
+              Link = new Link("C")
             }),
             new("D")
           }, 0)
@@ -240,10 +240,10 @@ namespace Markdraw.Tree.Test
               Italic = true
             }),
             new("C", new TextFormat {
-              Italic = true, Link = "F"
+              Italic = true, Link = new Link("F")
             }),
             new("D", new TextFormat {
-              Link = "F"
+              Link = new Link("F")
             }),
             new("E")
           }, 0)

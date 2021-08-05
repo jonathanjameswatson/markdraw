@@ -213,7 +213,7 @@
     private async Task SetLink()
     {
         await SetFormat(new TextFormat {
-            Link = modalLink
+            Link = new Link(modalLink)
         });
         Close();
     }

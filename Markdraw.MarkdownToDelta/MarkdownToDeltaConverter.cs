@@ -134,12 +134,12 @@ namespace Markdraw.MarkdownToDelta
               if (linkInline.IsImage)
               {
                 var altText = GetText(linkInline);
-                ops.Insert(new ImageInsert(linkInline.Url, altText)); // add Title as well
+                ops.Insert(new ImageInsert(linkInline.Url, altText, linkInline.Title ?? ""));
                 return;
               }
 
               newTextFormat = newTextFormat with {
-                Link = linkInline.Url
+                Link = new Link(linkInline.Url, linkInline.Title ?? "")
               }; // add Title as well
 
               break;
@@ -156,7 +156,7 @@ namespace Markdraw.MarkdownToDelta
           {
             case AutolinkInline autolinkInline:
               ops.Insert(new TextInsert(autolinkInline.Url, newTextFormat with {
-                Link = autolinkInline.Url
+                Link = new Link(autolinkInline.Url)
               }));
               break;
             case CodeInline codeInline:

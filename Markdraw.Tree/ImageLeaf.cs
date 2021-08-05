@@ -13,7 +13,9 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      return $@"<img src=""{CorrespondingInsert.Url}"" alt=""{CorrespondingInsert.Alt}"" />";
+      var altString = CorrespondingInsert.Alt == "" ? "" : $@"alt=""{CorrespondingInsert.Alt}"" ";
+      var titleString = CorrespondingInsert.Title == "" ? "" : $@"title=""{CorrespondingInsert.Title}"" ";
+      return $@"<img src=""{CorrespondingInsert.Url}"" {altString}{titleString}/>";
     }
   }
 }

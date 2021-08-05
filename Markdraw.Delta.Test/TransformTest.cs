@@ -158,17 +158,17 @@ namespace Markdraw.Delta.Test
 
       new Ops()
         .Insert("AB", new TextFormat {
-          Link = "C"
+          Link = new Link("C")
         })
         .Transform(new Ops().Retain(1).Insert("D"))
         .Is(
           new Ops()
             .Insert("A", new TextFormat {
-              Link = "C"
+              Link = new Link("C")
             })
             .Insert("D")
             .Insert("B", new TextFormat {
-              Link = "C"
+              Link = new Link("C")
             }));
     }
 

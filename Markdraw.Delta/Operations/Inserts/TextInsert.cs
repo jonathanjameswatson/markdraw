@@ -92,7 +92,8 @@ namespace Markdraw.Delta.Operations.Inserts
       var trimmed = Text.TrimStart();
       var bold = Format.Bold == true ? $"**{trimmed}**" : trimmed;
       var italic = Format.Italic == true ? $"*{bold}*" : bold;
-      return Format.Link != "" ? $"[{italic}]({Format.Link})" : italic;
+      var title = Format.Link.Title == "" ? "" : $@" ""{Format.Link.Title}""";
+      return Format.Link.Url != "" ? $"[{italic}]({Format.Link}{title})" : italic;
     }
   }
 }
