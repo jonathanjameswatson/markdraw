@@ -10,8 +10,8 @@ namespace Markdraw.Parser
   {
     public static string Parse(string markdown)
     {
-      var html = DeltaTree.Parse(markdown).ToString();
-      return Inner(Prettify(html));
+      var html = string.Join(' ', DeltaTree.Parse(markdown).Select(child => child.ToString()));
+      return Prettify(html);
     }
 
     public static string Prettify(string html)
@@ -22,14 +22,6 @@ namespace Markdraw.Parser
       settings.MinifyCssAttributes = false;
       settings.MinifyJs = false;
       return Uglify.Html(html, settings).ToString();
-    }
-
-    public static string Inner(string html)
-    {
-      return string.Join("\n", html.Split(new[] {
-          "\n"
-        },
-        StringSplitOptions.None).Skip(1).SkipLast(1).Select(s => s.Substring(2)));
     }
   }
 }
