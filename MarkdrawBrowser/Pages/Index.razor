@@ -4,6 +4,7 @@
 @using System.Collections.Immutable
 @using Markdraw.Delta.Formats
 @using Markdraw.Delta.Indents
+@using Markdraw.Delta.Links
 @using Markdraw.Delta.Operations.Inserts
 @inject HttpClient Http;
 @inject IJSRuntime JS;
@@ -213,7 +214,7 @@
     private async Task SetLink()
     {
         await SetFormat(new TextFormat {
-            Link = new Link(modalLink)
+            Link = new ExistentLink(modalLink)
         });
         Close();
     }

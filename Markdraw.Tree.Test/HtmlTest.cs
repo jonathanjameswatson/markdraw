@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Markdraw.Delta;
 using Markdraw.Delta.Formats;
+using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 using Xunit;
 
@@ -221,7 +222,7 @@ namespace Markdraw.Tree.Test
           new TextLeaf(new List<TextInsert> {
             new("A"),
             new("B", new TextFormat {
-              Link = new Link("C")
+              Link = new ExistentLink("C")
             }),
             new("D")
           }, 0)
@@ -240,10 +241,10 @@ namespace Markdraw.Tree.Test
               Italic = true
             }),
             new("C", new TextFormat {
-              Italic = true, Link = new Link("F")
+              Italic = true, Link = new ExistentLink("F")
             }),
             new("D", new TextFormat {
-              Link = new Link("F")
+              Link = new ExistentLink("F")
             }),
             new("E")
           }, 0)

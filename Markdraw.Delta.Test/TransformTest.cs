@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
+using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 using Xunit;
 
@@ -158,17 +159,17 @@ namespace Markdraw.Delta.Test
 
       new Ops()
         .Insert("AB", new TextFormat {
-          Link = new Link("C")
+          Link = new ExistentLink("C")
         })
         .Transform(new Ops().Retain(1).Insert("D"))
         .Is(
           new Ops()
             .Insert("A", new TextFormat {
-              Link = new Link("C")
+              Link = new ExistentLink("C")
             })
             .Insert("D")
             .Insert("B", new TextFormat {
-              Link = new Link("C")
+              Link = new ExistentLink("C")
             }));
     }
 

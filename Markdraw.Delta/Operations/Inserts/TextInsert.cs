@@ -1,5 +1,6 @@
 using System;
 using Markdraw.Delta.Formats;
+using Markdraw.Delta.Links;
 
 namespace Markdraw.Delta.Operations.Inserts
 {
@@ -92,8 +93,9 @@ namespace Markdraw.Delta.Operations.Inserts
       var trimmed = Text.TrimStart();
       var bold = Format.Bold == true ? $"**{trimmed}**" : trimmed;
       var italic = Format.Italic == true ? $"*{bold}*" : bold;
-      var title = Format.Link.Title == "" ? "" : $@" ""{Format.Link.Title}""";
-      return Format.Link.Url != "" ? $"[{italic}]({Format.Link}{title})" : italic;
+      if (Format.Link is not ExistentLink(var url, var title)) return italic;
+      var titleString = (title ?? "") == "" ? "" : $@" ""{title}""";
+      return $"[{italic}]({url}{titleString})";
     }
   }
 }

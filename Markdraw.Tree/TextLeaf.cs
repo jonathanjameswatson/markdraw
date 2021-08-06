@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Markdraw.Delta;
+using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Tree
@@ -192,11 +193,11 @@ namespace Markdraw.Tree
     private string AddLinks(List<TextInsert> textInserts, int start)
     {
       var stringBuilder = new StringBuilder();
-      var openLink = new Link();
+      Link openLink = new NonExistentLink();
       var buffer = new List<TextInsert>();
       var i = start;
 
-      string LinkString(Link link)
+      string LinkString(ExistentLink link)
       {
         var (url, title) = link;
         var titleString = title == "" ? "" : $@" title=""{title}""";
@@ -207,31 +208,31 @@ namespace Markdraw.Tree
       {
         var link = textInsert.Format.Link;
 
-        if (link.Url != "")
+        if (link is ExistentLink existentLink)
         {
-          if (openLink.Url == "")
+          if (openLink is NonExistentLink)
           {
             var (text1, newI1) = AddItalics(buffer, i);
-            stringBuilder.Append($@"{text1}{LinkString(link)}");
+            stringBuilder.Append($@"{text1}{LinkString(existentLink)}");
             i = newI1;
-            openLink = link;
+            openLink = existentLink;
             buffer = new List<TextInsert>();
           }
           else if (openLink != link)
           {
             var (text2, newI2) = AddItalics(buffer, i);
-            stringBuilder.Append($@"{text2}</a>{LinkString(link)}");
+            stringBuilder.Append($@"{text2}</a>{LinkString(existentLink)}");
             i = newI2;
-            openLink = link;
+            openLink = existentLink;
             buffer = new List<TextInsert>();
           }
         }
-        else if (openLink.Url != "" && link.Url == "")
+        else if (openLink is ExistentLink && link is NonExistentLink)
         {
           var (text3, newI3) = AddItalics(buffer, i);
           stringBuilder.Append($@"{text3}</a>");
           i = newI3;
-          openLink = new Link();
+          openLink = link;
           buffer = new List<TextInsert>();
         }
 
@@ -241,7 +242,7 @@ namespace Markdraw.Tree
       var (text, _) = AddItalics(buffer, i);
       stringBuilder.Append(text);
 
-      if (openLink.Url != "")
+      if (openLink is ExistentLink)
       {
         stringBuilder.Append(@"</a>");
       }

@@ -9,6 +9,7 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
+using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 
 // ReSharper disable IteratorNeverReturns
@@ -142,7 +143,7 @@ namespace Markdraw.MarkdownToDelta
               }
 
               newTextFormat = newTextFormat with {
-                Link = new Link(linkInline.Url, linkInline.Title ?? "")
+                Link = new ExistentLink(linkInline.Url, linkInline.Title ?? "")
               }; // add Title as well
 
               break;
@@ -159,7 +160,7 @@ namespace Markdraw.MarkdownToDelta
           {
             case AutolinkInline autolinkInline:
               ops.Insert(new TextInsert(autolinkInline.Url, newTextFormat with {
-                Link = new Link(autolinkInline.Url)
+                Link = new ExistentLink(autolinkInline.Url)
               }));
               break;
             case CodeInline codeInline:
