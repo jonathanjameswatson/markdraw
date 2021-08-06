@@ -22,10 +22,23 @@ namespace Markdraw.Delta.Formats
     public static readonly LineFormat CodePreset = new() {
       Indents = ImmutableList.Create<Indent>(Indent.Code)
     };
-    private int? _hashCode;
+    private readonly Lazy<int> _hashCode;
     public ImmutableList<Indent> Indents { get; init; } = ImmutableList<Indent>.Empty;
 
     public int? Header { get; init; } = 0;
+
+    public LineFormat()
+    {
+      _hashCode = new Lazy<int>(() => {
+        var hash = new HashCode();
+        foreach (var indent in Indents)
+        {
+          hash.Add(indent);
+        }
+        hash.Add(Header);
+        return hash.ToHashCode();
+      });
+    }
 
     public virtual bool Equals(LineFormat other)
     {
@@ -50,17 +63,7 @@ namespace Markdraw.Delta.Formats
     [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
     public override int GetHashCode()
     {
-      if (_hashCode is not null) return (int)_hashCode;
-
-      var hash = new HashCode();
-      foreach (var indent in Indents)
-      {
-        hash.Add(indent);
-      }
-      hash.Add(Header);
-      _hashCode = hash.ToHashCode();
-
-      return (int)_hashCode;
+      return _hashCode.Value;
     }
   }
 }
