@@ -1,10 +1,10 @@
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public class DividerInsert : EmbedInsert
+  public class DividerInsert : Insert
   {
     public override bool Equals(object obj)
     {
-      return obj is EmbedInsert x;
+      return obj is DividerInsert;
     }
 
     public override int GetHashCode()

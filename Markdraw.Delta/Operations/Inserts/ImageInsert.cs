@@ -2,7 +2,7 @@ using System;
 
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public class ImageInsert : EmbedInsert
+  public class ImageInsert : InlineInsert
   {
 
     public ImageInsert(string url = "", string alt = "", string title = "")

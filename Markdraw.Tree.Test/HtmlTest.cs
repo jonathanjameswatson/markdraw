@@ -21,8 +21,8 @@ namespace Markdraw.Tree.Test
     public void OneLine_IsParagraph()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           })
         })
         .ToString()
@@ -33,11 +33,11 @@ namespace Markdraw.Tree.Test
     public void TwoLines_AreTwoParagraph()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           }),
-          new TextLeaf(new List<TextInsert> {
-            new("B")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("B")
           })
         })
         .ToString()
@@ -49,8 +49,8 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new QuoteContainer(new List<TreeNode> {
-            new TextLeaf(new List<TextInsert> {
-              new("A")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("A")
             })
           })
         })
@@ -63,8 +63,8 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new BulletsContainer(new List<TreeNode> {
-            new TextLeaf(new List<TextInsert> {
-              new("A")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("A")
             })
           })
         })
@@ -77,8 +77,8 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new NumbersContainer(new List<TreeNode> {
-            new TextLeaf(new List<TextInsert> {
-              new("A")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("A")
             })
           })
         })
@@ -91,17 +91,17 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new NumbersContainer(new List<TreeNode> {
-            new TextLeaf(new List<TextInsert> {
-              new("A")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("A")
             })
           }),
           new BulletsContainer(new List<TreeNode> {
-            new TextLeaf(new List<TextInsert> {
-              new("B")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("B")
             })
           }),
-          new TextLeaf(new List<TextInsert> {
-            new("C")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("C")
           }),
           new QuoteContainer(new List<TreeNode>())
         })
@@ -116,8 +116,8 @@ namespace Markdraw.Tree.Test
           new NumbersContainer(new List<TreeNode> {
             new BulletsContainer(new List<TreeNode> {
               new QuoteContainer(new List<TreeNode> {
-                new TextLeaf(new List<TextInsert> {
-                  new("A")
+                new TextLeaf(new List<InlineInsert> {
+                  new TextInsert("A")
                 })
               })
             })
@@ -125,16 +125,6 @@ namespace Markdraw.Tree.Test
         })
         .ToString()
         .Is(@"<div><ol><li><ul><li><blockquote><p>A</p></blockquote></li></ul></li></ol></div>");
-    }
-
-    [Fact]
-    public void Images_AreConvertedToHtml()
-    {
-      new Container(new List<TreeNode> {
-          new ImageLeaf(new ImageInsert("A", "B"))
-        })
-        .ToString()
-        .Is(@"<div><img src=""A"" alt=""B"" /></div>");
     }
 
     [Fact]
@@ -167,48 +157,48 @@ namespace Markdraw.Tree.Test
     public void Headers_AreConvertedToHtml()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           }, 1)
         })
         .ToString()
         .Is(@"<div><h1>A</h1></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           }, 2)
         })
         .ToString()
         .Is(@"<div><h2>A</h2></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           }, 3)
         })
         .ToString()
         .Is(@"<div><h3>A</h3></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           }, 4)
         })
         .ToString()
         .Is(@"<div><h4>A</h4></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           }, 5)
         })
         .ToString()
         .Is(@"<div><h5>A</h5></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A")
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A")
           }, 6)
         })
         .ToString()
@@ -219,12 +209,12 @@ namespace Markdraw.Tree.Test
     public void DoubleLinks_AreConvertedToHtml()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A"),
-            new("B", new TextFormat {
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A"),
+            new TextInsert("B", new TextFormat {
               Link = new ExistentLink("C")
             }),
-            new("D")
+            new TextInsert("D")
           }, 0)
         })
         .ToString()
@@ -235,18 +225,18 @@ namespace Markdraw.Tree.Test
     public void ItalicsAndLink_AreConvertedToHtml()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<TextInsert> {
-            new("A"),
-            new("B", new TextFormat {
+          new TextLeaf(new List<InlineInsert> {
+            new TextInsert("A"),
+            new TextInsert("B", new TextFormat {
               Italic = true
             }),
-            new("C", new TextFormat {
+            new TextInsert("C", new TextFormat {
               Italic = true, Link = new ExistentLink("F")
             }),
-            new("D", new TextFormat {
+            new TextInsert("D", new TextFormat {
               Link = new ExistentLink("F")
             }),
-            new("E")
+            new TextInsert("E")
           }, 0)
         })
         .ToString()

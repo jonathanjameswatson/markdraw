@@ -28,8 +28,8 @@ namespace Markdraw.Tree.Test
         )
         .Is(
           new Container(new List<TreeNode> {
-            new TextLeaf(new List<TextInsert> {
-              new("A")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("A")
             })
           })
         );
@@ -47,11 +47,11 @@ namespace Markdraw.Tree.Test
         )
         .Is(
           new Container(new List<TreeNode> {
-            new TextLeaf(new List<TextInsert> {
-              new("A")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("A")
             }),
-            new TextLeaf(new List<TextInsert> {
-              new("B")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("B")
             })
           })
         );
@@ -69,8 +69,8 @@ namespace Markdraw.Tree.Test
         .Is(
           new Container(new List<TreeNode> {
             new QuoteContainer(new List<TreeNode> {
-              new TextLeaf(new List<TextInsert> {
-                new("A")
+              new TextLeaf(new List<InlineInsert> {
+                new TextInsert("A")
               })
             })
           })
@@ -89,8 +89,8 @@ namespace Markdraw.Tree.Test
         .Is(
           new Container(new List<TreeNode> {
             new BulletsContainer(new List<TreeNode> {
-              new TextLeaf(new List<TextInsert> {
-                new("A")
+              new TextLeaf(new List<InlineInsert> {
+                new TextInsert("A")
               })
             })
           })
@@ -109,8 +109,8 @@ namespace Markdraw.Tree.Test
         .Is(
           new Container(new List<TreeNode> {
             new NumbersContainer(new List<TreeNode> {
-              new TextLeaf(new List<TextInsert> {
-                new("A")
+              new TextLeaf(new List<InlineInsert> {
+                new TextInsert("A")
               })
             })
           })
@@ -134,17 +134,17 @@ namespace Markdraw.Tree.Test
         .Is(
           new Container(new List<TreeNode> {
             new NumbersContainer(new List<TreeNode> {
-              new TextLeaf(new List<TextInsert> {
-                new("A")
+              new TextLeaf(new List<InlineInsert> {
+                new TextInsert("A")
               })
             }),
             new BulletsContainer(new List<TreeNode> {
-              new TextLeaf(new List<TextInsert> {
-                new("B")
+              new TextLeaf(new List<InlineInsert> {
+                new TextInsert("B")
               })
             }),
-            new TextLeaf(new List<TextInsert> {
-              new("C")
+            new TextLeaf(new List<InlineInsert> {
+              new TextInsert("C")
             }),
             new QuoteContainer(new List<TreeNode>())
           })
@@ -181,20 +181,20 @@ namespace Markdraw.Tree.Test
         .Is(
           new Container(new List<TreeNode> {
             new NumbersContainer(new List<TreeNode> {
-              new TextLeaf(new List<TextInsert> {
-                new("A")
+              new TextLeaf(new List<InlineInsert> {
+                new TextInsert("A")
               }),
               new BulletsContainer(new List<TreeNode> {
-                new TextLeaf(new List<TextInsert> {
-                  new("B")
+                new TextLeaf(new List<InlineInsert> {
+                  new TextInsert("B")
                 }),
                 new QuoteContainer(new List<TreeNode> {
-                  new TextLeaf(new List<TextInsert> {
-                    new("C")
+                  new TextLeaf(new List<InlineInsert> {
+                    new TextInsert("C")
                   })
                 }),
-                new TextLeaf(new List<TextInsert> {
-                  new("D")
+                new TextLeaf(new List<InlineInsert> {
+                  new TextInsert("D")
                 })
               })
             })
@@ -220,8 +220,8 @@ namespace Markdraw.Tree.Test
             new NumbersContainer(new List<TreeNode> {
               new BulletsContainer(new List<TreeNode> {
                 new QuoteContainer(new List<TreeNode> {
-                  new TextLeaf(new List<TextInsert> {
-                    new("A")
+                  new TextLeaf(new List<InlineInsert> {
+                    new TextInsert("A")
                   })
                 })
               })
@@ -250,13 +250,13 @@ namespace Markdraw.Tree.Test
             new NumbersContainer(new List<TreeNode> {
               new BulletsContainer(new List<TreeNode> {
                 new QuoteContainer(new List<TreeNode> {
-                  new TextLeaf(new List<TextInsert> {
-                    new("A")
+                  new TextLeaf(new List<InlineInsert> {
+                    new TextInsert("A")
                   })
                 })
               }),
-              new TextLeaf(new List<TextInsert> {
-                new("B")
+              new TextLeaf(new List<InlineInsert> {
+                new TextInsert("B")
               })
             })
           })

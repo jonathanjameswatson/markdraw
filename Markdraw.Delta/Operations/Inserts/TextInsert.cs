@@ -4,7 +4,7 @@ using Markdraw.Delta.Links;
 
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public class TextInsert : Insert
+  public class TextInsert : InlineInsert
   {
 
     public TextInsert(string text, TextFormat format)

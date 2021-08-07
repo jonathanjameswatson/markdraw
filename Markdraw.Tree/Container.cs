@@ -131,7 +131,7 @@ namespace Markdraw.Tree
 
     private int AddContainer(Indent indent, Ops ops, int depth, int start)
     {
-      Container newContainer = indent switch {
+      var newContainer = indent switch {
         QuoteIndent => new QuoteContainer(depth, ops, ParentTree, start),
         BulletIndent => new BulletsContainer(depth, ops, ParentTree, start),
         NumberIndent => new NumbersContainer(depth, ops, ParentTree, start),
@@ -146,14 +146,14 @@ namespace Markdraw.Tree
 
     private int AddLeaves(Ops ops, int header, int start)
     {
-      var textBuffer = new List<TextInsert>();
+      var textBuffer = new List<InlineInsert>();
       var i = start;
 
       foreach (var op in ops)
       {
-        if (op is TextInsert textInsert)
+        if (op is InlineInsert inlineInsert)
         {
-          textBuffer.Add(textInsert);
+          textBuffer.Add(inlineInsert);
         }
         else
         {
@@ -161,7 +161,7 @@ namespace Markdraw.Tree
           {
             var textLeaf = new TextLeaf(textBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i);
             ElementsInside.Add(textLeaf);
-            textBuffer = new List<TextInsert>();
+            textBuffer = new List<InlineInsert>();
             i += textLeaf.Length;
           }
 
@@ -169,9 +169,6 @@ namespace Markdraw.Tree
           {
             case DividerInsert dividerInsert:
               ElementsInside.Add(new DividerLeaf(dividerInsert, ParentTree, i));
-              break;
-            case ImageInsert imageInsert:
-              ElementsInside.Add(new ImageLeaf(imageInsert, ParentTree, i));
               break;
             case CodeInsert codeInsert:
               ElementsInside.Add(new CodeLeaf(codeInsert, ParentTree, i));

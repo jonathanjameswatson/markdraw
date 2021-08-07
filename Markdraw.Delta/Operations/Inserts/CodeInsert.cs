@@ -1,6 +1,6 @@
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public class CodeInsert : EmbedInsert
+  public class CodeInsert : Insert
   {
 
     public CodeInsert(string text = "", string tag = "")
