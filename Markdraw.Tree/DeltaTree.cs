@@ -24,7 +24,7 @@ namespace Markdraw.Tree
       set
       {
         _delta = value;
-        Root = new Container(0, Delta, this);
+        Root = Container.CreateInstance(0, Delta, this);
       }
     }
     public Container Root { get; private set; }
@@ -39,12 +39,12 @@ namespace Markdraw.Tree
     public static Container Parse(string markdown)
     {
       var ops = MarkdownToDeltaConverter.Parse(markdown);
-      return new Container(0, ops);
+      return Container.CreateInstance(0, ops);
     }
 
     public static Container Parse(Ops ops)
     {
-      return new Container(0, ops);
+      return Container.CreateInstance(0, ops);
     }
   }
 }

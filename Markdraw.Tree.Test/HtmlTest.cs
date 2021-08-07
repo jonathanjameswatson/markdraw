@@ -21,7 +21,7 @@ namespace Markdraw.Tree.Test
     public void OneLine_IsParagraph()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           })
         })
@@ -33,10 +33,10 @@ namespace Markdraw.Tree.Test
     public void TwoLines_AreTwoParagraph()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           }),
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("B")
           })
         })
@@ -49,7 +49,7 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new QuoteContainer(new List<TreeNode> {
-            new TextLeaf(new List<InlineInsert> {
+            new InlineLeaf(new List<InlineInsert> {
               new TextInsert("A")
             })
           })
@@ -63,7 +63,7 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new BulletsContainer(new List<TreeNode> {
-            new TextLeaf(new List<InlineInsert> {
+            new InlineLeaf(new List<InlineInsert> {
               new TextInsert("A")
             })
           })
@@ -77,7 +77,7 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new NumbersContainer(new List<TreeNode> {
-            new TextLeaf(new List<InlineInsert> {
+            new InlineLeaf(new List<InlineInsert> {
               new TextInsert("A")
             })
           })
@@ -91,16 +91,16 @@ namespace Markdraw.Tree.Test
     {
       new Container(new List<TreeNode> {
           new NumbersContainer(new List<TreeNode> {
-            new TextLeaf(new List<InlineInsert> {
+            new InlineLeaf(new List<InlineInsert> {
               new TextInsert("A")
             })
           }),
           new BulletsContainer(new List<TreeNode> {
-            new TextLeaf(new List<InlineInsert> {
+            new InlineLeaf(new List<InlineInsert> {
               new TextInsert("B")
             })
           }),
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("C")
           }),
           new QuoteContainer(new List<TreeNode>())
@@ -116,7 +116,7 @@ namespace Markdraw.Tree.Test
           new NumbersContainer(new List<TreeNode> {
             new BulletsContainer(new List<TreeNode> {
               new QuoteContainer(new List<TreeNode> {
-                new TextLeaf(new List<InlineInsert> {
+                new InlineLeaf(new List<InlineInsert> {
                   new TextInsert("A")
                 })
               })
@@ -157,7 +157,7 @@ namespace Markdraw.Tree.Test
     public void Headers_AreConvertedToHtml()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           }, 1)
         })
@@ -165,7 +165,7 @@ namespace Markdraw.Tree.Test
         .Is(@"<div><h1>A</h1></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           }, 2)
         })
@@ -173,7 +173,7 @@ namespace Markdraw.Tree.Test
         .Is(@"<div><h2>A</h2></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           }, 3)
         })
@@ -181,7 +181,7 @@ namespace Markdraw.Tree.Test
         .Is(@"<div><h3>A</h3></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           }, 4)
         })
@@ -189,7 +189,7 @@ namespace Markdraw.Tree.Test
         .Is(@"<div><h4>A</h4></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           }, 5)
         })
@@ -197,7 +197,7 @@ namespace Markdraw.Tree.Test
         .Is(@"<div><h5>A</h5></div>");
 
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A")
           }, 6)
         })
@@ -209,7 +209,7 @@ namespace Markdraw.Tree.Test
     public void DoubleLinks_AreConvertedToHtml()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A"),
             new TextInsert("B", new TextFormat {
               Link = new ExistentLink("C")
@@ -225,7 +225,7 @@ namespace Markdraw.Tree.Test
     public void ItalicsAndLink_AreConvertedToHtml()
     {
       new Container(new List<TreeNode> {
-          new TextLeaf(new List<InlineInsert> {
+          new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A"),
             new TextInsert("B", new TextFormat {
               Italic = true

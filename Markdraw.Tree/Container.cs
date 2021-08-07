@@ -11,9 +11,23 @@ namespace Markdraw.Tree
   public class Container : TreeNode, IEnumerable<TreeNode>
   {
 
-    public Container(int depth, Ops ops, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
+    protected virtual string Tag => "div";
+    protected virtual string InsideTag => "li";
+    protected bool Loose = true;
+    protected virtual bool WrapAllInside => false;
+    public List<TreeNode> ElementsInside { get; } = new();
+
+    protected Container(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
+
+    public static Container CreateInstance(int depth, Ops ops, DeltaTree deltaTree = null, int i = 0)
     {
-      ElementsInside = new List<TreeNode>();
+      var container = new Container(deltaTree, i);
+
+      return Initialise(depth, ops, i, container);
+    }
+
+    protected static T Initialise<T>(int depth, Ops ops, int i, T container) where T : Container
+    {
       var opBuffer = new Ops();
       var lineOpBuffer = new Ops();
       var indented = false;
@@ -36,13 +50,13 @@ namespace Markdraw.Tree
             {
               if (goneBack || indents[depth] != lastIndent)
               {
-                currentI = AddContainer(lastIndent, opBuffer, depth + 1, currentI);
+                currentI = container.AddContainer(lastIndent, opBuffer, depth + 1, currentI);
                 currentI += 1;
 
                 if (goneBack)
                 {
                   indented = false;
-                  currentI = AddLeaves(lineOpBuffer, header, currentI);
+                  currentI = container.AddLeaves(lineOpBuffer, header, currentI);
                   currentI += 1;
                 }
                 else
@@ -70,7 +84,7 @@ namespace Markdraw.Tree
               }
               else
               {
-                currentI = AddLeaves(lineOpBuffer, header, currentI);
+                currentI = container.AddLeaves(lineOpBuffer, header, currentI);
                 currentI += 1;
               }
             }
@@ -88,35 +102,33 @@ namespace Markdraw.Tree
 
       if (opBuffer.Length != 0 && indented)
       {
-        currentI = AddContainer(lastIndent, opBuffer, depth + 1, currentI);
+        currentI = container.AddContainer(lastIndent, opBuffer, depth + 1, currentI);
         currentI += 1;
       }
 
       if (lineOpBuffer.Length != 0)
       {
-        AddLeaves(lineOpBuffer, 0, currentI);
+        container.AddLeaves(lineOpBuffer, 0, currentI);
       }
 
-      if (ElementsInside.Count > 0)
+      if (container.ElementsInside.Count > 0)
       {
-        var lastElement = ElementsInside[^1];
+        var lastElement = container.ElementsInside[^1];
 
-        Length = lastElement.I + lastElement.Length - i;
+        container.Length = lastElement.I + lastElement.Length - i;
       }
       else
       {
-        Length = 0;
+        container.Length = 0;
       }
+
+      return container;
     }
 
     public Container(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
     {
       ElementsInside = elementsInside;
     }
-    protected virtual string Tag => "div";
-    protected virtual string InsideTag => "li";
-    protected virtual bool WrapAllInside => false;
-    public List<TreeNode> ElementsInside { get; }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
@@ -132,11 +144,11 @@ namespace Markdraw.Tree
     private int AddContainer(Indent indent, Ops ops, int depth, int start)
     {
       var newContainer = indent switch {
-        QuoteIndent => new QuoteContainer(depth, ops, ParentTree, start),
-        BulletIndent => new BulletsContainer(depth, ops, ParentTree, start),
-        NumberIndent => new NumbersContainer(depth, ops, ParentTree, start),
-        CodeIndent => new QuoteContainer(depth, ops, ParentTree, start),
-        _ => new Container(depth, ops, ParentTree, start)
+        QuoteIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, start),
+        BulletIndent { Loose: var loose } => BulletsContainer.CreateInstance(depth, ops, ParentTree, start, loose),
+        NumberIndent { Loose: var loose } => NumbersContainer.CreateInstance(depth, ops, ParentTree, start, loose),
+        CodeIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, start),
+        _ => CreateInstance(depth, ops, ParentTree, start)
       };
 
       ElementsInside.Add(newContainer);
@@ -146,22 +158,22 @@ namespace Markdraw.Tree
 
     private int AddLeaves(Ops ops, int header, int start)
     {
-      var textBuffer = new List<InlineInsert>();
+      var inlineBuffer = new List<InlineInsert>();
       var i = start;
 
       foreach (var op in ops)
       {
         if (op is InlineInsert inlineInsert)
         {
-          textBuffer.Add(inlineInsert);
+          inlineBuffer.Add(inlineInsert);
         }
         else
         {
-          if (textBuffer.Count != 0)
+          if (inlineBuffer.Count != 0)
           {
-            var textLeaf = new TextLeaf(textBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i);
+            var textLeaf = new InlineLeaf(inlineBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i, Loose);
             ElementsInside.Add(textLeaf);
-            textBuffer = new List<InlineInsert>();
+            inlineBuffer = new List<InlineInsert>();
             i += textLeaf.Length;
           }
 
@@ -179,9 +191,9 @@ namespace Markdraw.Tree
         }
       }
 
-      if (textBuffer.Count == 0) return i;
+      if (inlineBuffer.Count == 0) return i;
 
-      var finalTextLeaf = new TextLeaf(textBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i);
+      var finalTextLeaf = new InlineLeaf(inlineBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i, Loose);
       ElementsInside.Add(finalTextLeaf);
       i += finalTextLeaf.Length;
 
@@ -214,4 +226,5 @@ namespace Markdraw.Tree
       return stringBuilder.ToString();
     }
   }
+
 }

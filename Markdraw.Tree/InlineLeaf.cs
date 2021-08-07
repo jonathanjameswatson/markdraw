@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Markdig.Helpers;
-using Markdraw.Delta;
 using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Helpers;
 
 namespace Markdraw.Tree
 {
-  public class TextLeaf : Leaf
+  public class InlineLeaf : Leaf
   {
 
     private List<InlineInsert> _correspondingInserts;
+    private bool _loose;
 
-    public TextLeaf(List<InlineInsert> correspondingInserts, int header) : this(correspondingInserts, header == 0 ? "p" : $"h{header}") {}
+    public InlineLeaf(List<InlineInsert> correspondingInserts, int header, bool loose = true) : this(correspondingInserts, header == 0 ? "p" : $"h{header}", null, 0, loose) {}
 
-    public TextLeaf(List<InlineInsert> correspondingInserts, string tag = "p", DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
+    public InlineLeaf(List<InlineInsert> correspondingInserts, string tag = "p", DeltaTree deltaTree = null, int i = 0, bool loose = true) : base(deltaTree, i)
     {
       CorrespondingInserts = correspondingInserts;
       Tag = tag;
+      _loose = loose;
     }
 
     protected override Insert CorrespondingInsert => CorrespondingInserts?[0];
@@ -304,7 +304,8 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      return $@"<{Tag}>{AddLinks(CorrespondingInserts, I)}</{Tag}>";
+      var inner = AddLinks(CorrespondingInserts, I);
+      return _loose ? $@"<{Tag}>{inner}</{Tag}>" : inner;
     }
   }
 }

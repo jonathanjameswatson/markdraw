@@ -6,11 +6,14 @@ namespace Markdraw.Tree
   public class QuoteContainer : Container
   {
 
-    public QuoteContainer(int depth, Ops ops, DeltaTree deltaTree, int i) : base(depth, ops, deltaTree, i) {}
+    private QuoteContainer(DeltaTree deltaTree, int i) : base(deltaTree, i) {}
+    public new static QuoteContainer CreateInstance(int depth, Ops ops, DeltaTree deltaTree, int i) {
+      var container = new QuoteContainer(deltaTree, i);
 
-    public QuoteContainer(List<TreeNode> elementsInside) : base(elementsInside) {}
+      return Initialise(depth, ops, i, container);
+    }
+    public QuoteContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
 
-    public QuoteContainer(List<TreeNode> elementsInside, DeltaTree deltaTree, int i) : base(elementsInside, deltaTree, i) {}
     protected override string Tag => "blockquote";
   }
 }

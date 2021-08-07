@@ -3,14 +3,17 @@ using Markdraw.Delta;
 
 namespace Markdraw.Tree
 {
-  public class NumbersContainer : Container
+  public class NumbersContainer : ListContainer
   {
 
-    public NumbersContainer(int depth, Ops ops, DeltaTree deltaTree, int i) : base(depth, ops, deltaTree, i) {}
+    private NumbersContainer(DeltaTree deltaTree = null, int i = 0, bool loose = false) : base(deltaTree, i, loose) {}
+    public static NumbersContainer CreateInstance(int depth, Ops ops, DeltaTree deltaTree = null, int i = 0, bool loose = false) {
+      var container = new NumbersContainer(deltaTree, i, loose);
 
-    public NumbersContainer(List<TreeNode> elementsInside) : base(elementsInside) {}
+      return Initialise(depth, ops, i, container);
+    }
+    public NumbersContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0, bool loose = false) : base(elementsInside, deltaTree, i, loose) {}
 
-    public NumbersContainer(List<TreeNode> elementsInside, DeltaTree deltaTree, int i) : base(elementsInside, deltaTree, i) {}
     protected override string Tag => "ol";
     protected override bool WrapAllInside => true;
   }
