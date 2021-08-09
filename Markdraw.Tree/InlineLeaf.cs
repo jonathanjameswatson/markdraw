@@ -77,7 +77,7 @@ namespace Markdraw.Tree
               buffer.Clear();
             }
 
-            buffer.Append(textInsert.Text);
+            buffer.Append(EscapeHelpers.Escape(textInsert.Text));
             break;
           default:
             throw new ArgumentOutOfRangeException(nameof(inlineInserts));
