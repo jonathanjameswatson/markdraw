@@ -236,6 +236,10 @@ namespace Markdraw.Tree
       {
         var (url, title) = link;
         var escapedUrl = EscapeHelpers.EscapeUrl(url);
+        if (EmailHelpers.IsEmail(url))
+        {
+          escapedUrl = $"mailto:{escapedUrl}";
+        }
         var titleString = title == "" ? "" : $@" title=""{title}""";
         return $@"<a href=""{escapedUrl}""{titleString}>";
       }
