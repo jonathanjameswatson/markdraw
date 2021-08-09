@@ -10,9 +10,10 @@ namespace Markdraw.Delta.Indents
     public static BulletIndent LooseBullet => Bullet();
     public static NumberIndent LooseNumber => Number();
 
-    public static BulletIndent Bullet(bool loose = false)
+    public static BulletIndent Bullet(bool start = true, bool loose = false)
     {
       return new BulletIndent {
+        Start = start,
         Loose = loose
       };
     }

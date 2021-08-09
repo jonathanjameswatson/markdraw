@@ -12,6 +12,7 @@ namespace Markdraw.Tree
   {
 
     protected virtual string Tag => "div";
+    protected virtual string StartingTag => null;
     protected virtual string InsideTag => "li";
     protected bool Loose = true;
     protected virtual bool WrapAllInside => false;
@@ -48,7 +49,7 @@ namespace Markdraw.Tree
 
             if (indented)
             {
-              if (goneBack || indents[depth] != lastIndent)
+              if (goneBack || indents[depth] != NextIndent(lastIndent))
               {
                 currentI = container.AddContainer(lastIndent, opBuffer, depth + 1, currentI);
                 currentI += 1;
@@ -130,6 +131,19 @@ namespace Markdraw.Tree
       ElementsInside = elementsInside;
     }
 
+    private static Indent NextIndent(Indent indent)
+    {
+      return indent switch {
+        BulletIndent { Start: true } bulletIndent => bulletIndent with {
+          Start = false
+        },
+        NumberIndent { Start: > 0 } numberIndent => numberIndent with {
+          Start = 0
+        },
+        _ => indent
+      };
+    }
+
     IEnumerator IEnumerable.GetEnumerator()
     {
       return GetEnumerator();
@@ -141,25 +155,25 @@ namespace Markdraw.Tree
       return ElementsInside.GetEnumerator();
     }
 
-    private int AddContainer(Indent indent, Ops ops, int depth, int start)
+    private int AddContainer(Indent indent, Ops ops, int depth, int i)
     {
       var newContainer = indent switch {
-        QuoteIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, start),
-        BulletIndent { Loose: var loose } => BulletsContainer.CreateInstance(depth, ops, ParentTree, start, loose),
-        NumberIndent { Loose: var loose } => NumbersContainer.CreateInstance(depth, ops, ParentTree, start, loose),
-        CodeIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, start),
-        _ => CreateInstance(depth, ops, ParentTree, start)
+        QuoteIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, i),
+        BulletIndent { Loose: var loose } => BulletsContainer.CreateInstance(depth, ops, ParentTree, i, loose),
+        NumberIndent { Loose: var loose, Start: var start } => NumbersContainer.CreateInstance(depth, ops, ParentTree, i, start, loose),
+        CodeIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, i),
+        _ => CreateInstance(depth, ops, ParentTree, i)
       };
 
       ElementsInside.Add(newContainer);
 
-      return start + newContainer.Length;
+      return i + newContainer.Length;
     }
 
-    private int AddLeaves(Ops ops, int header, int start)
+    private int AddLeaves(Ops ops, int header, int i)
     {
       var inlineBuffer = new List<InlineInsert>();
-      var i = start;
+      var newI = i;
 
       foreach (var op in ops)
       {
@@ -171,40 +185,40 @@ namespace Markdraw.Tree
         {
           if (inlineBuffer.Count != 0)
           {
-            var textLeaf = new InlineLeaf(inlineBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i, Loose);
+            var textLeaf = new InlineLeaf(inlineBuffer, header == 0 ? "p" : $"h{header}", ParentTree, newI, Loose);
             ElementsInside.Add(textLeaf);
             inlineBuffer = new List<InlineInsert>();
-            i += textLeaf.Length;
+            newI += textLeaf.Length;
           }
 
           switch (op)
           {
             case DividerInsert dividerInsert:
-              ElementsInside.Add(new DividerLeaf(dividerInsert, ParentTree, i));
+              ElementsInside.Add(new DividerLeaf(dividerInsert, ParentTree, newI));
               break;
             case CodeInsert codeInsert:
-              ElementsInside.Add(new CodeLeaf(codeInsert, ParentTree, i));
+              ElementsInside.Add(new CodeLeaf(codeInsert, ParentTree, newI));
               break;
           }
 
-          i += 1;
+          newI += 1;
         }
       }
 
-      if (inlineBuffer.Count == 0) return i;
+      if (inlineBuffer.Count == 0) return newI;
 
-      var finalTextLeaf = new InlineLeaf(inlineBuffer, header == 0 ? "p" : $"h{header}", ParentTree, i, Loose);
+      var finalTextLeaf = new InlineLeaf(inlineBuffer, header == 0 ? "p" : $"h{header}", ParentTree, newI, Loose);
       ElementsInside.Add(finalTextLeaf);
-      i += finalTextLeaf.Length;
+      newI += finalTextLeaf.Length;
 
-      return i;
+      return newI;
     }
 
     public override string ToString()
     {
       var stringBuilder = new StringBuilder();
 
-      stringBuilder.Append($@"<{Tag}>");
+      stringBuilder.Append(StartingTag ?? $@"<{Tag}>");
 
       foreach (var child in ElementsInside)
       {

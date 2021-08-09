@@ -26,10 +26,10 @@ namespace Markdraw.MarkdownToDelta
       return ops;
     }
 
-    private static void Write(Ops ops, IMarkdownObject block, ImmutableList<IEnumerator<Indent>> indentSequences, ListIndent listType = null)
+    private static void Write(Ops ops, IMarkdownObject block, ImmutableList<IEnumerator<Indent>> indentSequences, IEnumerator<ListIndent> listSequence = null)
     {
       var newIndents = indentSequences;
-      ListIndent newListType = null;
+      IEnumerator<ListIndent> newListSequence = null;
 
       switch (block)
       {
@@ -45,15 +45,19 @@ namespace Markdraw.MarkdownToDelta
               if (listBlock.IsOrdered)
               {
                 Debug.Assert(listBlock.OrderedStart != null, "listBlock.OrderedStart != null");
-                newListType = Indent.Number(int.Parse(listBlock.OrderedStart), loose);
+                var newIndent = Indent.Number(int.Parse(listBlock.OrderedStart), loose);
+                newListSequence = RepeatAfterFirst<ListIndent>(newIndent, newIndent with { Start = 0 });
               }
               else
               {
-                newListType = Indent.Bullet(loose);
+                var newIndent = Indent.Bullet(true, loose);
+                newListSequence = RepeatAfterFirst<ListIndent>(newIndent, newIndent with { Start = false });
               }
               break;
             case ListItemBlock:
-              newIndents = newIndents.Add(RepeatAfterFirst<Indent>(listType, Indent.Continue));
+              Debug.Assert(listSequence != null, nameof(listSequence) + " != null");
+              listSequence.MoveNext();
+              newIndents = newIndents.Add(RepeatAfterFirst<Indent>(listSequence.Current, Indent.Continue));
               break;
             case MarkdownDocument:
               break;
@@ -67,7 +71,7 @@ namespace Markdraw.MarkdownToDelta
 
           foreach (var child in containerBlock)
           {
-            Write(ops, child, newIndents, newListType);
+            Write(ops, child, newIndents, newListSequence);
           }
           break;
         case LeafBlock leafBlock:

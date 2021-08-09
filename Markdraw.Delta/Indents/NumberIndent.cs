@@ -10,9 +10,9 @@ namespace Markdraw.Delta.Indents
       get => _start;
       init
       {
-        if (value < 1)
+        if (value < 0)
         {
-          throw new ArgumentOutOfRangeException(nameof(value), "Start must be at least one.");
+          throw new ArgumentOutOfRangeException(nameof(value), "Start must be at least zero.");
         }
 
         _start = value;
