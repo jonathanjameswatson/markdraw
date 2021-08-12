@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Markdraw.Delta.Ops;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Links;
@@ -12,15 +13,15 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void RetainAndInsert_Appends()
     {
-      new Ops()
+      new Document()
         .Insert("A")
-        .Transform(new Ops().Retain(1).Insert("B"))
-        .Is(new Ops().Insert("AB"));
+        .Transform(new Transformation().Retain(1).Insert("B"))
+        .Is(new Document().Insert("AB"));
 
-      new Ops()
+      new Document()
         .Insert("A")
-        .Transform(new Ops().Retain(1).Insert("B", TextFormat.BoldPreset))
-        .Is(new Ops().Insert("A").Insert("B", TextFormat.BoldPreset));
+        .Transform(new Transformation().Retain(1).Insert("B", TextFormat.BoldPreset))
+        .Is(new Document().Insert("A").Insert("B", TextFormat.BoldPreset));
     }
 
     [Fact]
@@ -30,49 +31,49 @@ namespace Markdraw.Delta.Test
         Bold = true, Italic = null, Link = null
       };
 
-      new Ops()
+      new Document()
         .Insert("A")
-        .Transform(new Ops().Retain(1, turnBold))
-        .Is(new Ops().Insert("A", TextFormat.BoldPreset));
+        .Transform(new Transformation().Retain(1, turnBold))
+        .Is(new Document().Insert("A", TextFormat.BoldPreset));
 
-      new Ops()
+      new Document()
         .Insert("AA")
-        .Transform(new Ops().Retain(1, turnBold))
-        .Is(new Ops().Insert("A", TextFormat.BoldPreset).Insert("A"));
+        .Transform(new Transformation().Retain(1, turnBold))
+        .Is(new Document().Insert("A", TextFormat.BoldPreset).Insert("A"));
 
-      new Ops()
+      new Document()
         .Insert("AA")
-        .Transform(new Ops().Retain(1).Retain(1, turnBold))
-        .Is(new Ops().Insert("A").Insert("A", TextFormat.BoldPreset));
+        .Transform(new Transformation().Retain(1).Retain(1, turnBold))
+        .Is(new Document().Insert("A").Insert("A", TextFormat.BoldPreset));
 
-      new Ops()
+      new Document()
         .Insert("A")
         .Insert("A", TextFormat.BoldPreset)
-        .Transform(new Ops().Retain(1, turnBold))
-        .Is(new Ops().Insert("AA", TextFormat.BoldPreset));
+        .Transform(new Transformation().Retain(1, turnBold))
+        .Is(new Document().Insert("AA", TextFormat.BoldPreset));
 
-      new Ops()
+      new Document()
         .Insert("A")
         .Insert("A", TextFormat.BoldPreset)
-        .Transform(new Ops().Retain(2, turnBold))
-        .Is(new Ops().Insert("AA", TextFormat.BoldPreset));
+        .Transform(new Transformation().Retain(2, turnBold))
+        .Is(new Document().Insert("AA", TextFormat.BoldPreset));
 
-      new Ops()
+      new Document()
         .Insert("A", TextFormat.BoldPreset)
         .Insert("A", TextFormat.ItalicPreset)
-        .Transform(new Ops().Retain(2, turnBold))
-        .Is(new Ops()
+        .Transform(new Transformation().Retain(2, turnBold))
+        .Is(new Document()
           .Insert("A", TextFormat.BoldPreset)
           .Insert("A", new TextFormat {
             Bold = true, Italic = true
           })
         );
 
-      new Ops()
+      new Document()
         .Insert("AA", TextFormat.BoldPreset)
         .Insert("AA", TextFormat.ItalicPreset)
-        .Transform(new Ops().Retain(1).Retain(2, turnBold))
-        .Is(new Ops()
+        .Transform(new Transformation().Retain(1).Retain(2, turnBold))
+        .Is(new Document()
           .Insert("AA", TextFormat.BoldPreset)
           .Insert("A", new TextFormat {
             Bold = true, Italic = true
@@ -80,10 +81,10 @@ namespace Markdraw.Delta.Test
           .Insert("A", TextFormat.ItalicPreset)
         );
 
-      new Ops()
+      new Document()
         .Insert("AAA")
-        .Transform(new Ops().Retain(1).Retain(1, turnBold))
-        .Is(new Ops()
+        .Transform(new Transformation().Retain(1).Retain(1, turnBold))
+        .Is(new Document()
           .Insert("A")
           .Insert("A", TextFormat.BoldPreset)
           .Insert("A")
@@ -103,17 +104,17 @@ namespace Markdraw.Delta.Test
         Indents = ImmutableList.Create<Indent>(Indent.Quote)
       }));
 
-      new Ops()
+      new Document()
         .Insert(new LineInsert())
-        .Transform(new Ops().Retain(1, turnQuote))
-        .Is(new Ops().Insert(new LineInsert(LineFormat.QuotePreset)));
+        .Transform(new Transformation().Retain(1, turnQuote))
+        .Is(new Document().Insert(new LineInsert(LineFormat.QuotePreset)));
 
-      new Ops()
+      new Document()
         .Insert("A")
         .Insert(new LineInsert())
         .Insert("A")
-        .Transform(new Ops().Retain(3, turnQuote))
-        .Is(new Ops()
+        .Transform(new Transformation().Retain(3, turnQuote))
+        .Is(new Document()
           .Insert("A")
           .Insert(new LineInsert(LineFormat.QuotePreset))
           .Insert("A")
@@ -123,47 +124,47 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Delete_DeletesText()
     {
-      new Ops()
+      new Document()
         .Insert("A")
-        .Transform(new Ops().Delete(1))
-        .Is(new Ops());
+        .Transform(new Transformation().Delete(1))
+        .Is(new Document());
 
-      new Ops()
+      new Document()
         .Insert("AA")
-        .Transform(new Ops().Delete(1))
-        .Is(new Ops().Insert("A"));
+        .Transform(new Transformation().Delete(1))
+        .Is(new Document().Insert("A"));
 
-      new Ops()
+      new Document()
         .Insert("AA")
-        .Transform(new Ops().Retain(1).Delete(1))
-        .Is(new Ops().Insert("A"));
+        .Transform(new Transformation().Retain(1).Delete(1))
+        .Is(new Document().Insert("A"));
 
-      new Ops()
+      new Document()
         .Insert("AAA")
-        .Transform(new Ops().Retain(1).Delete(1))
-        .Is(new Ops().Insert("AA"));
+        .Transform(new Transformation().Retain(1).Delete(1))
+        .Is(new Document().Insert("AA"));
     }
 
     [Fact]
     public void Insert_InsertsInText()
     {
-      new Ops()
+      new Document()
         .Insert("AA")
-        .Transform(new Ops().Retain(1).Insert("A"))
-        .Is(new Ops().Insert("AAA"));
+        .Transform(new Transformation().Retain(1).Insert("A"))
+        .Is(new Document().Insert("AAA"));
 
-      new Ops()
+      new Document()
         .Insert("AA")
-        .Transform(new Ops().Retain(1).Insert("A", TextFormat.BoldPreset))
-        .Is(new Ops().Insert("A").Insert("A", TextFormat.BoldPreset).Insert("A"));
+        .Transform(new Transformation().Retain(1).Insert("A", TextFormat.BoldPreset))
+        .Is(new Document().Insert("A").Insert("A", TextFormat.BoldPreset).Insert("A"));
 
-      new Ops()
+      new Document()
         .Insert("AB", new TextFormat {
           Link = new ExistentLink("C")
         })
-        .Transform(new Ops().Retain(1).Insert("D"))
+        .Transform(new Transformation().Retain(1).Insert("D"))
         .Is(
-          new Ops()
+          new Document()
             .Insert("A", new TextFormat {
               Link = new ExistentLink("C")
             })
@@ -180,11 +181,11 @@ namespace Markdraw.Delta.Test
         Bold = true, Italic = null, Link = null
       };
 
-      new Ops()
+      new Document()
         .Insert("AAA")
         .Insert(new LineInsert())
-        .Transform(new Ops().Retain(1).Retain(1, turnBold))
-        .Is(new Ops()
+        .Transform(new Transformation().Retain(1).Retain(1, turnBold))
+        .Is(new Document()
           .Insert("A")
           .Insert("A", TextFormat.BoldPreset)
           .Insert("A")
@@ -195,20 +196,20 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Insert_InsertsWithNewLine()
     {
-      new Ops()
+      new Document()
         .Insert("AAA")
         .Insert(new LineInsert())
-        .Transform(new Ops().Retain(3).Insert("A"))
-        .Is(new Ops()
+        .Transform(new Transformation().Retain(3).Insert("A"))
+        .Is(new Document()
           .Insert("AAAA")
           .Insert(new LineInsert())
         );
 
-      new Ops()
+      new Document()
         .Insert("AAA")
         .Insert(new LineInsert())
-        .Transform(new Ops().Retain(1).Insert(new LineInsert()).Insert("B"))
-        .Is(new Ops()
+        .Transform(new Transformation().Retain(1).Insert(new LineInsert()).Insert("B"))
+        .Is(new Document()
           .Insert("A")
           .Insert(new LineInsert())
           .Insert("BAA")

@@ -11,6 +11,7 @@ using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Ops;
 
 // ReSharper disable IteratorNeverReturns
 
@@ -18,15 +19,15 @@ namespace Markdraw.MarkdownToDelta
 {
   public static class MarkdownToDeltaConverter
   {
-    public static Ops Parse(string markdown)
+    public static Document Parse(string markdown)
     {
       var abstractSyntaxTree = Markdown.Parse(markdown);
-      var ops = new Ops();
+      var ops = new Document();
       Write(ops, abstractSyntaxTree, ImmutableList<IEnumerator<Indent>>.Empty);
       return ops;
     }
 
-    private static void Write(Ops ops, IMarkdownObject block, ImmutableList<IEnumerator<Indent>> indentSequences, IEnumerator<ListIndent> listSequence = null)
+    private static void Write(Document document, IMarkdownObject block, ImmutableList<IEnumerator<Indent>> indentSequences, IEnumerator<ListIndent> listSequence = null)
     {
       var newIndents = indentSequences;
       IEnumerator<ListIndent> newListSequence = null;
@@ -71,7 +72,7 @@ namespace Markdraw.MarkdownToDelta
 
           foreach (var child in containerBlock)
           {
-            Write(ops, child, newIndents, newListSequence);
+            Write(document, child, newIndents, newListSequence);
           }
           break;
         case LeafBlock leafBlock:
@@ -86,31 +87,31 @@ namespace Markdraw.MarkdownToDelta
             case EmptyBlock:
               return;
             case FencedCodeBlock fencedCodeBlock:
-              ops.Insert(new CodeInsert(fencedCodeBlock.Lines.ToString(), fencedCodeBlock.Info));
+              document.Insert(new CodeInsert(fencedCodeBlock.Lines.ToString(), fencedCodeBlock.Info));
               break;
             case CodeBlock codeBlock:
-              ops.Insert(new CodeInsert(codeBlock.Lines.ToString()));
+              document.Insert(new CodeInsert(codeBlock.Lines.ToString()));
               break;
             case HeadingBlock headingBlock:
-              InsertText(ops, headingBlock.Inline);
+              InsertText(document, headingBlock.Inline);
               header = headingBlock.Level;
               break;
             case HtmlBlock htmlBlock:
-              ops.Insert(new TextInsert(htmlBlock.Lines.ToString(), new TextFormat()));
+              document.Insert(new TextInsert(htmlBlock.Lines.ToString(), new TextFormat()));
               break;
             case LinkReferenceDefinition:
               return;
             case ParagraphBlock paragraphBlock:
-              InsertText(ops, paragraphBlock.Inline);
+              InsertText(document, paragraphBlock.Inline);
               break;
             case ThematicBreakBlock:
-              ops.Insert(new DividerInsert());
+              document.Insert(new DividerInsert());
               break;
             default:
               throw new ArgumentOutOfRangeException(nameof(block));
 
           }
-          ops.Insert(new LineInsert(new LineFormat() {
+          document.Insert(new LineInsert(new LineFormat() {
             Indents = indents, Header = header
           }));
           break;
@@ -118,7 +119,7 @@ namespace Markdraw.MarkdownToDelta
       }
     }
 
-    private static void InsertText(Ops ops, Inline inline, TextFormat format = null)
+    private static void InsertText(Document document, Inline inline, TextFormat format = null)
     {
       var newTextFormat = format ?? new TextFormat();
       switch (inline)
@@ -142,7 +143,7 @@ namespace Markdraw.MarkdownToDelta
               if (linkInline.IsImage)
               {
                 var altText = GetText(linkInline);
-                ops.Insert(new ImageInsert(linkInline.Url, altText, linkInline.Title ?? ""));
+                document.Insert(new ImageInsert(linkInline.Url, altText, linkInline.Title ?? ""));
                 return;
               }
 
@@ -156,32 +157,32 @@ namespace Markdraw.MarkdownToDelta
 
           foreach (var child in containerInline)
           {
-            InsertText(ops, child, newTextFormat);
+            InsertText(document, child, newTextFormat);
           }
           break;
         case LeafInline leafInline:
           switch (leafInline)
           {
             case AutolinkInline autolinkInline:
-              ops.Insert(new TextInsert(autolinkInline.Url, newTextFormat with {
+              document.Insert(new TextInsert(autolinkInline.Url, newTextFormat with {
                 Link = new ExistentLink(autolinkInline.Url)
               }));
               break;
             case CodeInline codeInline:
-              ops.Insert(new TextInsert(codeInline.Content, newTextFormat with {
+              document.Insert(new TextInsert(codeInline.Content, newTextFormat with {
                 Code = true
               }));
               break;
             case HtmlEntityInline htmlEntityInline:
-              ops.Insert(new TextInsert(htmlEntityInline.Transcoded.ToString()));
+              document.Insert(new TextInsert(htmlEntityInline.Transcoded.ToString()));
               break;
             case HtmlInline htmlInline:
-              ops.Insert(new TextInsert(htmlInline.Tag));
+              document.Insert(new TextInsert(htmlInline.Tag));
               break;
             case LineBreakInline:
               return; // fix later maybe
             case LiteralInline literalInline:
-              ops.Insert(new TextInsert(literalInline.Content.ToString(), newTextFormat));
+              document.Insert(new TextInsert(literalInline.Content.ToString(), newTextFormat));
               break;
             default:
               throw new ArgumentOutOfRangeException(nameof(inline));

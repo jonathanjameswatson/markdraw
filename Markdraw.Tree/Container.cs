@@ -5,6 +5,7 @@ using System.Text;
 using Markdraw.Delta;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Ops;
 
 namespace Markdraw.Tree
 {
@@ -20,22 +21,22 @@ namespace Markdraw.Tree
 
     protected Container(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-    public static Container CreateInstance(int depth, Ops ops, DeltaTree deltaTree = null, int i = 0)
+    public static Container CreateInstance(int depth, Document document, DeltaTree deltaTree = null, int i = 0)
     {
       var container = new Container(deltaTree, i);
 
-      return Initialise(depth, ops, i, container);
+      return Initialise(depth, document, i, container);
     }
 
-    protected static T Initialise<T>(int depth, Ops ops, int i, T container) where T : Container
+    protected static T Initialise<T>(int depth, Document document, int i, T container) where T : Container
     {
-      var opBuffer = new Ops();
-      var lineOpBuffer = new Ops();
+      var opBuffer = new Document();
+      var lineOpBuffer = new Document();
       var indented = false;
       Indent lastIndent = null;
       var currentI = i;
 
-      foreach (var op in ops)
+      foreach (var op in document)
       {
         switch (op)
         {
@@ -90,14 +91,14 @@ namespace Markdraw.Tree
               }
             }
 
-            lineOpBuffer = new Ops();
+            lineOpBuffer = new Document();
             break;
           }
           case Insert insert:
             lineOpBuffer.Insert(insert);
             break;
           default:
-            throw new ArgumentException("ops must only contain inserts.");
+            throw new ArgumentException("document must only contain inserts.");
         }
       }
 
@@ -155,14 +156,14 @@ namespace Markdraw.Tree
       return ElementsInside.GetEnumerator();
     }
 
-    private int AddContainer(Indent indent, Ops ops, int depth, int i)
+    private int AddContainer(Indent indent, Document document, int depth, int i)
     {
       var newContainer = indent switch {
-        QuoteIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, i),
-        BulletIndent { Loose: var loose } => BulletsContainer.CreateInstance(depth, ops, ParentTree, i, loose),
-        NumberIndent { Loose: var loose, Start: var start } => NumbersContainer.CreateInstance(depth, ops, ParentTree, i, start, loose),
-        CodeIndent => QuoteContainer.CreateInstance(depth, ops, ParentTree, i),
-        _ => CreateInstance(depth, ops, ParentTree, i)
+        QuoteIndent => QuoteContainer.CreateInstance(depth, document, ParentTree, i),
+        BulletIndent { Loose: var loose } => BulletsContainer.CreateInstance(depth, document, ParentTree, i, loose),
+        NumberIndent { Loose: var loose, Start: var start } => NumbersContainer.CreateInstance(depth, document, ParentTree, i, start, loose),
+        CodeIndent => QuoteContainer.CreateInstance(depth, document, ParentTree, i),
+        _ => CreateInstance(depth, document, ParentTree, i)
       };
 
       ElementsInside.Add(newContainer);
@@ -170,12 +171,12 @@ namespace Markdraw.Tree
       return i + newContainer.Length;
     }
 
-    private int AddLeaves(Ops ops, int header, int i)
+    private int AddLeaves(Document document, int header, int i)
     {
       var inlineBuffer = new List<InlineInsert>();
       var newI = i;
 
-      foreach (var op in ops)
+      foreach (var op in document)
       {
         if (op is InlineInsert inlineInsert)
         {

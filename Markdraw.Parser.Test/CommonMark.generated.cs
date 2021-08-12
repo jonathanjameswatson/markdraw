@@ -1105,7 +1105,7 @@ namespace Markdraw.Parser.Test
       Parser.Parse("\\## foo").Is(Parser.Prettify("<p>## foo</p>"));
     }
 
-    // Contents are parsed as inlines:
+    // _ops are parsed as inlines:
     [Fact]
     public void LeafBlocksATXHeadings_Example036()
     {

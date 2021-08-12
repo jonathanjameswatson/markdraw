@@ -1,11 +1,12 @@
 using Markdraw.Delta;
+using Markdraw.Delta.Ops;
 using Markdraw.MarkdownToDelta;
 
 namespace Markdraw.Tree
 {
   public class DeltaTree
   {
-    private Ops _delta;
+    private Document _delta;
 
     public DeltaTree(string markdown = "")
     {
@@ -13,12 +14,12 @@ namespace Markdraw.Tree
       AddSpans = true;
     }
 
-    public DeltaTree(Ops ops)
+    public DeltaTree(Document document)
     {
-      Delta = ops;
+      Delta = document;
       AddSpans = true;
     }
-    public Ops Delta
+    public Document Delta
     {
       get => _delta;
       set
@@ -42,9 +43,9 @@ namespace Markdraw.Tree
       return Container.CreateInstance(0, ops);
     }
 
-    public static Container Parse(Ops ops)
+    public static Container Parse(Document document)
     {
-      return Container.CreateInstance(0, ops);
+      return Container.CreateInstance(0, document);
     }
   }
 }

@@ -6,6 +6,7 @@
 @using Markdraw.Delta.Indents
 @using Markdraw.Delta.Links
 @using Markdraw.Delta.Operations.Inserts
+@using Markdraw.Delta.Ops
 @inject HttpClient Http;
 @inject IJSRuntime JS;
 
@@ -67,7 +68,7 @@
     private async Task SetFormat(Format format)
     {
         var cursorPos = await GetCursor();
-        var transformation = new Ops();
+        var transformation = new Transformation();
 
         if (cursorPos.start > 0)
         {
@@ -85,9 +86,9 @@
         content = deltaTree.Root.ToString();
     }
 
-    private int InsertElementsWithCursor(Ops inserts, Cursor cursorPos)
+    private int InsertElementsWithCursor(Document inserts, Cursor cursorPos)
     {
-        var transformation = new Ops();
+        var transformation = new Transformation();
 
         var characters = inserts.Characters;
 
@@ -109,7 +110,7 @@
         return cursorPos.start + characters;
     }
 
-    private async Task InsertElements(Ops inserts)
+    private async Task InsertElements(Document inserts)
     {
         var cursorPos = await GetCursor();
         InsertElementsWithCursor(inserts, cursorPos);
@@ -194,7 +195,7 @@
     private async Task Divider()
     {
         await InsertElements(
-            new Ops()
+            new Document()
                 .Insert(new LineInsert())
                 .Insert(new DividerInsert())
                 .Insert(new LineInsert())
@@ -222,7 +223,7 @@
     private async Task AddImage()
     {
         await InsertElements(
-            new Ops()
+            new Document()
                 .Insert(new ImageInsert(modalImageUrl, modalImageAlt))
             );
         Close();
@@ -231,7 +232,7 @@
     private async Task AddCode()
     {
         await InsertElements(
-            new Ops()
+            new Document()
                 .Insert(new LineInsert())
                 .Insert(new CodeInsert(modalCodeContents, modalCodeLanguage))
                 .Insert(new LineInsert())
@@ -245,7 +246,7 @@
         var splitText = new List<string>(text.Split("\n"));
         var lastTextFormat = deltaTree.Delta.GetFirstFormat<TextFormat>(cursor.start);
         LineFormat lastLineFormat = null;
-        var ops = new Ops();
+        var ops = new Document();
 
         foreach (var part in splitText.GetRange(0, splitText.Count - 1))
         {
@@ -275,7 +276,7 @@
     [JSInvokable]
     public int RemoveText(bool backwards, Cursor cursor)
     {
-        var transformation = new Ops();
+        var transformation = new Transformation();
 
         var range = cursor.end - cursor.start;
         var retainAmount = range == 0 && backwards ? cursor.start - 1 : cursor.start;

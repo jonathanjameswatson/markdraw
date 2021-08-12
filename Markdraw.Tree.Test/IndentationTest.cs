@@ -4,6 +4,7 @@ using Markdraw.Delta;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Ops;
 using Xunit;
 
 namespace Markdraw.Tree.Test
@@ -14,7 +15,7 @@ namespace Markdraw.Tree.Test
     public void EmptyOps_IsEmptyContainer()
     {
       DeltaTree
-        .Parse(new Ops())
+        .Parse(new Document())
         .Is(new Container(new List<TreeNode>()));
     }
 
@@ -23,7 +24,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
         )
         .Is(
@@ -40,7 +41,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert())
             .Insert("B")
@@ -62,7 +63,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert(LineFormat.QuotePreset))
         )
@@ -82,7 +83,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert(LineFormat.BulletPreset))
         )
@@ -102,7 +103,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert(LineFormat.NumberPreset))
         )
@@ -122,7 +123,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert(LineFormat.NumberPreset))
             .Insert("B")
@@ -156,7 +157,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert(LineFormat.NumberPreset))
             .Insert("B")
@@ -207,7 +208,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat {
@@ -235,7 +236,7 @@ namespace Markdraw.Tree.Test
     {
       DeltaTree
         .Parse(
-          new Ops()
+          new Document()
             .Insert("A")
             .Insert(new LineInsert(
               new LineFormat {

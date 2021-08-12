@@ -1,4 +1,5 @@
 using System;
+using Markdraw.Delta.Ops;
 using Markdraw.Delta.Formats;
 using Xunit;
 
@@ -9,35 +10,35 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void EmptyDelta_IsEmptyDelta()
     {
-      new Ops()
-        .Is(new Ops());
+      new Document()
+        .Is(new Document());
     }
 
     [Fact]
     public void Delta_IsSameDelta()
     {
-      new Ops()
+      new Document()
         .Insert("A")
-        .Is(new Ops().Insert("A"));
+        .Is(new Document().Insert("A"));
 
-      new Ops()
+      new Document()
         .Insert("A")
-        .IsNot(new Ops().Insert("AA"));
+        .IsNot(new Document().Insert("AA"));
 
-      new Ops()
+      new Document()
         .Insert("A")
-        .IsNot(new Ops().Insert("A", TextFormat.BoldPreset));
+        .IsNot(new Document().Insert("A", TextFormat.BoldPreset));
     }
 
     [Fact]
     public void Delta_HasAppendedTextMerged()
     {
-      new Ops()
+      new Document()
         .Insert("A")
         .Insert("A")
-        .Is(new Ops().Insert("AA"));
+        .Is(new Document().Insert("AA"));
 
-      new Ops()
+      new Document()
         .Insert("A")
         .Insert("A", TextFormat.BoldPreset)
         .Length
@@ -48,15 +49,15 @@ namespace Markdraw.Delta.Test
     public void Delta_AppendingOps_FailsWithZeroLength()
     {
       Assert.Throws<ArgumentOutOfRangeException>(
-        () => new Ops().Retain(0)
+        () => new Transformation().Retain(0)
       );
 
       Assert.Throws<ArgumentOutOfRangeException>(
-        () => new Ops().Delete(0)
+        () => new Transformation().Delete(0)
       );
 
       Assert.Throws<ArgumentException>(
-        () => new Ops().Insert("")
+        () => new Transformation().Insert("")
       );
     }
   }

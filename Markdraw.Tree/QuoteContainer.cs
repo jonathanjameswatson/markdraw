@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Markdraw.Delta;
+using Markdraw.Delta.Ops;
 
 namespace Markdraw.Tree
 {
@@ -7,10 +8,10 @@ namespace Markdraw.Tree
   {
 
     private QuoteContainer(DeltaTree deltaTree, int i) : base(deltaTree, i) {}
-    public new static QuoteContainer CreateInstance(int depth, Ops ops, DeltaTree deltaTree, int i) {
+    public new static QuoteContainer CreateInstance(int depth, Document document, DeltaTree deltaTree, int i) {
       var container = new QuoteContainer(deltaTree, i);
 
-      return Initialise(depth, ops, i, container);
+      return Initialise(depth, document, i, container);
     }
     public QuoteContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
 
