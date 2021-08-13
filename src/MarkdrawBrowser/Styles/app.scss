@@ -1,5 +1,5 @@
-@import '../../node_modules/bulma/sass/utilities/initial-variables';
-@import '../../node_modules/bulma/sass/utilities/functions';
+@import '../../../node_modules/bulma/sass/utilities/initial-variables';
+@import '../../../node_modules/bulma/sass/utilities/functions';
 
 $spacing-shortcuts: ();
 
@@ -10,7 +10,7 @@ $red-invert: findColorInvert($red);
 
 $primary: $red;
 
-@import '../../node_modules/bulma/bulma';
+@import '../../../node_modules/bulma/bulma';
 
 $render-button-dividers: false;
 

@@ -11,16 +11,16 @@ const webpack_config = require("./webpack.config.js");
 
 const dirs = {
   scss: {
-    src: "MarkdrawBrowser/Styles",
-    dest: "MarkdrawBrowser/wwwroot/css",
+    src: "src/MarkdrawBrowser/Styles",
+    dest: "src/MarkdrawBrowser/wwwroot/css",
   },
   js: {
-    src: "MarkdrawBrowser/JavaScript",
-    dest: "MarkdrawBrowser/wwwroot",
+    src: "src/MarkdrawBrowser/JavaScript",
+    dest: "src/MarkdrawBrowser/wwwroot",
   },
   grammars: {
     src: "node_modules/prismjs/components",
-    dest: "MarkdrawBrowser/wwwroot/grammars",
+    dest: "src/MarkdrawBrowser/wwwroot/grammars",
   },
 };
 
