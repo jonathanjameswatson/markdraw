@@ -10,7 +10,8 @@
             "**/obj/**",
             "**/bin/**",
             "_site/**",
-            "**/*.Test.csproj"
+            "**/*.Test.csproj",
+            "**/MarkdrawBrowser.csproj"
           ],
           "cwd": ".."
         }
@@ -72,9 +73,12 @@
     "cleanupCacheHistory": false,
     "disableGitFeatures": false,
     "globalMetadata": {
-      "_appLogoPath": "../src/MarkdrawBrowser/wwwroot/icon.png",
+      "_appLogoPath": "doc/images/smallIcon.png",
       "_enableSearch": "true",
-      "_appFaviconPath": "../src/MarkdrawBrowser/wwwroot/icon.png"
-    }
+      "_appFaviconPath": "doc/images/smallIcon.png"
+    },
+    "xrefService": [
+      "https://xref.docs.microsoft.com/query?uid={uid}"
+    ]
   }
 }
