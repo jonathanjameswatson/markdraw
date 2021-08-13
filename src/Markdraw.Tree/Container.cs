@@ -5,7 +5,7 @@ using System.Text;
 using Markdraw.Delta;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
-using Markdraw.Delta.Ops;
+using Markdraw.Delta.OperationSequences;
 
 namespace Markdraw.Tree
 {

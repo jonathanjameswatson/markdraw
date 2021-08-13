@@ -1,9 +1,9 @@
 using System.Collections.Immutable;
-using Markdraw.Delta.Ops;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.OperationSequences;
 using Xunit;
 
 namespace Markdraw.Delta.Test

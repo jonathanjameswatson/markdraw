@@ -2,11 +2,17 @@
 using Markdraw.Delta.Operations;
 using Markdraw.Delta.Operations.Inserts;
 
-namespace Markdraw.Delta.Ops
+namespace Markdraw.Delta.OperationSequences
 {
-  public class Transformation : Ops<IOp, Transformation>, ITransformation
+  /// <summary>
+  ///   A sequence of inserts representing a transformation.
+  /// </summary>
+  /// <remarks>
+  ///   Transformations are not canonical, so two different transformations may have the same effect.
+  /// </remarks>
+  public class Transformation : OperationSequence<IOp, Transformation>
   {
-    /// <inheritdoc />
+    /// <inheritdoc cref="OperationSequence{T,TSelf}.Insert(Operations.Inserts.Insert)" />
     public override Transformation Insert(Insert insert)
     {
       Add(insert);

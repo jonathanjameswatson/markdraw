@@ -1,26 +1,29 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Operations;
 using Markdraw.Delta.Operations.Inserts;
 
-namespace Markdraw.Delta.Ops
+namespace Markdraw.Delta.OperationSequences
 {
   /// <summary>
-  ///   A sequence of operations representing a Markdown document or transformation.
+  ///   A sequence of <see cref="Operations.Inserts.Insert" />s representing a Markdown document.
   /// </summary>
   /// <remarks>
-  ///   Each unique document can only be represented by one canonical sequence of operations. However, transformations can
-  ///   currently have different representations as deletes and retains are not merged when they are added.
+  ///   Each unique document is represented by one canonical sequence of inserts.
   /// </remarks>
-  public class Document : Ops<Insert, Document>
+  public class Document : OperationSequence<Insert, Document>
   {
     /// <summary>
-    ///   The sum of lengths of operations intended to be used as the number of characters in a document.
+    ///   The number of characters in the document.
     /// </summary>
+    /// <remarks>
+    ///   Certain inserts result in one character, such as dividers and code blocks.
+    /// </remarks>
     public int Characters => this.Sum(op => op.Length);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="OperationSequence{T,TSelf}.Insert(Operations.Inserts.Insert)" />
     public override Document Insert(Insert insert)
     {
       Add(insert);
@@ -29,12 +32,11 @@ namespace Markdraw.Delta.Ops
     }
 
     /// <summary>
-    ///   Transforms this sequence of operations (assuming it represents a document) with another sequence of operations
-    ///   <paramref name="other" /> representing a transformation.
+    ///   Transforms this document with a transformation.
     /// </summary>
-    /// <param name="other">A sequence of operations representing a transformation.</param>
-    /// <returns>This sequence of operations.</returns>
-    public Document Transform(ITransformation other)
+    /// <param name="other">A transformation.</param>
+    /// <returns>This document.</returns>
+    public Document Transform(IEnumerable<IOp> other)
     {
       var opIndex = 0;
       var opCharacterIndex = 0;
@@ -217,9 +219,8 @@ namespace Markdraw.Delta.Ops
     }
 
     /// <summary>
-    ///   Finds the first <see cref="Format" /> of type <typeparamref name="T" /> in a sequence of operations representing
-    ///   a document starting from position <paramref name="start" />, returning <see langword="null" /> if nothing can
-    ///   be found past this position.
+    ///   Finds the first <see cref="Format" /> of type <typeparamref name="T" /> in this document starting from position <paramref name="start" />,
+    ///   returning <see langword="null" /> if nothing can be found past this position.
     /// </summary>
     /// <param name="start">The position to start searching, which must be positive.</param>
     /// <typeparam name="T">The type of <see cref="Format" /> that must be found.</typeparam>

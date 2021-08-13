@@ -6,10 +6,19 @@ using Markdraw.Delta.Formats;
 using Markdraw.Delta.Operations;
 using Markdraw.Delta.Operations.Inserts;
 
-namespace Markdraw.Delta.Ops
+namespace Markdraw.Delta.OperationSequences
 {
 
-  public abstract class Ops<T, TSelf> : IOps<T> where T : IOp where TSelf : Ops<T, TSelf>
+  /// <summary>
+  ///   A sequence of operations that can be extended to represent a Markdown document or transformation.
+  ///   This sequence may only contain elements of type <typeparamref name="T"/>.
+  /// </summary>
+  /// <remarks>
+  ///   <typeparamref name="TSelf"/> should be the derived class. It is used in chaining.
+  /// </remarks>
+  /// <typeparam name="T">A class that all elements in this sequence must be or extend.</typeparam>
+  /// <typeparam name="TSelf">The class of instances returned by methods that use chaining.</typeparam>
+  public abstract class OperationSequence<T, TSelf> : IEnumerable<T> where T : IOp where TSelf : OperationSequence<T, TSelf>
   {
     private readonly List<T> _ops = new();
 
@@ -18,13 +27,13 @@ namespace Markdraw.Delta.Ops
     /// </summary>
     public int Length => _ops.Count;
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IEnumerable{T}.GetEnumerator()" />
     public IEnumerator<T> GetEnumerator()
     {
       return _ops.GetEnumerator();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IEnumerable.GetEnumerator()" />
     IEnumerator IEnumerable.GetEnumerator()
     {
       return GetEnumerator();
@@ -88,7 +97,10 @@ namespace Markdraw.Delta.Ops
     ///   same format if one exists.
     /// </summary>
     /// <param name="index">The index at which a <see cref="TextInsert" /> should be attempted to be merged back.</param>
-    /// <returns></returns>
+    /// <returns>
+    ///   Returns <see langword="null" /> if a merge doesn't occur or the previous length of the <see cref="TextInsert" /> behind
+    ///   what was the <paramref name="index" />th operation in this sequence of operations otherwise.
+    /// </returns>
     protected int? MergeBack(int index)
     {
       if (index < 1 || index >= Length || _ops[index] is not TextInsert after ||
@@ -104,7 +116,7 @@ namespace Markdraw.Delta.Ops
     ///   Adds a <see cref="Operations.Inserts.Insert" /> to the end of this sequence of operations, which is then normalised.
     /// </summary>
     /// <param name="insert">The insert to be added.</param>
-    /// <returns></returns>
+    /// <returns>This sequence of operations.</returns>
     public abstract TSelf Insert(Insert insert);
     /*
     {
@@ -120,7 +132,7 @@ namespace Markdraw.Delta.Ops
     /// </summary>
     /// <param name="text">A string of the contents of the text added to this sequence.</param>
     /// <param name="format">The format of the text added to this sequence.</param>
-    /// <returns></returns>
+    /// <returns>This sequence of operations.</returns>
     public TSelf Insert(string text, TextFormat format=null)
     {
       return Insert(new TextInsert(text, format ?? new TextFormat()));
@@ -130,18 +142,16 @@ namespace Markdraw.Delta.Ops
     ///   Appends a document to this sequence of operations, which is returned.
     /// </summary>
     /// <param name="inserts">A document.</param>
-    /// <returns>This sequence of operations.</returns>
-    public TSelf InsertMany(Document inserts)
+    public void InsertMany(Document inserts)
     {
       foreach (var insert in inserts)
       {
         Insert(insert);
       }
 
-      return this as TSelf;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="Object.ToString()" />
     public override string ToString()
     {
       var stringBuilder = new StringBuilder();

@@ -1,5 +1,5 @@
 using Markdraw.Delta;
-using Markdraw.Delta.Ops;
+using Markdraw.Delta.OperationSequences;
 using Markdraw.MarkdownToDelta;
 
 namespace Markdraw.Tree

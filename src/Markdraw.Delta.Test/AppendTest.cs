@@ -1,6 +1,6 @@
 using System;
-using Markdraw.Delta.Ops;
 using Markdraw.Delta.Formats;
+using Markdraw.Delta.OperationSequences;
 using Xunit;
 
 namespace Markdraw.Delta.Test

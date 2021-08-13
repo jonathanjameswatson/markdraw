@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Markdraw.Delta;
-using Markdraw.Delta.Ops;
+using Markdraw.Delta.OperationSequences;
 
 namespace Markdraw.Tree
 {
