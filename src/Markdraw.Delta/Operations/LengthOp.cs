@@ -2,23 +2,23 @@ using System;
 
 namespace Markdraw.Delta.Operations
 {
-  public abstract class LengthOp : IOp
+  public abstract record LengthOp : Op
   {
-    private int _length;
+    private readonly int _length;
 
-    public LengthOp(int length)
+    protected LengthOp(int length)
     {
       Length = length;
     }
 
-    public int Length
+    public override int Length
     {
       get => _length;
-      set
+      init
       {
         if (value < 1)
         {
-          throw new ArgumentOutOfRangeException("value", "You must operate on at least one character.");
+          throw new ArgumentOutOfRangeException(nameof(value), "You must operate on at least one character.");
         }
         _length = value;
       }

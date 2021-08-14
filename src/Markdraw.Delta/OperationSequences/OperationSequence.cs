@@ -18,7 +18,7 @@ namespace Markdraw.Delta.OperationSequences
   /// </remarks>
   /// <typeparam name="T">A class that all elements in this sequence must be or extend.</typeparam>
   /// <typeparam name="TSelf">The class of instances returned by methods that use chaining.</typeparam>
-  public abstract class OperationSequence<T, TSelf> : IEnumerable<T> where T : IOp where TSelf : OperationSequence<T, TSelf>
+  public abstract class OperationSequence<T, TSelf> : IEnumerable<T> where T : Op where TSelf : OperationSequence<T, TSelf>
   {
     private readonly List<T> _ops = new();
 
@@ -92,6 +92,20 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     /// <summary>
+    ///   Sets the <paramref name="index" />th operation in this sequence to operation <paramref name="op" />.
+    /// </summary>
+    /// <param name="index">The index at which the returned operation is found.</param>
+    /// <param name="op">The operation that is put in the sequence.</param>
+    /// <returns>The <paramref name="index" />th operation in this sequence.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///   Thrown if <paramref name="index"/> is less than 0 or the number of operations or greater.
+    /// </exception>
+    protected void Set(int index, T op)
+    {
+      _ops[index] = op;
+    }
+
+    /// <summary>
     ///   If <paramref name="index" /> is the index of any <see cref="TextInsert" /> that is not the first operation in
     ///   this sequence of operations, then this method will merge it with a <see cref="TextInsert" /> behind it with the
     ///   same format if one exists.
@@ -103,11 +117,12 @@ namespace Markdraw.Delta.OperationSequences
     /// </returns>
     protected int? MergeBack(int index)
     {
-      if (index < 1 || index >= Length || _ops[index] is not TextInsert after ||
-        _ops[index - 1] is not TextInsert before) return null;
+      if (index < 1 || index >= Length || Get(index) is not TextInsert after ||
+        Get(index - 1) is not TextInsert before) return null;
       var beforeLength = before.Length;
       var merged = after.Merge(before);
       if (merged is null) return null;
+      Set(index - 1, merged as T);
       RemoveAt(index);
       return beforeLength;
     }
@@ -117,14 +132,21 @@ namespace Markdraw.Delta.OperationSequences
     /// </summary>
     /// <param name="insert">The insert to be added.</param>
     /// <returns>This sequence of operations.</returns>
-    public abstract TSelf Insert(Insert insert);
-    /*
+    /// <exception cref="InvalidOperationException">
+    ///   This method must not be ran on classes where <see cref="Operations.Inserts.Insert" /> does
+    ///   not extend <typeparamref name="T" />.
+    /// </exception>
+    public TSelf Insert(Insert insert)
     {
-      _ops.Add(insert);
+      var castedInsert = insert as T;
+      if (castedInsert is null)
+      {
+        throw new InvalidOperationException("Insert must be castable to T.");
+      }
+      Add(castedInsert);
       MergeBack(Length - 1);
-      return this;
+      return this as TSelf;
     }
-    */
 
     /// <summary>
     ///   Creates a <see cref="TextInsert" /> given its contents and format and adds it to the end of this sequence of

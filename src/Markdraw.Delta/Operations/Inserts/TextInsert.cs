@@ -4,88 +4,71 @@ using Markdraw.Delta.Links;
 
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public class TextInsert : InlineInsert
+  public record TextInsert : InlineInsert
   {
 
     public TextInsert(string text, TextFormat format)
     {
-      if (text.Length == 0)
-      {
-        throw new ArgumentException("TextInsert cannot be empty");
-      }
-
       Text = text;
       Format = format;
     }
 
     public TextInsert(string text) : this(text, new TextFormat()) {}
-    public override int Length => Text.Length;
+    protected override int InsertLength => Text.Length;
 
-    public string Text { get; private set; }
-
-    public TextFormat Format { get; private set; }
-
-    public override void SetFormat(Format format)
+    private readonly string _text;
+    public string Text
     {
-      if (format is TextFormat textFormat)
+      get => _text;
+      init
       {
-        Format = Format.Merge(textFormat);
+        if (value is null or "")
+        {
+          throw new ArgumentOutOfRangeException(nameof(value), "Text must be a non-empty string.");
+        }
+        _text = value;
       }
     }
 
-    public override (int, bool) Subtract(int amount)
+    public TextFormat Format { get; init; }
+
+    public override TextInsert SetFormat(Format format)
     {
-      var n = Length;
-      if (amount >= n)
+      if (format is TextFormat textFormat)
       {
-        return (n, true);
+        return this with {
+          Format = Format.Merge(textFormat)
+        };
       }
-      Text = Text[..(n - amount)];
-      return (amount, false);
+      return null;
     }
 
     public TextInsert Merge(TextInsert before)
     {
-      if (Format.Equals(before.Format))
-      {
-        before.Text += Text;
-        return before;
-      }
-      return null;
+      if (!Format.Equals(before.Format)) return null;
+      return before with { Text = before.Text + Text };
     }
 
     public TextInsert Merge(TextInsert middle, TextInsert before)
     {
-      if (Format.Equals(middle.Format))
-      {
-        before.Text += middle.Text + Text;
-        return before;
-      }
-      return null;
+      if (!Format.Equals(middle.Format)) return null;
+      return before with { Text = before.Text + middle.Text + Text };
     }
 
-    public bool DeleteUpTo(int position)
+    public TextInsert DeleteUpTo(int position)
     {
-      Text = Text.Substring(position, Length - position);
-      return Length == 0;
+      var newText = Text.Substring(position, Length - position);
+      if (newText.Length == 0) return null;
+      return this with {
+        Text = newText
+      };
     }
 
-    public TextInsert SplitAt(int position)
+    public (TextInsert, TextInsert) SplitAt(int position)
     {
       var startText = Text[..position];
       var endText = Text[position..];
-      Text = startText;
-      return new TextInsert(endText, Format);
-    }
-
-    public override bool Equals(object obj)
-    {
-      return obj is TextInsert x && x.Text == Text && x.Format.Equals(Format);
-    }
-
-    public override int GetHashCode()
-    {
-      return (Text, Format).GetHashCode();
+      return (this with { Text = startText }, new TextInsert(endText, Format));
     }
 
     public override string ToString()

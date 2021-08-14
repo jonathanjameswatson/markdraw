@@ -56,7 +56,7 @@ namespace Markdraw.Delta.Test
         () => new Transformation().Delete(0)
       );
 
-      Assert.Throws<ArgumentException>(
+      Assert.Throws<ArgumentOutOfRangeException>(
         () => new Transformation().Insert("")
       );
     }

@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Markdraw.Delta.Indents;
 
 namespace Markdraw.Delta.Formats
 {
-  public record LineFormat : Format
+  public record LineFormat : Format, ILineFormatModifier
   {
 
     public static readonly LineFormat QuotePreset = new() {
@@ -45,22 +44,14 @@ namespace Markdraw.Delta.Formats
       return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
     }
 
-    public LineFormat Merge(LineFormat other)
+    public LineFormat Modify(LineFormat format)
     {
-      return new LineFormat {
-        Indents = other.Indents ?? Indents, Header = other.Header ?? Header
+      if (format.Equals(this)) return null;
+      return format with {
+        Indents = Indents ?? format.Indents, Header = Header ?? format.Header
       };
     }
 
-    public LineFormat Modify(ModifyingLineFormat other)
-    {
-      Debug.Assert(Header != null, nameof(Header) + " != null");
-      return new LineFormat {
-        Indents = other.IndentsFunction(Indents), Header = other.HeaderFunction((int)Header)
-      };
-    }
-
-    [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
     public override int GetHashCode()
     {
       return _hashCode.Value;

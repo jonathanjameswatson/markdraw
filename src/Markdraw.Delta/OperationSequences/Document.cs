@@ -23,25 +23,17 @@ namespace Markdraw.Delta.OperationSequences
     /// </remarks>
     public int Characters => this.Sum(op => op.Length);
 
-    /// <inheritdoc cref="OperationSequence{T,TSelf}.Insert(Operations.Inserts.Insert)" />
-    public override Document Insert(Insert insert)
-    {
-      Add(insert);
-      MergeBack(Length - 1);
-      return this;
-    }
-
     /// <summary>
     ///   Transforms this document with a transformation.
     /// </summary>
-    /// <param name="other">A transformation.</param>
+    /// <param name="transformation">A transformation.</param>
     /// <returns>This document.</returns>
-    public Document Transform(IEnumerable<IOp> other)
+    public Document Transform(IEnumerable<Op> transformation)
     {
       var opIndex = 0;
       var opCharacterIndex = 0;
 
-      foreach (var op in other)
+      foreach (var op in transformation)
       {
         var length = op.Length;
 
@@ -54,7 +46,8 @@ namespace Markdraw.Delta.OperationSequences
 
             if (shouldFormat && opCharacterIndex != 0 && Get(opIndex) is TextInsert before)
             {
-              var after = before.SplitAt(opCharacterIndex);
+              var (newBefore, after) = before.SplitAt(opCharacterIndex);
+              Set(opIndex, newBefore);
               InsertOp(opIndex + 1, after);
               opIndex += 1;
               opCharacterIndex = 0;
@@ -74,15 +67,22 @@ namespace Markdraw.Delta.OperationSequences
                 if (shouldFormat)
                 {
                   var textInsert = next as TextInsert;
-                  var after = textInsert.SplitAt(opCharacterIndex);
+                  var (newBefore, after) = textInsert.SplitAt(opCharacterIndex);
+                  next = newBefore;
                   opCharacterIndex = 0;
+                  Set(opIndex, newBefore);
                   InsertOp(opIndex + 1, after);
                 }
               }
 
               if (shouldFormat)
               {
-                next.SetFormat(format);
+                var newNext = next.SetFormat(format);
+                if (newNext is not null)
+                {
+                  next = newNext;
+                  Set(opIndex, next);
+                }
 
                 if (opIndex >= 1)
                 {
@@ -121,8 +121,9 @@ namespace Markdraw.Delta.OperationSequences
               {
                 if (opCharacterIndex != 0)
                 {
-                  var after = nextTextInsert.SplitAt(opCharacterIndex);
+                  var (newBefore, after) = nextTextInsert.SplitAt(opCharacterIndex);
                   opCharacterIndex = 0;
+                  Set(opIndex, newBefore);
                   opIndex += 1;
                   InsertOp(opIndex, after);
                   nextTextInsert = after;
@@ -133,12 +134,16 @@ namespace Markdraw.Delta.OperationSequences
                 var deleted = nextTextInsert.DeleteUpTo(toDelete);
                 length -= toDelete;
 
-                if (deleted)
+                if (deleted is null)
                 {
                   RemoveAt(opIndex);
                 }
+                else
+                {
+                  Set(opIndex, deleted);
+                }
 
-                opCharacterIndex = deleted ? 0 : opCharacterIndex;
+                opCharacterIndex = deleted is null ? 0 : opCharacterIndex;
               }
               else
               {
@@ -190,7 +195,8 @@ namespace Markdraw.Delta.OperationSequences
           {
             if (Get(opIndex) is TextInsert before)
             {
-              var after = before.SplitAt(opCharacterIndex);
+              var (newBefore, after) = before.SplitAt(opCharacterIndex);
+              Set(opIndex, newBefore);
               InsertOp(opIndex + 1, insert);
               InsertOp(opIndex + 2, after);
               opIndex += 2;
@@ -198,13 +204,14 @@ namespace Markdraw.Delta.OperationSequences
 
               if (op is TextInsert middle)
               {
-                var beforeAndMiddleLength = before.Length + middle.Length;
-                var merged = after.Merge(middle, before);
+                var beforeAndMiddleLength = newBefore.Length + middle.Length;
+                var merged = after.Merge(middle, newBefore);
                 if (merged is not null)
                 {
                   RemoveAt(opIndex);
                   RemoveAt(opIndex - 1);
                   opIndex -= 2;
+                  Set(opIndex, merged);
                   opCharacterIndex += beforeAndMiddleLength;
                 }
               }

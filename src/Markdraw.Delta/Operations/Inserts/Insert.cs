@@ -1,16 +1,20 @@
+using System;
 using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public abstract class Insert : IOp
+  public abstract record Insert : Op
   {
-    public virtual int Length => 1;
-
-    public virtual void SetFormat(Format format) {}
-
-    public virtual (int, bool) Subtract(int amount)
+    protected virtual int InsertLength => 1;
+    public sealed override int Length
     {
-      return (1, true);
+      get => InsertLength;
+      init => throw new InvalidOperationException("You cannot initialize the length of an insert.");
+    }
+
+    public virtual Insert SetFormat(Format format)
+    {
+      return null;
     }
 
     public override string ToString()

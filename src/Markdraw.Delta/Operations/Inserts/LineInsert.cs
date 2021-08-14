@@ -1,10 +1,9 @@
 using System.Text;
 using Markdraw.Delta.Formats;
-using Markdraw.Delta.Indents;
 
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public class LineInsert : Insert
+  public record LineInsert : Insert
   {
 
     public LineInsert(LineFormat format)
@@ -13,29 +12,16 @@ namespace Markdraw.Delta.Operations.Inserts
     }
 
     public LineInsert() : this(new LineFormat()) {}
-    public LineFormat Format { get; private set; }
+    public LineFormat Format { get; init; }
 
-    public override void SetFormat(Format format)
+    public override LineInsert SetFormat(Format format)
     {
-      switch (format)
-      {
-        case LineFormat lineFormat:
-          Format = Format.Merge(lineFormat);
-          break;
-        case ModifyingLineFormat modifyingLineFormat:
-          Format = Format.Modify(modifyingLineFormat);
-          break;
-      }
-    }
-
-    public override bool Equals(object obj)
-    {
-      return obj is LineInsert x && x.Format.Equals(Format);
-    }
-
-    public override int GetHashCode()
-    {
-      return Format.GetHashCode();
+      if (format is not ILineFormatModifier lineFormatModifier) return null;
+      var result = lineFormatModifier.Modify(Format);
+      if (result is null) return null;
+      return new LineInsert {
+        Format = result
+      };
     }
 
     public override string ToString()
@@ -49,24 +35,7 @@ namespace Markdraw.Delta.Operations.Inserts
 
       foreach (var indent in Format.Indents)
       {
-        switch (indent)
-        {
-          case BulletIndent:
-            stringBuilder.Append('-');
-            break;
-          case QuoteIndent:
-            stringBuilder.Append('>');
-            break;
-          case NumberIndent:
-            stringBuilder.Append("1.");
-            break;
-          case CodeIndent:
-            stringBuilder.Append("    ");
-            break;
-          case ContinueIndent:
-            stringBuilder.Append(" "); //last
-            break;
-        }
+        stringBuilder.Append(indent);
       }
 
       if (Format.Header == 0) return stringBuilder.ToString();

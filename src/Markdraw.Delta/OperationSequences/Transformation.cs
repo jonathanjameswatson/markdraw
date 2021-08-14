@@ -10,15 +10,8 @@ namespace Markdraw.Delta.OperationSequences
   /// <remarks>
   ///   Transformations are not canonical, so two different transformations may have the same effect.
   /// </remarks>
-  public class Transformation : OperationSequence<IOp, Transformation>
+  public class Transformation : OperationSequence<Op, Transformation>
   {
-    /// <inheritdoc cref="OperationSequence{T,TSelf}.Insert(Operations.Inserts.Insert)" />
-    public override Transformation Insert(Insert insert)
-    {
-      Add(insert);
-      MergeBack(Length - 1);
-      return this;
-    }
 
     /// <summary>
     ///   Adds a <see cref="Operations.Delete" /> with a given length to the end of this transformation.

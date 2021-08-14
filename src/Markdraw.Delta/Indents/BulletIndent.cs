@@ -2,6 +2,11 @@
 {
   public record BulletIndent : ListIndent
   {
-    public bool Start { get; init; } = false;
+    public bool Start { get; init; }
+
+    public override string ToString()
+    {
+      return "-";
+    }
   };
 }

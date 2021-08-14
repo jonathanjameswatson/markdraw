@@ -75,7 +75,7 @@
             transformation.Retain(cursorPos.start);
         }
 
-        var end = format is ModifyingLineFormat || format is LineFormat ? cursorPos.nextLine : cursorPos.end;
+        var end = format is FunctionalLineFormat || format is LineFormat ? cursorPos.nextLine : cursorPos.end;
 
         if (end - cursorPos.start != 0)
         {
@@ -138,7 +138,7 @@
     private async Task Quote()
     {
         await SetFormat(
-            new ModifyingLineFormat {
+            new FunctionalLineFormat {
                 IndentsFunction = list => list.Insert(0, Indent.Quote)
             }
             );
@@ -147,7 +147,7 @@
     private async Task Bullet()
     {
         await SetFormat(
-            new ModifyingLineFormat {
+            new FunctionalLineFormat {
                 IndentsFunction = list => list.Insert(0, Indent.LooseBullet)
             }
             );
@@ -156,7 +156,7 @@
     private async Task Number()
     {
         await SetFormat(
-            new ModifyingLineFormat {
+            new FunctionalLineFormat {
                 IndentsFunction = list => list.Insert(0, Indent.Number(2))
             });
     }
@@ -168,21 +168,21 @@
 
     private async Task ClearLine()
     {
-        await SetFormat(new ModifyingLineFormat {
+        await SetFormat(new FunctionalLineFormat {
             IndentsFunction = _ => ImmutableList<Indent>.Empty
         });
     }
 
     private async Task HeaderUp()
     {
-        await SetFormat(new ModifyingLineFormat {
+        await SetFormat(new FunctionalLineFormat {
             HeaderFunction = i => Math.Max((i + 6) % 7, 1)
         });
     }
 
     private async Task HeaderDown()
     {
-        await SetFormat(new ModifyingLineFormat {
+        await SetFormat(new FunctionalLineFormat {
             HeaderFunction = i => (i == 0 ? i : i + 1) % 7
         });
     }

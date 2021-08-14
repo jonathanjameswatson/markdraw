@@ -2,7 +2,7 @@ using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations
 {
-  public class Retain : LengthOp
+  public record Retain : LengthOp
   {
 
     public Retain(int length) : base(length)
@@ -15,17 +15,7 @@ namespace Markdraw.Delta.Operations
       Format = format;
     }
 
-    public Format Format { get; }
-
-    public override bool Equals(object obj)
-    {
-      return obj is Retain x && x.Length == Length && x.Format.Equals(Format);
-    }
-
-    public override int GetHashCode()
-    {
-      return (Length, Format).GetHashCode();
-    }
+    public Format Format { get; init; }
 
     public override string ToString()
     {

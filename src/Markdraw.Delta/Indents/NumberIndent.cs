@@ -18,5 +18,10 @@ namespace Markdraw.Delta.Indents
         _start = value;
       }
     }
+
+    public override string ToString()
+    {
+      return $"{(Start <= 1 ? 1 : Start)}.";
+    }
   }
 }
