@@ -119,14 +119,14 @@
     private async Task Bold()
     {
         await SetFormat(new TextFormat {
-            Bold = true, Italic = null, Link = null
+            Bold = true, Italic = null, Link = null, Code = null
         });
     }
 
     private async Task Italic()
     {
         await SetFormat(new TextFormat {
-            Bold = null, Italic = true, Link = null
+            Bold = null, Italic = true, Link = null, Code = null
         });
     }
 
@@ -215,7 +215,10 @@
     private async Task SetLink()
     {
         await SetFormat(new TextFormat {
-            Link = new ExistentLink(modalLink)
+            Bold = null,
+            Italic = null,
+            Link = new ExistentLink(modalLink),
+            Code = null
         });
         Close();
     }

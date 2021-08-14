@@ -28,7 +28,7 @@ namespace Markdraw.Delta.Test
     public void Retain_FormatsText()
     {
       var turnBold = new TextFormat {
-        Bold = true, Italic = null, Link = null
+        Bold = true, Italic = null, Link = null, Code = null
       };
 
       new Document()
