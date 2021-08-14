@@ -161,34 +161,21 @@ namespace Markdraw.MarkdownToDelta
           }
           break;
         case LeafInline leafInline:
-          switch (leafInline)
-          {
-            case AutolinkInline autolinkInline:
-              document.Insert(new TextInsert(autolinkInline.Url, newTextFormat with {
-                Link = new ExistentLink(autolinkInline.Url)
-              }));
-              break;
-            case CodeInline codeInline:
-              document.Insert(new TextInsert(codeInline.Content, newTextFormat with {
-                Code = true
-              }));
-              break;
-            case HtmlEntityInline htmlEntityInline:
-              document.Insert(new TextInsert(htmlEntityInline.Transcoded.ToString()));
-              break;
-            case HtmlInline htmlInline:
-              document.Insert(new TextInsert(htmlInline.Tag));
-              break;
-            case LineBreakInline:
-              document.Insert(" ");
-              break;
-            case LiteralInline literalInline:
-              document.Insert(new TextInsert(literalInline.Content.ToString(), newTextFormat));
-              break;
-            default:
-              throw new ArgumentOutOfRangeException(nameof(inline));
+          var newInsert = leafInline switch {
+            AutolinkInline autolinkInline => new TextInsert(autolinkInline.Url, newTextFormat with {
+              Link = new ExistentLink(autolinkInline.Url)
+            }),
+            CodeInline codeInline => new TextInsert(codeInline.Content, newTextFormat with {
+              Code = true
+            }),
+            HtmlEntityInline htmlEntityInline => new TextInsert(htmlEntityInline.Transcoded.ToString()),
+            HtmlInline htmlInline => new TextInsert(htmlInline.Tag),
+            LineBreakInline => new TextInsert(" "),
+            LiteralInline literalInline => new TextInsert(literalInline.Content.ToString(), newTextFormat),
+            _ => throw new ArgumentOutOfRangeException(nameof(inline))
+          };
 
-          }
+          document.Insert(newInsert);
           break;
         default:
           throw new ArgumentOutOfRangeException(nameof(inline));
