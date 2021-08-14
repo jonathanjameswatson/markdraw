@@ -180,7 +180,8 @@ namespace Markdraw.MarkdownToDelta
               document.Insert(new TextInsert(htmlInline.Tag));
               break;
             case LineBreakInline:
-              return; // fix later maybe
+              document.Insert(" ");
+              break;
             case LiteralInline literalInline:
               document.Insert(new TextInsert(literalInline.Content.ToString(), newTextFormat));
               break;
