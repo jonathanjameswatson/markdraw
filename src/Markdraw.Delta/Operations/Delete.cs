@@ -6,7 +6,7 @@ namespace Markdraw.Delta.Operations
 
     public override string ToString()
     {
-      return $"[DELETE {Length}]";
+      return $"[Delete {Length}]";
     }
   }
 }

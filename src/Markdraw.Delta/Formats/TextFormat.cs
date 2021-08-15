@@ -1,3 +1,4 @@
+using System.Text;
 using Markdraw.Delta.Links;
 
 namespace Markdraw.Delta.Formats
@@ -21,6 +22,29 @@ namespace Markdraw.Delta.Formats
       return new TextFormat {
         Bold = other.Bold ?? Bold, Italic = other.Italic ?? Italic, Link = Link.Merge(other.Link), Code = other.Code ?? Code
       };
+    }
+
+    public override string ToString()
+    {
+      var stringBuilder = new StringBuilder("{");
+      if (Bold == true)
+      {
+        stringBuilder.Append(" BOLD ");
+      }
+      if (Italic == true)
+      {
+        stringBuilder.Append(" ITALIC ");
+      }
+      if (Link is ExistentLink existentLink)
+      {
+        stringBuilder.Append($" {existentLink} ");
+      }
+      if (Code == true)
+      {
+        stringBuilder.Append(" CODE ");
+      }
+      stringBuilder.Append('}');
+      return stringBuilder.ToString();
     }
   }
 }

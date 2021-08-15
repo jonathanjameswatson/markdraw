@@ -19,7 +19,7 @@ namespace Markdraw.Delta.Operations
 
     public override string ToString()
     {
-      return $"[RETAIN {Length}]";
+      return $"[Retain {Length}]";
     }
   }
 }

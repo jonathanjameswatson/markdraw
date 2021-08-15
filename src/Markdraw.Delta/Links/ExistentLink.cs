@@ -26,7 +26,11 @@ namespace Markdraw.Delta.Links
           throw new ArgumentOutOfRangeException(nameof(other));
 
       }
+    }
 
+    public override string ToString()
+    {
+      return $"<{Url} \"{Title}\">";
     }
   }
 }

@@ -56,5 +56,10 @@ namespace Markdraw.Delta.Formats
     {
       return _hashCode.Value;
     }
+
+    public override string ToString()
+    {
+      return $"{{{string.Join("", Indents)} {Header}}}";
+    }
   }
 }

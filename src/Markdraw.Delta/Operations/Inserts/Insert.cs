@@ -19,7 +19,7 @@ namespace Markdraw.Delta.Operations.Inserts
 
     public override string ToString()
     {
-      return $"[INSERT {Length}]";
+      return "[Insert]";
     }
   }
 }

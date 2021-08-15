@@ -23,5 +23,10 @@ namespace Markdraw.Delta.Operations
         _length = value;
       }
     }
+
+    public override string ToString()
+    {
+      return $"[LengthOp {Length}]";
+    }
   }
 }

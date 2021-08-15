@@ -26,5 +26,10 @@ namespace Markdraw.Delta.Formats
         Indents = newIndents, Header = newHeader
       };
     }
+
+    public override string ToString()
+    {
+      return "{FunctionalLineFormat}";
+    }
   }
 }
