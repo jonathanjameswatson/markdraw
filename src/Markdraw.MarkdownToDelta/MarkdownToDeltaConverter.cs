@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
-using Markdraw.Delta;
 using Markdig;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;

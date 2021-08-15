@@ -1,5 +1,3 @@
-using System;
-
 namespace Markdraw.Delta.Indents
 {
   public abstract record Indent

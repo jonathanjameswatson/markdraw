@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Markdraw.Delta;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.OperationSequences;
@@ -14,7 +12,6 @@ namespace Markdraw.Tree
 
     protected virtual string Tag => "div";
     protected virtual string StartingTag => null;
-    protected virtual string InsideTag => "li";
     protected bool Loose = true;
     protected virtual bool WrapAllInside => false;
     public List<TreeNode> ElementsInside { get; } = new();
@@ -38,67 +35,62 @@ namespace Markdraw.Tree
 
       foreach (var op in document)
       {
-        switch (op)
+        if (op is LineInsert lineInsert)
         {
-          case LineInsert lineInsert:
+          var indents = lineInsert.Format.Indents;
+          var header = lineInsert.Format.Header ?? 0;
+          var numberOfIndents = indents.Count;
+          var goneForward = numberOfIndents > depth;
+          var goneBack = numberOfIndents <= depth;
+
+          if (indented)
           {
-            var indents = lineInsert.Format.Indents;
-            var header = lineInsert.Format.Header ?? 0;
-            var numberOfIndents = indents.Count;
-            var goneForward = numberOfIndents > depth;
-            var goneBack = numberOfIndents <= depth;
-
-            if (indented)
+            if (goneBack || indents[depth] is not ContinueIndent && indents[depth] != NextIndent(lastIndent))
             {
-              if (goneBack || indents[depth] != NextIndent(lastIndent))
-              {
-                currentI = container.AddContainer(lastIndent, opBuffer, depth + 1, currentI);
-                currentI += 1;
+              currentI = container.AddContainer(lastIndent, opBuffer, depth + 1, currentI);
+              currentI += 1;
 
-                if (goneBack)
-                {
-                  indented = false;
-                  currentI = container.AddLeaves(lineOpBuffer, header, currentI);
-                  currentI += 1;
-                }
-                else
-                {
-                  lastIndent = indents[depth];
-                  opBuffer = lineOpBuffer;
-                }
+              if (goneBack)
+              {
+                indented = false;
+                currentI = container.AddLeaves(lineOpBuffer, header, currentI);
+                currentI += 1;
               }
               else
               {
-                opBuffer.InsertMany(lineOpBuffer);
+                lastIndent = indents[depth];
+                opBuffer = lineOpBuffer;
               }
+            }
+            else
+            {
+              opBuffer.InsertMany(lineOpBuffer);
+            }
 
+            opBuffer.Insert(lineInsert);
+          }
+          else
+          {
+            if (goneForward)
+            {
+              lastIndent = indents[depth];
+              indented = true;
+
+              opBuffer = lineOpBuffer;
               opBuffer.Insert(lineInsert);
             }
             else
             {
-              if (goneForward)
-              {
-                lastIndent = indents[depth];
-                indented = true;
-
-                opBuffer = lineOpBuffer;
-                opBuffer.Insert(lineInsert);
-              }
-              else
-              {
-                currentI = container.AddLeaves(lineOpBuffer, header, currentI);
-                currentI += 1;
-              }
+              currentI = container.AddLeaves(lineOpBuffer, header, currentI);
+              currentI += 1;
             }
-
-            lineOpBuffer = new Document();
-            break;
           }
-          case Insert insert:
-            lineOpBuffer.Insert(insert);
-            break;
-          default:
-            throw new ArgumentException("document must only contain inserts.");
+
+          lineOpBuffer = new Document();
+        }
+        else
+        {
+          lineOpBuffer.Insert(op);
         }
       }
 
@@ -225,14 +217,14 @@ namespace Markdraw.Tree
       {
         if (WrapAllInside)
         {
-          stringBuilder.Append($@"<{InsideTag}>");
+          stringBuilder.Append($@"<li>");
         }
 
         stringBuilder.Append(child);
 
         if (WrapAllInside)
         {
-          stringBuilder.Append($@"</{InsideTag}>");
+          stringBuilder.Append($@"</li>");
         }
       }
 

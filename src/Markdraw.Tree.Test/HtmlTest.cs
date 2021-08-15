@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Markdraw.Delta;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;

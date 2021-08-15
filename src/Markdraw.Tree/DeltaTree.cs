@@ -1,4 +1,3 @@
-using Markdraw.Delta;
 using Markdraw.Delta.OperationSequences;
 using Markdraw.MarkdownToDelta;
 

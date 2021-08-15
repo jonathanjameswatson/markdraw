@@ -1,6 +1,5 @@
 ﻿using Markdraw.Delta.Formats;
 using Markdraw.Delta.Operations;
-using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Delta.OperationSequences
 {

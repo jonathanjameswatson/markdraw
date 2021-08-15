@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Markdraw.Delta;
 using Markdraw.Delta.OperationSequences;
 
 namespace Markdraw.Tree
