@@ -9,11 +9,11 @@
           "exclude": [
             "**/obj/**",
             "**/bin/**",
-            "_site/**",
+            "doc/_site/**",
             "**/*.Test.csproj",
             "**/MarkdrawBrowser.csproj"
           ],
-          "cwd": ".."
+          "src": "../"
         }
       ],
       "dest": "api",
@@ -66,16 +66,17 @@
     "template": [
       "default"
     ],
-    "postProcessors": [],
+    "postProcessors": ["ExtractSearchIndex"],
     "markdownEngineName": "markdig",
     "noLangKeyword": false,
     "keepFileLink": false,
     "cleanupCacheHistory": false,
     "disableGitFeatures": false,
     "globalMetadata": {
-      "_appLogoPath": "doc/images/smallIcon.png",
+      "_appTitle": "Markdraw",
+      "_appLogoPath": "images/logo.svg",
       "_enableSearch": "true",
-      "_appFaviconPath": "doc/images/smallIcon.png"
+      "_appFaviconPath": "images/smallIcon.png"
     },
     "xrefService": [
       "https://xref.docs.microsoft.com/query?uid={uid}"
