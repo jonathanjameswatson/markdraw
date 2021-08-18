@@ -1,8 +1,8 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="container">
-        <div class="navbar-brand">
+        <div class="navbar-brand" @ref="navbarBrand">
             <a class="navbar-item" href=".">
-                <img src="./icon.png" width="48" height="48">
+                <Logo HoverElement="navbarBrand"></Logo>
                 <b>Markdraw</b>
             </a>
 
@@ -78,6 +78,8 @@
 
 @code{
     private bool active = false;
+
+    private ElementReference navbarBrand;
 
     private void ToggleActive()
     {

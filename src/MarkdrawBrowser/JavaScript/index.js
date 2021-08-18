@@ -2,6 +2,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime.js';
 
 import rangy from 'rangy';
+import { default as animate, stop } from "animateplus";
 
 import runPrism from './prism';
 import binarySearch from './binarySearch';
@@ -180,3 +181,29 @@ window.renderMarkdown = (editor, content) => {
 }
 
 window.getCursor = () => cursor;
+
+window.setupLogo = (hoverElement, wheel) => {
+  const change = progress => {
+    wheel.setAttribute('transform', `rotate(${-7.5 + progress * 360},5.291667,5.291667)`);
+  }
+  const duration = 1000;
+  const elements = wheel;
+
+  hoverElement.addEventListener('mouseenter', () => {
+    stop(wheel)
+    animate({
+      elements,
+      duration,
+      change,
+    })
+  });
+
+  hoverElement.addEventListener('mouseleave', () => {
+    stop(wheel)
+    animate({
+      elements,
+      duration,
+      change: progress => change(progress - 1),
+    })
+  });
+}
