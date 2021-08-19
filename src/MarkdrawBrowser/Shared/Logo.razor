@@ -41,12 +41,20 @@
 
 @code {
   [Parameter]
-  public ElementReference HoverElement { get; set; }
+  public Func<ElementReference> GetHoverElement { get; set; }
 
   private ElementReference wheel;
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    await JS.InvokeVoidAsync("setupLogo", HoverElement, wheel);
+    if (GetHoverElement is null)
+    {
+      throw new ArgumentNullException(nameof(GetHoverElement));
+    }
+
+    if (firstRender)
+    {
+      await JS.InvokeVoidAsync("setupLogo", GetHoverElement(), wheel);
+    }
   }
 }
