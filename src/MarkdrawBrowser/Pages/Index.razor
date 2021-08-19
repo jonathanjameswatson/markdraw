@@ -378,7 +378,7 @@
         <button class="modal-close is-large" aria-label="close" @onclick="Close"></button>
     </div>
 
-    <div class="section">
+    <div class="section no-padding-bottom">
         <div class="container">
             <div class="columns is-mobile">
                 <div class="column is-narrow format-buttons">
@@ -399,7 +399,7 @@
                     <hr class="buttons-divider"/>
                     <FormatButton icon="image" @onclick="Image"></FormatButton>
                     <FormatButton icon="minus" @onclick="Divider"></FormatButton>
-                    <FormatButton icon="code-not-equal-variant" @onclick="Code"></FormatButton>
+                    <FormatButton icon="code-not-equal-variant" @onclick="Code" ScrollFix="true"></FormatButton>
                 </div>
 
                 <div class="column content-container">

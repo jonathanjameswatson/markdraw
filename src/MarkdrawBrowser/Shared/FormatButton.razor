@@ -1,4 +1,4 @@
-<div class="field">
+<div class="field@(ScrollFix ? " scroll-fix" : "")">
     <button class="button" disabled="@Disabled" @onclick="onclick">
         <span class="icon is-small">
             <i class="iconify" data-icon="mdi-@(Icon)"></i>
@@ -10,6 +10,9 @@
 
     [Parameter]
     public string Icon { get; set; }
+
+    [Parameter]
+    public bool ScrollFix { get; set; }
 
     [Parameter]
     public bool Disabled { get; set; }
