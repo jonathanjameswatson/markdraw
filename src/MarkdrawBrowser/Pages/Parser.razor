@@ -8,13 +8,35 @@
       </h1>
       <textarea rows="25" class="textarea is-family-monospace" @bind="Input" @bind:event="oninput"></textarea>
     </div>
-    <div class="column">
+    <div class="column output-column">
       <h1 class="title">
         Output
       </h1>
-      <div class="content">
-        @((MarkupString)_htmlOutput)
-      </div>
+      <Tabs>
+        <TabPage Text="Preview">
+          <div class="content">
+            @((MarkupString)_htmlOutput)
+          </div>
+        </TabPage>
+        <TabPage Text="HTML">
+          <div class="content">
+            <pre class="language-html">
+<code>
+@_htmlOutput
+</code>
+</pre>
+          </div>
+        </TabPage>
+        <TabPage Text="Delta">
+          <div class="content">
+            <pre class="language-none">
+<code>
+@_deltaOutput
+</code>
+</pre>
+          </div>
+        </TabPage>
+      </Tabs>
     </div>
   </div>
 </div>

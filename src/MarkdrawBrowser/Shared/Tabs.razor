@@ -1,0 +1,15 @@
+﻿<CascadingValue Value="this">
+  <div class="tabs">
+    <ul>
+      @foreach (var tabPage in _pages)
+      {
+        <li class="@(tabPage == ActivePage ? "is-active" : "")">
+          <a @onclick=@(() => ActivePage = tabPage)>
+            @tabPage.Text
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+  @ChildContent
+</CascadingValue>
