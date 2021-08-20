@@ -15,8 +15,7 @@ namespace MarkdrawBrowser.Shared
     public bool Disabled { get; set; }
 
     [Parameter]
-    // ReSharper disable once InconsistentNaming
-    public EventCallback<MouseEventArgs> onclick { get; set; }
+    public EventCallback<MouseEventArgs> EnabledClickCallback { get; set; }
 
   }
 }

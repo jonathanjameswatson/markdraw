@@ -1,7 +1,7 @@
 <div class="field@(ScrollFix ? " scroll-fix" : "")">
-  <button class="button" disabled="@Disabled" @onclick="onclick">
+  <Button disabled="@Disabled" EnabledClickCallback="EnabledClickCallback">
     <span class="icon is-small">
       <i class="iconify" data-icon="mdi-@(Icon ?? "help")"></i>
     </span>
-  </button>
+  </Button>
 </div>

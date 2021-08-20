@@ -23,12 +23,12 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <button class="button" @onclick="Import">
+            <Button Disabled="@(!ModalsAvailable)" EnabledClickCallback="Import">
               Import
-            </button>
-            <button class="button" @onclick="Export">
+            </Button>
+            <Button Disabled="@(!ModalsAvailable)" EnabledClickCallback="Export">
               Export
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -39,36 +39,41 @@
     <div class="modal-background"></div>
     <div class="modal-content">
       <div class="box">
-        @if (_modal == ModalOpen.Import)
+        @switch (_modal)
         {
-          <div class="field">
-            <label class="label">Markdown</label>
-            <p class="control">
-              <textarea class="textarea" placeholder="Input markdown" @bind="_temporaryMarkdown"></textarea>
-            </p>
-          </div>
-          <div class="buttons">
-            <button class="button" @onclick="SetMarkdown">
-              Import and close
-            </button>
-            <button class="button" @onclick="Close">
-              Close
-            </button>
-          </div>
-        }
-        else if (_modal == ModalOpen.Export)
-        {
-          <div class="field">
-            <label class="label">Markdown</label>
-            <p class="control">
-              <textarea class="textarea" @bind="_exportMarkdown" readonly></textarea>
-            </p>
-          </div>
-          <div class="buttons">
-            <button class="button" @onclick="Close">
-              Close
-            </button>
-          </div>
+          case ModalOpen.Import:
+            <div class="field">
+              <label class="label">Markdown</label>
+              <p class="control">
+                <textarea class="textarea" placeholder="Input markdown" @bind="_temporaryMarkdown"></textarea>
+              </p>
+            </div>
+            <div class="buttons">
+              <Button EnabledClickCallback="SetMarkdown">
+                Import and close
+              </Button>
+              <Button EnabledClickCallback="Close">
+                Close
+              </Button>
+            </div>
+            break;
+          case ModalOpen.Export:
+            <div class="field">
+              <label class="label">Markdown</label>
+              <p class="control">
+                <textarea class="textarea" @bind="_exportMarkdown" readonly></textarea>
+              </p>
+            </div>
+            <div class="buttons">
+              <Button EnabledClickCallback="Close">
+                Close
+              </Button>
+            </div>
+            break;
+          case ModalOpen.Neither:
+            break;
+          default:
+            throw new ArgumentOutOfRangeException();
         }
       </div>
     </div>

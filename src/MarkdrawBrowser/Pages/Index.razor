@@ -2,7 +2,7 @@
 @layout EmptyLayout
 
 <div>
-  <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown"></NavBar>
+  <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown" ModalsAvailable="true" />
 
   <div class="modal@(_modal != ModalOpen.None ? " is-active" : "")">
     <div class="modal-background"></div>
@@ -84,24 +84,24 @@
     <div class="container">
       <div class="columns is-mobile">
         <div class="column is-narrow format-buttons">
-          <FormatButton icon="format-bold" @onclick="Bold" />
-          <FormatButton icon="format-italic" @onclick="Italic" />
-          <FormatButton icon="code-tags" @onclick="Code" />
-          <FormatButton icon="link" @onclick="Link" />
+          <FormatButton icon="format-bold" EnabledClickCallback="Bold" />
+          <FormatButton icon="format-italic" EnabledClickCallback="Italic" />
+          <FormatButton icon="code-tags" EnabledClickCallback="Code" />
+          <FormatButton icon="link" EnabledClickCallback="Link" />
           <hr class="buttons-divider"/>
-          <FormatButton icon="format-quote-close" @onclick="Quote" />
-          <FormatButton icon="format-list-bulleted" @onclick="Bullet" />
-          <FormatButton icon="format-list-numbered" @onclick="Number" />
+          <FormatButton icon="format-quote-close" EnabledClickCallback="Quote" />
+          <FormatButton icon="format-list-bulleted" EnabledClickCallback="Bullet" />
+          <FormatButton icon="format-list-numbered" EnabledClickCallback="Number" />
           <hr class="buttons-divider"/>
-          <FormatButton icon="format-clear" @onclick="Clear" />
-          <FormatButton icon="format-horizontal-align-left" @onclick="ClearLine" />
+          <FormatButton icon="format-clear" EnabledClickCallback="Clear" />
+          <FormatButton icon="format-horizontal-align-left" EnabledClickCallback="ClearLine" />
           <hr class="buttons-divider"/>
-          <FormatButton icon="format-font-size-increase" @onclick="HeaderUp" />
-          <FormatButton icon="format-font-size-decrease" @onclick="HeaderDown" />
+          <FormatButton icon="format-font-size-increase" EnabledClickCallback="HeaderUp" />
+          <FormatButton icon="format-font-size-decrease" EnabledClickCallback="HeaderDown" />
           <hr class="buttons-divider"/>
-          <FormatButton icon="image" @onclick="Image" />
-          <FormatButton icon="minus" @onclick="Divider" />
-          <FormatButton icon="code-not-equal-variant" @onclick="CodeBlock" ScrollFix="true" />
+          <FormatButton icon="image" EnabledClickCallback="Image" />
+          <FormatButton icon="minus" EnabledClickCallback="Divider" />
+          <FormatButton icon="code-not-equal-variant" EnabledClickCallback="CodeBlock" ScrollFix="true" />
         </div>
 
         <div class="column content-container">

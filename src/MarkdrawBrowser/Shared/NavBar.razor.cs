@@ -24,6 +24,9 @@ namespace MarkdrawBrowser.Shared
     [Parameter]
     public Func<string> ExportMarkdown { get; set; }
 
+    [Parameter]
+    public bool ModalsAvailable { get; set; }
+
     private bool _active = false;
 
     private string _markdown;
