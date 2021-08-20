@@ -1,0 +1,20 @@
+﻿@page "/Parser"
+
+<div class="container">
+  <div class="columns">
+    <div class="column">
+      <h1 class="title">
+        Input
+      </h1>
+      <textarea rows="25" class="textarea is-family-monospace" @bind="Input" @bind:event="oninput"></textarea>
+    </div>
+    <div class="column">
+      <h1 class="title">
+        Output
+      </h1>
+      <div class="content">
+        @((MarkupString)_htmlOutput)
+      </div>
+    </div>
+  </div>
+</div>
