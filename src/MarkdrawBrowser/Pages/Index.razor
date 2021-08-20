@@ -1,411 +1,113 @@
 @page "/"
-@using Markdraw.Tree
-@using System.Collections.Immutable
-@using Markdraw.Delta.Formats
-@using Markdraw.Delta.Indents
-@using Markdraw.Delta.Links
-@using Markdraw.Delta.Operations.Inserts
-@using Markdraw.Delta.OperationSequences
-@inject HttpClient Http;
-@inject IJSRuntime JS;
-
-@code {
-    private string markdown = "";
-    private string content = "<p>Loading...</p>";
-    private DeltaTree deltaTree;
-    private Editor editor;
-
-    private ModalOpen modal = ModalOpen.None;
-    private string modalLink = "";
-    private string modalImageUrl = "";
-    private string modalImageAlt = "";
-    private string modalCodeLanguage = "";
-    private string modalCodeContents = "";
-
-    private DotNetObjectReference<Index> indexRef;
-
-    private enum ModalOpen
-    {
-        None,
-        Image,
-        Link,
-        Code
-    }
-
-    public string Markdown
-    {
-        get => markdown;
-        set
-        {
-            markdown = value;
-            deltaTree.SetWithMarkdown(markdown);
-            content = deltaTree.Root.ToString();
-        }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        indexRef = DotNetObjectReference.Create(this);
-        await JS.InvokeVoidAsync("setReference", indexRef);
-        deltaTree = new DeltaTree(markdown);
-        const string url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
-        Markdown = await Http.GetStringAsync(url);
-    }
-
-    public class Cursor
-    {
-        public int start { get; set; }
-        public int end { get; set; }
-        public int nextLine { get; set; }
-    }
-
-    private async Task<Cursor> GetCursor()
-    {
-        return await JS.InvokeAsync<Cursor>("getCursor");
-    }
-
-    private async Task SetFormat(Format format)
-    {
-        var cursorPos = await GetCursor();
-        var transformation = new Transformation();
-
-        if (cursorPos.start > 0)
-        {
-            transformation.Retain(cursorPos.start);
-        }
-
-        var end = format is FunctionalLineFormat || format is LineFormat ? cursorPos.nextLine : cursorPos.end;
-
-        if (end - cursorPos.start != 0)
-        {
-            transformation.Retain(end - cursorPos.start, format);
-        }
-
-        deltaTree.Delta = deltaTree.Delta.Transform(transformation);
-        content = deltaTree.Root.ToString();
-    }
-
-    private int InsertElementsWithCursor(Document inserts, Cursor cursorPos)
-    {
-        var transformation = new Transformation();
-
-        var characters = inserts.Characters;
-
-        if (cursorPos.start > 0)
-        {
-            transformation.Retain(cursorPos.start);
-        }
-
-        if (cursorPos.end - cursorPos.start != 0)
-        {
-            transformation.Delete(cursorPos.end - cursorPos.start);
-        }
-
-        transformation.InsertMany(inserts);
-
-        deltaTree.Delta = deltaTree.Delta.Transform(transformation);
-        content = deltaTree.Root.ToString();
-
-        return cursorPos.start + characters;
-    }
-
-    private async Task InsertElements(Document inserts)
-    {
-        var cursorPos = await GetCursor();
-        InsertElementsWithCursor(inserts, cursorPos);
-    }
-
-    private async Task Bold()
-    {
-        await SetFormat(new TextFormat {
-            Bold = true, Italic = null, Link = null, Code = null
-        });
-    }
-
-    private async Task Italic()
-    {
-        await SetFormat(new TextFormat {
-            Bold = null, Italic = true, Link = null, Code = null
-        });
-    }
-
-    private void Link()
-    {
-        modal = ModalOpen.Link;
-    }
-
-    private async Task Quote()
-    {
-        await SetFormat(
-            new FunctionalLineFormat {
-                IndentsFunction = list => list.Insert(0, Indent.Quote)
-            }
-            );
-    }
-
-    private async Task Bullet()
-    {
-        await SetFormat(
-            new FunctionalLineFormat {
-                IndentsFunction = list => list.Insert(0, Indent.LooseBullet)
-            }
-            );
-    }
-
-    private async Task Number()
-    {
-        await SetFormat(
-            new FunctionalLineFormat {
-                IndentsFunction = list => list.Insert(0, Indent.Number(2))
-            });
-    }
-
-    private async Task Clear()
-    {
-        await SetFormat(new TextFormat());
-    }
-
-    private async Task ClearLine()
-    {
-        await SetFormat(new FunctionalLineFormat {
-            IndentsFunction = _ => ImmutableList<Indent>.Empty
-        });
-    }
-
-    private async Task HeaderUp()
-    {
-        await SetFormat(new FunctionalLineFormat {
-            HeaderFunction = i => Math.Max((i + 6) % 7, 1)
-        });
-    }
-
-    private async Task HeaderDown()
-    {
-        await SetFormat(new FunctionalLineFormat {
-            HeaderFunction = i => (i == 0 ? i : i + 1) % 7
-        });
-    }
-
-    private void Image()
-    {
-        modal = ModalOpen.Image;
-    }
-
-    private async Task Divider()
-    {
-        await InsertElements(
-            new Document()
-                .Insert(new LineInsert())
-                .Insert(new DividerInsert())
-                .Insert(new LineInsert())
-            );
-    }
-
-    private void Code()
-    {
-        modal = ModalOpen.Code;
-    }
-
-    private void Close()
-    {
-        modal = ModalOpen.None;
-    }
-
-    private async Task SetLink()
-    {
-        await SetFormat(new TextFormat {
-            Bold = null,
-            Italic = null,
-            Link = new ExistentLink(modalLink),
-            Code = null
-        });
-        Close();
-    }
-
-    private async Task AddImage()
-    {
-        await InsertElements(
-            new Document()
-                .Insert(new ImageInsert(modalImageUrl, modalImageAlt))
-            );
-        Close();
-    }
-
-    private async Task AddCode()
-    {
-        await InsertElements(
-            new Document()
-                .Insert(new LineInsert())
-                .Insert(new CodeInsert(modalCodeContents, modalCodeLanguage))
-                .Insert(new LineInsert())
-            );
-        Close();
-    }
-
-    [JSInvokable]
-    public int InsertText(string text, Cursor cursor)
-    {
-        var splitText = new List<string>(text.Split("\n"));
-        var lastTextFormat = deltaTree.Delta.GetFirstFormat<TextFormat>(cursor.start);
-        LineFormat lastLineFormat = null;
-        var ops = new Document();
-
-        foreach (var part in splitText.GetRange(0, splitText.Count - 1))
-        {
-            lastLineFormat ??= deltaTree.Delta.GetFirstFormat<LineFormat>(cursor.start);
-
-            if (part.Length != 0)
-            {
-                ops.Insert(part, lastTextFormat);
-            }
-
-            ops.Insert(new LineInsert(lastLineFormat));
-        }
-
-        var final = splitText[^1];
-        if (final.Length != 0)
-        {
-            ops.Insert(final, lastTextFormat);
-        }
-
-        var i = InsertElementsWithCursor(ops, cursor);
-
-        StateHasChanged();
-
-        return i;
-    }
-
-    [JSInvokable]
-    public int RemoveText(bool backwards, Cursor cursor)
-    {
-        var transformation = new Transformation();
-
-        var range = cursor.end - cursor.start;
-        var retainAmount = range == 0 && backwards ? cursor.start - 1 : cursor.start;
-
-        if (retainAmount > 0)
-        {
-            transformation.Retain(retainAmount);
-        }
-
-        transformation.Delete(Math.Max(range, 1));
-
-        deltaTree.Delta = deltaTree.Delta.Transform(transformation);
-        content = deltaTree.Root.ToString();
-        StateHasChanged();
-
-        return Math.Max(0, retainAmount);
-    }
-
-    private string ExportMarkdown()
-    {
-        return deltaTree.Delta.ToString();
-    }
-}
+@layout EmptyLayout
 
 <div>
-    <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown"></NavBar>
+  <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown"></NavBar>
 
-    <div class="modal@(modal != ModalOpen.None ? " is-active" : "")">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="box">
-                @if (modal == ModalOpen.Link)
-                {
-                    <div class="field">
-                        <label class="label">Link address</label>
-                        <p class="control">
-                            <input class="input" type="text" @bind="modalLink">
-                        </p>
-                    </div>
-                    <div class="buttons">
-                        <button class="button" @onclick="SetLink">
-                            Set link
-                        </button>
-                        <button class="button" @onclick="Close">
-                            Close
-                        </button>
-                    </div>
-                }
-                else if (modal == ModalOpen.Image)
-                {
-                    <div class="field">
-                        <label class="label">Image address</label>
-                        <p class="control">
-                            <input class="input" type="text" @bind="modalImageUrl">
-                        </p>
-                    </div>
-                    <div class="field">
-                        <label class="label">Alternative text</label>
-                        <p class="control">
-                            <input class="input" type="text" @bind="modalImageAlt">
-                        </p>
-                    </div>
-                    <div class="buttons">
-                        <button class="button" @onclick="AddImage">
-                            Insert image
-                        </button>
-                        <button class="button" @onclick="Close">
-                            Close
-                        </button>
-                    </div>
-                }
-                else if (modal == ModalOpen.Code)
-                {
-                    <div class="field">
-                        <label class="label">Language</label>
-                        <p class="control">
-                            <input class="input" type="text" @bind="modalCodeLanguage">
-                        </p>
-                    </div>
-                    <div class="field">
-                        <label class="label">Code</label>
-                        <p class="control">
-                            <textarea class="textarea" @bind="modalCodeContents"></textarea>
-                        </p>
-                    </div>
-                    <div class="buttons">
-                        <button class="button" @onclick="AddCode">
-                            Insert code
-                        </button>
-                        <button class="button" @onclick="Close">
-                            Close
-                        </button>
-                    </div>
-                }
+  <div class="modal@(_modal != ModalOpen.None ? " is-active" : "")">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="box">
+        @switch (_modal)
+        {
+          case ModalOpen.Link:
+            <div class="field">
+              <label class="label">Link address</label>
+              <p class="control">
+                <input class="input" type="text" @bind="_modalLink">
+              </p>
             </div>
-        </div>
-        <button class="modal-close is-large" aria-label="close" @onclick="Close"></button>
-    </div>
-
-    <div class="section no-padding-bottom">
-        <div class="container">
-            <div class="columns is-mobile">
-                <div class="column is-narrow format-buttons">
-                    <FormatButton icon="format-bold" @onclick="Bold"></FormatButton>
-                    <FormatButton icon="format-italic" @onclick="Italic"></FormatButton>
-                    <!--<FormatButton icon="code-tags" Disabled></FormatButton>-->
-                    <FormatButton icon="link" @onclick="Link"></FormatButton>
-                    <hr class="buttons-divider"/>
-                    <FormatButton icon="format-quote-close" @onclick="Quote"></FormatButton>
-                    <FormatButton icon="format-list-bulleted" @onclick="Bullet"></FormatButton>
-                    <FormatButton icon="format-list-numbered" @onclick="Number"></FormatButton>
-                    <hr class="buttons-divider"/>
-                    <FormatButton icon="format-clear" @onclick="Clear"></FormatButton>
-                    <FormatButton icon="format-horizontal-align-left" @onclick="ClearLine"></FormatButton>
-                    <hr class="buttons-divider"/>
-                    <FormatButton icon="format-font-size-increase" @onclick="HeaderUp"></FormatButton>
-                    <FormatButton icon="format-font-size-decrease" @onclick="HeaderDown"></FormatButton>
-                    <hr class="buttons-divider"/>
-                    <FormatButton icon="image" @onclick="Image"></FormatButton>
-                    <FormatButton icon="minus" @onclick="Divider"></FormatButton>
-                    <FormatButton icon="code-not-equal-variant" @onclick="Code" ScrollFix="true"></FormatButton>
-                </div>
-
-                <div class="column content-container">
-                    <Editor Content="@content" @ref="editor"></Editor>
-                </div>
+            <div class="buttons">
+              <button class="button" @onclick="SetLink">
+                Set link
+              </button>
+              <button class="button" @onclick="Close">
+                Close
+              </button>
             </div>
-        </div>
+            break;
+          case ModalOpen.Image:
+            <div class="field">
+              <label class="label">Image address</label>
+              <p class="control">
+                <input class="input" type="text" @bind="_modalImageUrl">
+              </p>
+            </div>
+            <div class="field">
+              <label class="label">Alternative text</label>
+              <p class="control">
+                <input class="input" type="text" @bind="_modalImageAlt">
+              </p>
+            </div>
+            <div class="buttons">
+              <button class="button" @onclick="AddImage">
+                Insert image
+              </button>
+              <button class="button" @onclick="Close">
+                Close
+              </button>
+            </div>
+            break;
+          case ModalOpen.Code:
+            <div class="field">
+              <label class="label">Language</label>
+              <p class="control">
+                <input class="input" type="text" @bind="_modalCodeLanguage">
+              </p>
+            </div>
+            <div class="field">
+              <label class="label">Code</label>
+              <p class="control">
+                <textarea class="textarea" @bind="_modalCodeContents"></textarea>
+              </p>
+            </div>
+            <div class="buttons">
+              <button class="button" @onclick="AddCode">
+                Insert code
+              </button>
+              <button class="button" @onclick="Close">
+                Close
+              </button>
+            </div>
+            break;
+          case ModalOpen.None:
+            break;
+          default:
+            throw new ArgumentOutOfRangeException();
+        }
+      </div>
     </div>
+    <button class="modal-close is-large" aria-label="close" @onclick="Close"></button>
+  </div>
+
+  <div class="section no-padding-bottom">
+    <div class="container">
+      <div class="columns is-mobile">
+        <div class="column is-narrow format-buttons">
+          <FormatButton icon="format-bold" @onclick="Bold" />
+          <FormatButton icon="format-italic" @onclick="Italic" />
+          <FormatButton icon="code-tags" @onclick="Code" />
+          <FormatButton icon="link" @onclick="Link" />
+          <hr class="buttons-divider"/>
+          <FormatButton icon="format-quote-close" @onclick="Quote" />
+          <FormatButton icon="format-list-bulleted" @onclick="Bullet" />
+          <FormatButton icon="format-list-numbered" @onclick="Number" />
+          <hr class="buttons-divider"/>
+          <FormatButton icon="format-clear" @onclick="Clear" />
+          <FormatButton icon="format-horizontal-align-left" @onclick="ClearLine" />
+          <hr class="buttons-divider"/>
+          <FormatButton icon="format-font-size-increase" @onclick="HeaderUp" />
+          <FormatButton icon="format-font-size-decrease" @onclick="HeaderDown" />
+          <hr class="buttons-divider"/>
+          <FormatButton icon="image" @onclick="Image" />
+          <FormatButton icon="minus" @onclick="Divider" />
+          <FormatButton icon="code-not-equal-variant" @onclick="CodeBlock" ScrollFix="true" />
+        </div>
+
+        <div class="column content-container">
+          <Editor Content="@_content" @ref="_editor" />
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
