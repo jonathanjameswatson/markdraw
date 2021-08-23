@@ -173,7 +173,11 @@ namespace Markdraw.Delta.OperationSequences
 
     }
 
-    /// <inheritdoc cref="Object.ToString()" />
+    /// <summary>
+    ///   Returns a representation of this operation sequence with inserts being represented
+    ///   by Markdown strings and other operations being represented by their string forms.
+    /// </summary>
+    /// <returns>This instance's string representation.</returns>
     public override string ToString()
     {
       var stringBuilder = new StringBuilder();

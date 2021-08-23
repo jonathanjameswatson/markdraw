@@ -271,5 +271,15 @@ namespace Markdraw.Delta.OperationSequences
 
       return null;
     }
+
+    // ReSharper disable once RedundantOverriddenMember
+    /// <summary>
+    ///   Converts this document to a Markdown string.
+    /// </summary>
+    /// <returns>A Markdown string representing this document.</returns>
+    public override string ToString()
+    {
+      return base.ToString();
+    }
   }
 }
