@@ -15,7 +15,7 @@ namespace Markdraw.Tree
     {
       var language = CorrespondingInsert.Tag is "" or null
         ? "none" : CorrespondingInsert.Tag;
-      return $@"<pre><code>{CorrespondingInsert.Text}</code></pre>";
+      return $@"<pre><code>{CorrespondingInsert.Text}&#10;</code></pre>";
       // return $@"<pre class=""language-{language}"" contenteditable=""false""><code class=""language-{language}"">{CorrespondingInsert.Text}</code></pre>";
     }
   }
