@@ -28,7 +28,7 @@ namespace Markdraw.MarkdownToDelta
 
     private static void Write(Document document, IMarkdownObject block, ImmutableList<IEnumerator<Indent>> indentSequences, IEnumerator<ListIndent> listSequence = null)
     {
-      var newIndents = indentSequences;
+      var newIndentSequences = indentSequences;
       IEnumerator<ListIndent> newListSequence = null;
 
       switch (block)
@@ -57,28 +57,33 @@ namespace Markdraw.MarkdownToDelta
             case ListItemBlock:
               Debug.Assert(listSequence != null, nameof(listSequence) + " != null");
               listSequence.MoveNext();
-              newIndents = newIndents.Add(RepeatAfterFirst<Indent>(listSequence.Current, Indent.Continue));
+              newIndentSequences = newIndentSequences.Add(RepeatAfterFirst<Indent>(listSequence.Current, Indent.Continue));
               break;
             case MarkdownDocument:
               break;
             case QuoteBlock:
-              newIndents = newIndents.Add(Repeat<Indent>(Indent.Quote));
+              newIndentSequences = newIndentSequences.Add(Repeat<Indent>(Indent.Quote));
               break;
             default:
               throw new ArgumentOutOfRangeException(nameof(block));
 
           }
 
+          if (containerBlock.Count == 0)
+          {
+            document.Insert(new LineInsert(new LineFormat {
+              Indents = YieldFromSequences(newIndentSequences).ToImmutableList(), Header = 0
+            }));
+          }
           foreach (var child in containerBlock)
           {
-            Write(document, child, newIndents, newListSequence);
+            Write(document, child, newIndentSequences, newListSequence);
           }
+
+
           break;
         case LeafBlock leafBlock:
-          var indents = indentSequences.Select(sequence => {
-            sequence.MoveNext();
-            return sequence.Current;
-          }).ToImmutableList();
+          var indents = YieldFromSequences(newIndentSequences).ToImmutableList();
           var header = 0;
 
           switch (leafBlock)
@@ -110,11 +115,12 @@ namespace Markdraw.MarkdownToDelta
               throw new ArgumentOutOfRangeException(nameof(block));
 
           }
-          document.Insert(new LineInsert(new LineFormat() {
+
+          document.Insert(new LineInsert(new LineFormat {
             Indents = indents, Header = header
           }));
-          break;
 
+          break;
       }
     }
 
@@ -217,6 +223,14 @@ namespace Markdraw.MarkdownToDelta
       }
 
       return Enumerable().GetEnumerator();
+    }
+
+    private static IEnumerable<T> YieldFromSequences<T>(IEnumerable<IEnumerator<T>> sequences)
+    {
+      return sequences.Select(sequence => {
+        sequence.MoveNext();
+        return sequence.Current;
+      });
     }
 
   }
