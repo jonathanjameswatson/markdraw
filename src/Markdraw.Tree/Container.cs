@@ -171,6 +171,12 @@ namespace Markdraw.Tree
       var inlineBuffer = new List<InlineInsert>();
       var newI = i;
 
+      if (document.Length == 0 && header != 0)
+      {
+        AddEmptyInline(header);
+        return i;
+      }
+
       foreach (var op in document)
       {
         if (op is InlineInsert inlineInsert)
@@ -210,6 +216,11 @@ namespace Markdraw.Tree
       return newI;
     }
 
+    private void AddEmptyInline(int header)
+    {
+      ElementsInside.Add(new InlineLeaf(new List<InlineInsert>(), header));
+    }
+
     public override string ToString()
     {
       var stringBuilder = new StringBuilder();
@@ -220,14 +231,14 @@ namespace Markdraw.Tree
       {
         if (WrapAllInside)
         {
-          stringBuilder.Append($@"<li>");
+          stringBuilder.Append(@"<li>");
         }
 
         stringBuilder.Append(child);
 
         if (WrapAllInside)
         {
-          stringBuilder.Append($@"</li>");
+          stringBuilder.Append(@"</li>");
         }
       }
 
