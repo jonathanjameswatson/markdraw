@@ -176,7 +176,7 @@ namespace Markdraw.MarkdownToDelta
               Code = true
             }),
             HtmlEntityInline htmlEntityInline => new InlineHtmlInsert(htmlEntityInline.Transcoded.ToString()),
-            HtmlInline htmlInline => new TextInsert(htmlInline.Tag),
+            HtmlInline htmlInline => new InlineHtmlInsert(htmlInline.Tag),
             LineBreakInline { IsHard: var hard } => hard ? new InlineHtmlInsert("<br />") : new TextInsert(" "),
             LiteralInline literalInline => new TextInsert(literalInline.Content.ToString(), newTextFormat),
             _ => throw new ArgumentOutOfRangeException(nameof(inline))
