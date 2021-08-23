@@ -193,15 +193,14 @@ namespace Markdraw.Tree
             newI += textLeaf.Length;
           }
 
-          switch (op)
-          {
-            case DividerInsert dividerInsert:
-              ElementsInside.Add(new DividerLeaf(dividerInsert, ParentTree, newI));
-              break;
-            case CodeInsert codeInsert:
-              ElementsInside.Add(new CodeLeaf(codeInsert, ParentTree, newI));
-              break;
-          }
+          Leaf newElement = op switch {
+            DividerInsert dividerInsert => new DividerLeaf(dividerInsert, ParentTree, newI),
+            CodeInsert codeInsert => new CodeLeaf(codeInsert, ParentTree, newI),
+            BlockHtmlInsert blockHtmlInsert => new BlockHtmlLeaf(blockHtmlInsert, ParentTree, newI),
+            _ => null
+          };
+
+          ElementsInside.Add(newElement);
 
           newI += 1;
         }

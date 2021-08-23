@@ -101,7 +101,7 @@ namespace Markdraw.MarkdownToDelta
               header = headingBlock.Level;
               break;
             case HtmlBlock htmlBlock:
-              document.Insert(new TextInsert(htmlBlock.Lines.ToString(), new TextFormat()));
+              document.Insert(new BlockHtmlInsert(htmlBlock.Lines.ToString()));
               break;
             case LinkReferenceDefinition:
               return;
@@ -168,16 +168,16 @@ namespace Markdraw.MarkdownToDelta
 
           break;
         case LeafInline leafInline:
-          var newInsert = leafInline switch {
+          Insert newInsert = leafInline switch {
             AutolinkInline autolinkInline => new TextInsert(autolinkInline.Url, newTextFormat with {
               Link = new ExistentLink(autolinkInline.Url)
             }),
             CodeInline codeInline => new TextInsert(codeInline.Content, newTextFormat with {
               Code = true
             }),
-            HtmlEntityInline htmlEntityInline => new TextInsert(htmlEntityInline.Transcoded.ToString()),
+            HtmlEntityInline htmlEntityInline => new InlineHtmlInsert(htmlEntityInline.Transcoded.ToString()),
             HtmlInline htmlInline => new TextInsert(htmlInline.Tag),
-            LineBreakInline => new TextInsert(" "),
+            LineBreakInline { IsHard: var hard } => hard ? new InlineHtmlInsert("<br />") : new TextInsert(" "),
             LiteralInline literalInline => new TextInsert(literalInline.Content.ToString(), newTextFormat),
             _ => throw new ArgumentOutOfRangeException(nameof(inline))
           };

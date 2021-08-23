@@ -30,7 +30,7 @@ namespace Markdraw.Tree
       get => _correspondingInserts;
       set
       {
-        Length = value.Aggregate(0, (acc, textInsert) => acc + textInsert.Length);
+        Length = value.Sum(insert => insert.Length);
         _correspondingInserts = value;
       }
     }
@@ -65,6 +65,9 @@ namespace Markdraw.Tree
           case ImageInsert imageInsert:
             buffer.Append(ImageTag(imageInsert));
             break;
+          case InlineHtmlInsert { Content: var content }:
+            buffer.Append(content);
+            break;
           case TextInsert textInsert:
             Debug.Assert(textInsert.Format.Code != null, "textInsert.Format.Code != null");
             var code = (bool)textInsert.Format.Code;
@@ -81,9 +84,7 @@ namespace Markdraw.Tree
             break;
           default:
             throw new ArgumentOutOfRangeException(nameof(inlineInserts));
-
         }
-
       }
 
       if (buffer.Length <= 0) return (stringBuilder.ToString(), i);
@@ -102,46 +103,36 @@ namespace Markdraw.Tree
 
       foreach (var inlineInsert in inlineInserts)
       {
-        switch (inlineInsert)
-        {
-          case ImageInsert:
-            break;
-          case TextInsert textInsert:
-            Debug.Assert(textInsert.Format.Bold != null, "textInsert.Format.Bold != null");
-            var bold = (bool)textInsert.Format.Bold;
+        if (inlineInsert is TextInsert textInsert) {
+          Debug.Assert(textInsert.Format.Bold != null, "textInsert.Format.Bold != null");
+          var bold = (bool)textInsert.Format.Bold;
 
-            switch (open)
-            {
-              case false when bold:
+          switch (open)
+          {
+            case false when bold:
+              var (text1, newI1) = AddCode(buffer, i);
+
+              if (ParentTree is not null && ParentTree.AddSpans)
               {
-                var (text1, newI1) = AddCode(buffer, i);
-
-                if (ParentTree is not null && ParentTree.AddSpans)
-                {
-                  stringBuilder.Append($@"{text1}<em i=""{i}"">");
-                }
-                else
-                {
-                  stringBuilder.Append($@"{text1}<em>");
-                }
-
-                i = newI1;
-                open = true;
-                buffer = new List<InlineInsert>();
-                break;
+                stringBuilder.Append($@"{text1}<em i=""{i}"">");
               }
-              case true when !bold:
-                var (text2, newI2) = AddCode(buffer, i);
-                stringBuilder.Append($@"{text2}</em>");
-                i = newI2;
-                open = false;
-                buffer = new List<InlineInsert>();
-                break;
-            }
-            break;
-          default:
-            throw new ArgumentOutOfRangeException(nameof(inlineInserts));
+              else
+              {
+                stringBuilder.Append($@"{text1}<em>");
+              }
 
+              i = newI1;
+              open = true;
+              buffer = new List<InlineInsert>();
+              break;
+            case true when !bold:
+              var (text2, newI2) = AddCode(buffer, i);
+              stringBuilder.Append($@"{text2}</em>");
+              i = newI2;
+              open = false;
+              buffer = new List<InlineInsert>();
+              break;
+          }
         }
 
         buffer.Add(inlineInsert);
@@ -168,46 +159,37 @@ namespace Markdraw.Tree
 
       foreach (var inlineInsert in inlineInserts)
       {
-        switch (inlineInsert)
+        if (inlineInsert is TextInsert textInsert)
         {
-          case ImageInsert:
-            break;
-          case TextInsert textInsert:
-            Debug.Assert(textInsert.Format.Italic != null, "textInsert.Format.Italic != null");
-            var italic = (bool)textInsert.Format.Italic;
+          Debug.Assert(textInsert.Format.Italic != null, "textInsert.Format.Italic != null");
+          var italic = (bool)textInsert.Format.Italic;
 
-            switch (open)
-            {
-              case false when italic:
+          switch (open)
+          {
+            case false when italic:
+              var (text1, newI1) = AddBold(buffer, i);
+
+              if (ParentTree is not null && ParentTree.AddSpans)
               {
-                var (text1, newI1) = AddBold(buffer, i);
-
-                if (ParentTree is not null && ParentTree.AddSpans)
-                {
-                  stringBuilder.Append($@"{text1}<em i=""{i}"">");
-                }
-                else
-                {
-                  stringBuilder.Append($@"{text1}<em>");
-                }
-
-                i = newI1;
-                open = true;
-                buffer = new List<InlineInsert>();
-                break;
+                stringBuilder.Append($@"{text1}<em i=""{i}"">");
               }
-              case true when !italic:
-                var (text2, newI2) = AddBold(buffer, i);
-                stringBuilder.Append($@"{text2}</em>");
-                i = newI2;
-                open = false;
-                buffer = new List<InlineInsert>();
-                break;
-            }
-            break;
-          default:
-            throw new ArgumentOutOfRangeException(nameof(inlineInserts));
+              else
+              {
+                stringBuilder.Append($@"{text1}<em>");
+              }
 
+              i = newI1;
+              open = true;
+              buffer = new List<InlineInsert>();
+              break;
+            case true when !italic:
+              var (text2, newI2) = AddBold(buffer, i);
+              stringBuilder.Append($@"{text2}</em>");
+              i = newI2;
+              open = false;
+              buffer = new List<InlineInsert>();
+              break;
+          }
         }
 
         buffer.Add(inlineInsert);
@@ -246,44 +228,36 @@ namespace Markdraw.Tree
 
       foreach (var inlineInsert in inlineInserts)
       {
-        switch (inlineInsert)
-        {
-          case ImageInsert:
-            break;
-          case TextInsert textInsert:
-            var link = textInsert.Format.Link;
+        if (inlineInsert is TextInsert textInsert) {
+          var link = textInsert.Format.Link;
 
-            if (link is ExistentLink existentLink)
+          if (link is ExistentLink existentLink)
+          {
+            if (openLink is NonExistentLink)
             {
-              if (openLink is NonExistentLink)
-              {
-                var (text1, newI1) = AddItalics(buffer, i);
-                stringBuilder.Append($@"{text1}{LinkString(existentLink)}");
-                i = newI1;
-                openLink = existentLink;
-                buffer = new List<InlineInsert>();
-              }
-              else if (openLink != link)
-              {
-                var (text2, newI2) = AddItalics(buffer, i);
-                stringBuilder.Append($@"{text2}</a>{LinkString(existentLink)}");
-                i = newI2;
-                openLink = existentLink;
-                buffer = new List<InlineInsert>();
-              }
-            }
-            else if (openLink is ExistentLink && link is NonExistentLink)
-            {
-              var (text3, newI3) = AddItalics(buffer, i);
-              stringBuilder.Append($@"{text3}</a>");
-              i = newI3;
-              openLink = link;
+              var (text1, newI1) = AddItalics(buffer, i);
+              stringBuilder.Append($@"{text1}{LinkString(existentLink)}");
+              i = newI1;
+              openLink = existentLink;
               buffer = new List<InlineInsert>();
             }
-            break;
-          default:
-            throw new ArgumentOutOfRangeException(nameof(inlineInserts));
-
+            else if (openLink != link)
+            {
+              var (text2, newI2) = AddItalics(buffer, i);
+              stringBuilder.Append($@"{text2}</a>{LinkString(existentLink)}");
+              i = newI2;
+              openLink = existentLink;
+              buffer = new List<InlineInsert>();
+            }
+          }
+          else if (openLink is ExistentLink && link is NonExistentLink)
+          {
+            var (text3, newI3) = AddItalics(buffer, i);
+            stringBuilder.Append($@"{text3}</a>");
+            i = newI3;
+            openLink = link;
+            buffer = new List<InlineInsert>();
+          }
         }
 
         buffer.Add(inlineInsert);
@@ -300,10 +274,11 @@ namespace Markdraw.Tree
       return stringBuilder.ToString();
     }
 
-    private string ImageTag(ImageInsert imageInsert)
+    private static string ImageTag(ImageInsert imageInsert)
     {
-      var titleString = imageInsert.Title == "" ? "" : $@"title=""{EscapeHelpers.Escape(imageInsert.Title)}"" ";
-      return $@"<img src=""{imageInsert.Url}"" alt=""{imageInsert.Alt}""{titleString}/>";
+      var (url, alt, title) = imageInsert;
+      var titleString = title == "" ? "" : $@"title=""{EscapeHelpers.Escape(title)}"" ";
+      return $@"<img src=""{url}"" alt=""{alt}""{titleString}/>";
     }
 
     public override string ToString()
