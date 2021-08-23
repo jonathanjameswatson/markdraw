@@ -132,8 +132,10 @@ namespace Markdraw.MarkdownToDelta
         case ContainerInline containerInline:
           switch (containerInline)
           {
-            case DelimiterInline:
-              return;
+            case DelimiterInline delimiterInline:
+              var literal = delimiterInline.ToLiteral();
+              document.Insert(new TextInsert(literal, newTextFormat));
+              break;
             case EmphasisInline emphasisInline:
               newTextFormat = emphasisInline.DelimiterCount switch {
                 (< 2) => newTextFormat with {
@@ -154,16 +156,16 @@ namespace Markdraw.MarkdownToDelta
 
               newTextFormat = newTextFormat with {
                 Link = new ExistentLink(linkInline.Url, linkInline.Title ?? "")
-              }; // add Title as well
+              };
 
               break;
-
           }
 
           foreach (var child in containerInline)
           {
             InsertText(document, child, newTextFormat);
           }
+
           break;
         case LeafInline leafInline:
           var newInsert = leafInline switch {
