@@ -1,4 +1,5 @@
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Helpers;
 
 namespace Markdraw.Tree
 {
@@ -13,14 +14,15 @@ namespace Markdraw.Tree
 
     public override string ToString()
     {
-      var language = CorrespondingInsert.Tag is "" or null
-        ? "none" : CorrespondingInsert.Tag;
-      var text = CorrespondingInsert.Text;
+      // var language = CorrespondingInsert.Tag is "" or null
+      //   ? "none" : CorrespondingInsert.Tag;
+      var classString = CorrespondingInsert.Tag is "" or null ? "" : $@" class=""language-{CorrespondingInsert.Tag}""";
+      var text = EscapeHelpers.Escape(CorrespondingInsert.Text);
       if (text != "")
       {
         text += @"&#10;";
       }
-      return $@"<pre><code>{text}</code></pre>";
+      return $@"<pre><code{classString}>{text}</code></pre>";
       // return $@"<pre class=""language-{language}"" contenteditable=""false""><code class=""language-{language}"">{CorrespondingInsert.Text}</code></pre>";
     }
   }
