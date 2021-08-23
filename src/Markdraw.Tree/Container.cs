@@ -133,6 +133,9 @@ namespace Markdraw.Tree
         NumberIndent { Start: > 0 } numberIndent => numberIndent with {
           Start = 0
         },
+        QuoteIndent { Start: true } quoteIndent => quoteIndent with {
+          Start = false
+        },
         _ => indent
       };
     }

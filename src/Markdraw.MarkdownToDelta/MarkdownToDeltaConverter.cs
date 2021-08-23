@@ -62,7 +62,7 @@ namespace Markdraw.MarkdownToDelta
             case MarkdownDocument:
               break;
             case QuoteBlock:
-              newIndentSequences = newIndentSequences.Add(Repeat<Indent>(Indent.Quote));
+              newIndentSequences = newIndentSequences.Add(RepeatAfterFirst<Indent>(Indent.Quote, Indent.Quote with { Start = false }));
               break;
             default:
               throw new ArgumentOutOfRangeException(nameof(block));

@@ -2,9 +2,9 @@ namespace Markdraw.Delta.Indents
 {
   public abstract record Indent
   {
-    public static QuoteIndent Quote => new QuoteIndent();
-    public static CodeIndent Code => new CodeIndent();
-    public static ContinueIndent Continue => new ContinueIndent();
+    public static QuoteIndent Quote => new() { Start = true };
+    public static CodeIndent Code => new();
+    public static ContinueIndent Continue => new();
     public static BulletIndent LooseBullet => Bullet();
     public static NumberIndent LooseNumber => Number();
 
