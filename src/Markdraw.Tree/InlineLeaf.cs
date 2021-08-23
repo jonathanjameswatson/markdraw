@@ -114,11 +114,11 @@ namespace Markdraw.Tree
 
               if (ParentTree is not null && ParentTree.AddSpans)
               {
-                stringBuilder.Append($@"{text1}<em i=""{i}"">");
+                stringBuilder.Append($@"{text1}<strong i=""{i}"">");
               }
               else
               {
-                stringBuilder.Append($@"{text1}<em>");
+                stringBuilder.Append($@"{text1}<strong>");
               }
 
               i = newI1;
@@ -127,7 +127,7 @@ namespace Markdraw.Tree
               break;
             case true when !bold:
               var (text2, newI2) = AddCode(buffer, i);
-              stringBuilder.Append($@"{text2}</em>");
+              stringBuilder.Append($@"{text2}</strong>");
               i = newI2;
               open = false;
               buffer = new List<InlineInsert>();
@@ -144,7 +144,7 @@ namespace Markdraw.Tree
 
       if (open)
       {
-        stringBuilder.Append(@"</em>");
+        stringBuilder.Append(@"</strong>");
       }
 
       return (stringBuilder.ToString(), i);
