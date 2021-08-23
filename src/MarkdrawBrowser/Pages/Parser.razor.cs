@@ -1,4 +1,6 @@
-﻿using Markdraw.MarkdownToDelta;
+﻿using System.Threading.Tasks;
+using Markdraw.Delta.OperationSequences;
+using Markdraw.MarkdownToDelta;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -13,7 +15,8 @@ namespace MarkdrawBrowser.Pages
 
     private string _input = Original;
     private string _htmlOutput = GetHtml(Original);
-    private string _deltaOutput = GetDelta(Original);
+    private string _highlightedHtmlOutput;
+    private Document _deltaOutput = GetDelta(Original);
 
     private string Input
     {
@@ -22,13 +25,24 @@ namespace MarkdrawBrowser.Pages
       {
         _input = value;
         _htmlOutput = GetHtml(value);
+        _highlightedHtmlOutput = HighlightHtml(_htmlOutput);
         _deltaOutput = GetDelta(value);
       }
+    }
+
+    protected override void OnInitialized()
+    {
+      _highlightedHtmlOutput = HighlightHtml(_htmlOutput);
     }
 
     private static string GetHtml(string input)
     {
       return Markdraw.Parser.Parser.Parse(input);
+    }
+
+    private string HighlightHtml(string html)
+    {
+      return ((IJSInProcessRuntime)Js).Invoke<string>("window.highlightHtml", html);
     }
 
     /*
@@ -41,9 +55,9 @@ namespace MarkdrawBrowser.Pages
     }
     */
 
-    private static string GetDelta(string input)
+    private static Document GetDelta(string input)
     {
-      return MarkdownToDeltaConverter.Parse(input).ToString();
+      return MarkdownToDeltaConverter.Parse(input);
     }
   }
 }

@@ -58,7 +58,12 @@ namespace Markdraw.Delta.Formats
 
     public override string ToString()
     {
-      return $"{{{string.Join("", Indents)} {Header}}}";
+      var indentString = string.Join("", Indents);
+      if (indentString != "")
+      {
+        indentString += " ";
+      }
+      return $"{{{indentString}{Header}}}";
     }
   }
 }

@@ -2,13 +2,13 @@
 
 <div class="container">
   <div class="columns">
-    <div class="column">
+    <div class="column is-half">
       <h1 class="title">
         Input
       </h1>
       <textarea rows="25" class="textarea is-family-monospace" @bind="Input" @bind:event="oninput"></textarea>
     </div>
-    <div class="column output-column">
+    <div class="column is-half">
       <h1 class="title">
         Output
       </h1>
@@ -22,18 +22,17 @@
           <div class="content">
             <pre class="language-html">
 <code>
-@_htmlOutput
+@((MarkupString)_highlightedHtmlOutput)
 </code>
 </pre>
           </div>
         </TabPage>
         <TabPage Text="Delta">
-          <div class="content">
-            <pre class="language-none">
-<code>
-@_deltaOutput
-</code>
-</pre>
+          <div class="tags">
+            @foreach (var tag in _deltaOutput)
+            {
+              <span class="tag is-dark">@tag.ToString()</span>
+            }
           </div>
         </TabPage>
       </Tabs>
