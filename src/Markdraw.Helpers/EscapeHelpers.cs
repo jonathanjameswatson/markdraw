@@ -8,7 +8,17 @@ namespace Markdraw.Helpers
   {
     public static string EscapeUrl(string url)
     {
-      return string.Join("", url.Select(c => HtmlHelper.EscapeUrlCharacter(c) ?? c.ToString()));
+      return string.Join("", url.SelectMany(c => {
+        if (c < 128)
+        {
+          return new [] {
+            HtmlHelper.EscapeUrlCharacter(c) ?? c.ToString()
+          };
+        }
+
+        var bytes = Encoding.UTF8.GetBytes(new[] { c });
+        return bytes.Select(b => $"%{b:X2}").ToArray();
+      }));
     }
 
     public static string Escape(string content, bool softEscape = false)
