@@ -20,6 +20,7 @@ namespace Markdraw.Parser
       settings.MinifyCss = false;
       settings.MinifyCssAttributes = false;
       settings.MinifyJs = false;
+      settings.AttributeQuoteChar = '"';
       return Uglify.Html(html, settings).ToString();
     }
   }
