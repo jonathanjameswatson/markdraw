@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 using Xunit;
 
 namespace Markdraw.Tree.Test
@@ -210,7 +211,7 @@ namespace Markdraw.Tree.Test
       new Container(new List<TreeNode> {
           new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A"),
-            new TextInsert("B", new TextFormat {
+            new TextInsert("B", new InlineFormat {
               Link = new ExistentLink("C")
             }),
             new TextInsert("D")
@@ -226,13 +227,13 @@ namespace Markdraw.Tree.Test
       new Container(new List<TreeNode> {
           new InlineLeaf(new List<InlineInsert> {
             new TextInsert("A"),
-            new TextInsert("B", new TextFormat {
+            new TextInsert("B", new InlineFormat {
               Italic = true
             }),
-            new TextInsert("C", new TextFormat {
+            new TextInsert("C", new InlineFormat {
               Italic = true, Link = new ExistentLink("F")
             }),
-            new TextInsert("D", new TextFormat {
+            new TextInsert("D", new InlineFormat {
               Link = new ExistentLink("F")
             }),
             new TextInsert("E")

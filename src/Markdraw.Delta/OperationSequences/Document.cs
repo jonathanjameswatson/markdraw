@@ -4,6 +4,7 @@ using System.Linq;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Operations;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 
 namespace Markdraw.Delta.OperationSequences
 {

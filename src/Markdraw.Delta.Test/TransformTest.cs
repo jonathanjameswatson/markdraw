@@ -20,65 +20,65 @@ namespace Markdraw.Delta.Test
 
       new Document()
         .Insert("A")
-        .Transform(new Transformation().Retain(1).Insert("B", TextFormat.BoldPreset))
-        .Is(new Document().Insert("A").Insert("B", TextFormat.BoldPreset));
+        .Transform(new Transformation().Retain(1).Insert("B", InlineFormat.BoldPreset))
+        .Is(new Document().Insert("A").Insert("B", InlineFormat.BoldPreset));
     }
 
     [Fact]
     public void Retain_FormatsText()
     {
-      var turnBold = new TextFormat {
+      var turnBold = new InlineFormat {
         Bold = true, Italic = null, Link = null, Code = null
       };
 
       new Document()
         .Insert("A")
         .Transform(new Transformation().Retain(1, turnBold))
-        .Is(new Document().Insert("A", TextFormat.BoldPreset));
+        .Is(new Document().Insert("A", InlineFormat.BoldPreset));
 
       new Document()
         .Insert("AA")
         .Transform(new Transformation().Retain(1, turnBold))
-        .Is(new Document().Insert("A", TextFormat.BoldPreset).Insert("A"));
+        .Is(new Document().Insert("A", InlineFormat.BoldPreset).Insert("A"));
 
       new Document()
         .Insert("AA")
         .Transform(new Transformation().Retain(1).Retain(1, turnBold))
-        .Is(new Document().Insert("A").Insert("A", TextFormat.BoldPreset));
+        .Is(new Document().Insert("A").Insert("A", InlineFormat.BoldPreset));
 
       new Document()
         .Insert("A")
-        .Insert("A", TextFormat.BoldPreset)
+        .Insert("A", InlineFormat.BoldPreset)
         .Transform(new Transformation().Retain(1, turnBold))
-        .Is(new Document().Insert("AA", TextFormat.BoldPreset));
+        .Is(new Document().Insert("AA", InlineFormat.BoldPreset));
 
       new Document()
         .Insert("A")
-        .Insert("A", TextFormat.BoldPreset)
+        .Insert("A", InlineFormat.BoldPreset)
         .Transform(new Transformation().Retain(2, turnBold))
-        .Is(new Document().Insert("AA", TextFormat.BoldPreset));
+        .Is(new Document().Insert("AA", InlineFormat.BoldPreset));
 
       new Document()
-        .Insert("A", TextFormat.BoldPreset)
-        .Insert("A", TextFormat.ItalicPreset)
+        .Insert("A", InlineFormat.BoldPreset)
+        .Insert("A", InlineFormat.ItalicPreset)
         .Transform(new Transformation().Retain(2, turnBold))
         .Is(new Document()
-          .Insert("A", TextFormat.BoldPreset)
-          .Insert("A", new TextFormat {
+          .Insert("A", InlineFormat.BoldPreset)
+          .Insert("A", new InlineFormat {
             Bold = true, Italic = true
           })
         );
 
       new Document()
-        .Insert("AA", TextFormat.BoldPreset)
-        .Insert("AA", TextFormat.ItalicPreset)
+        .Insert("AA", InlineFormat.BoldPreset)
+        .Insert("AA", InlineFormat.ItalicPreset)
         .Transform(new Transformation().Retain(1).Retain(2, turnBold))
         .Is(new Document()
-          .Insert("AA", TextFormat.BoldPreset)
-          .Insert("A", new TextFormat {
+          .Insert("AA", InlineFormat.BoldPreset)
+          .Insert("A", new InlineFormat {
             Bold = true, Italic = true
           })
-          .Insert("A", TextFormat.ItalicPreset)
+          .Insert("A", InlineFormat.ItalicPreset)
         );
 
       new Document()
@@ -86,7 +86,7 @@ namespace Markdraw.Delta.Test
         .Transform(new Transformation().Retain(1).Retain(1, turnBold))
         .Is(new Document()
           .Insert("A")
-          .Insert("A", TextFormat.BoldPreset)
+          .Insert("A", InlineFormat.BoldPreset)
           .Insert("A")
         );
     }
@@ -155,21 +155,21 @@ namespace Markdraw.Delta.Test
 
       new Document()
         .Insert("AA")
-        .Transform(new Transformation().Retain(1).Insert("A", TextFormat.BoldPreset))
-        .Is(new Document().Insert("A").Insert("A", TextFormat.BoldPreset).Insert("A"));
+        .Transform(new Transformation().Retain(1).Insert("A", InlineFormat.BoldPreset))
+        .Is(new Document().Insert("A").Insert("A", InlineFormat.BoldPreset).Insert("A"));
 
       new Document()
-        .Insert("AB", new TextFormat {
+        .Insert("AB", new InlineFormat {
           Link = new ExistentLink("C")
         })
         .Transform(new Transformation().Retain(1).Insert("D"))
         .Is(
           new Document()
-            .Insert("A", new TextFormat {
+            .Insert("A", new InlineFormat {
               Link = new ExistentLink("C")
             })
             .Insert("D")
-            .Insert("B", new TextFormat {
+            .Insert("B", new InlineFormat {
               Link = new ExistentLink("C")
             }));
     }
@@ -177,7 +177,7 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsTextWithNewLine()
     {
-      var turnBold = new TextFormat {
+      var turnBold = new InlineFormat {
         Bold = true, Italic = null, Link = null
       };
 
@@ -187,7 +187,7 @@ namespace Markdraw.Delta.Test
         .Transform(new Transformation().Retain(1).Retain(1, turnBold))
         .Is(new Document()
           .Insert("A")
-          .Insert("A", TextFormat.BoldPreset)
+          .Insert("A", InlineFormat.BoldPreset)
           .Insert("A")
           .Insert(new LineInsert())
         );

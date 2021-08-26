@@ -7,6 +7,7 @@ using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.OperationSequences;
 using Markdraw.Tree;
 using MarkdrawBrowser.Shared;
@@ -125,21 +126,21 @@ namespace MarkdrawBrowser.Pages
 
     private async Task Bold()
     {
-      await SetFormat(new TextFormat {
+      await SetFormat(new InlineFormat {
         Bold = true, Italic = null, Link = null, Code = null
       });
     }
 
     private async Task Italic()
     {
-      await SetFormat(new TextFormat {
+      await SetFormat(new InlineFormat {
         Bold = null, Italic = true, Link = null, Code = null
       });
     }
 
     private async Task Code()
     {
-      await SetFormat(new TextFormat {
+      await SetFormat(new InlineFormat {
         Bold = null, Italic = null, Link = null, Code = true
       });
     }
@@ -177,7 +178,7 @@ namespace MarkdrawBrowser.Pages
 
     private async Task Clear()
     {
-      await SetFormat(new TextFormat());
+      await SetFormat(new InlineFormat());
     }
 
     private async Task ClearLine()
@@ -228,7 +229,7 @@ namespace MarkdrawBrowser.Pages
 
     private async Task SetLink()
     {
-      await SetFormat(new TextFormat {
+      await SetFormat(new InlineFormat {
         Bold = null, Italic = null, Link = new ExistentLink(_modalLink), Code = null
       });
       Close();
@@ -258,7 +259,7 @@ namespace MarkdrawBrowser.Pages
     private int InsertText(string text, Cursor cursor)
     {
       var splitText = new List<string>(text.Split("\n"));
-      var lastTextFormat = _deltaTree.Delta.GetFirstFormat<TextFormat>(cursor.Start);
+      var lastTextFormat = _deltaTree.Delta.GetFirstFormat<InlineFormat>(cursor.Start);
       LineFormat lastLineFormat = null;
       var ops = new Document();
 

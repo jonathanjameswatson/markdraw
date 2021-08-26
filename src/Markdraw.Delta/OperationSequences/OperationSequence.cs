@@ -5,6 +5,7 @@ using System.Text;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Operations;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 
 namespace Markdraw.Delta.OperationSequences
 {
@@ -155,9 +156,9 @@ namespace Markdraw.Delta.OperationSequences
     /// <param name="text">A string of the contents of the text added to this sequence.</param>
     /// <param name="format">The format of the text added to this sequence.</param>
     /// <returns>This sequence of operations.</returns>
-    public TSelf Insert(string text, TextFormat format=null)
+    public TSelf Insert(string text, InlineFormat format=null)
     {
-      return Insert(new TextInsert(text, format ?? new TextFormat()));
+      return Insert(new TextInsert(text, format ?? new InlineFormat()));
     }
 
     /// <summary>

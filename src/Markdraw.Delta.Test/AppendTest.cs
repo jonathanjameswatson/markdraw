@@ -27,7 +27,7 @@ namespace Markdraw.Delta.Test
 
       new Document()
         .Insert("A")
-        .IsNot(new Document().Insert("A", TextFormat.BoldPreset));
+        .IsNot(new Document().Insert("A", InlineFormat.BoldPreset));
     }
 
     [Fact]
@@ -40,7 +40,7 @@ namespace Markdraw.Delta.Test
 
       new Document()
         .Insert("A")
-        .Insert("A", TextFormat.BoldPreset)
+        .Insert("A", InlineFormat.BoldPreset)
         .Length
         .Is(2);
     }

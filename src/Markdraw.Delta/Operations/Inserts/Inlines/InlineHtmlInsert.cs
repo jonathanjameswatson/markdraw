@@ -1,11 +1,11 @@
-﻿namespace Markdraw.Delta.Operations.Inserts
+﻿namespace Markdraw.Delta.Operations.Inserts.Inlines
 {
   public record InlineHtmlInsert(string Content = "") : InlineInsert, IHtmlInsert
   {
 
     public override string ToString()
     {
-      return Content;
+      return Format.Wrap(Content);
     }
 
   }

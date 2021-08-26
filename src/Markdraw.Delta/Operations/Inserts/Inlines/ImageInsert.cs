@@ -1,11 +1,11 @@
-namespace Markdraw.Delta.Operations.Inserts
+namespace Markdraw.Delta.Operations.Inserts.Inlines
 {
   public record ImageInsert(string Url, string Alt = "", string Title = "") : InlineInsert
   {
 
     public override string ToString()
     {
-      return $"![{Alt}]({Url})";
+      return Format.Wrap($"![{Alt}]({Url})");
     }
 
   }

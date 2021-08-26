@@ -3,13 +3,13 @@ using Markdraw.Delta.Links;
 
 namespace Markdraw.Delta.Formats
 {
-  public record TextFormat : Format
+  public record InlineFormat : Format
   {
 
-    public static readonly TextFormat BoldPreset = new() {
+    public static readonly InlineFormat BoldPreset = new() {
       Bold = true
     };
-    public static readonly TextFormat ItalicPreset = new() {
+    public static readonly InlineFormat ItalicPreset = new() {
       Italic = true
     };
     public bool? Bold { get; init; } = false;
@@ -17,11 +17,21 @@ namespace Markdraw.Delta.Formats
     public Link Link { get; init; } = new NonExistentLink();
     public bool? Code { get; init; } = false;
 
-    public TextFormat Merge(TextFormat other)
+    public InlineFormat Merge(InlineFormat other)
     {
-      return new TextFormat {
+      return new InlineFormat {
         Bold = other.Bold ?? Bold, Italic = other.Italic ?? Italic, Link = Link.Merge(other.Link), Code = other.Code ?? Code
       };
+    }
+
+    public string Wrap(string text)
+    {
+      var trimmed = text.TrimStart();
+      var bold = Bold == true ? $"**{trimmed}**" : trimmed;
+      var italic = Italic == true ? $"*{bold}*" : bold;
+      if (Link is not ExistentLink(var url, var title)) return italic;
+      var titleString = (title ?? "") == "" ? "" : $@" ""{title}""";
+      return $"[{italic}]({url}{titleString})";
     }
 
     public override string ToString()

@@ -10,6 +10,7 @@ using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.OperationSequences;
 
 // ReSharper disable IteratorNeverReturns
@@ -97,7 +98,7 @@ namespace Markdraw.MarkdownToDelta
               document.Insert(new CodeInsert(codeBlock.Lines.ToString()));
               break;
             case HeadingBlock headingBlock:
-              InsertText(document, headingBlock.Inline);
+              InsertInline(document, headingBlock.Inline);
               header = headingBlock.Level;
               break;
             case HtmlBlock htmlBlock:
@@ -106,7 +107,7 @@ namespace Markdraw.MarkdownToDelta
             case LinkReferenceDefinition:
               return;
             case ParagraphBlock paragraphBlock:
-              InsertText(document, paragraphBlock.Inline);
+              InsertInline(document, paragraphBlock.Inline);
               break;
             case ThematicBreakBlock:
               document.Insert(new DividerInsert());
@@ -124,9 +125,9 @@ namespace Markdraw.MarkdownToDelta
       }
     }
 
-    private static void InsertText(Document document, Inline inline, TextFormat format = null)
+    private static void InsertInline(Document document, Inline inline, InlineFormat format = null)
     {
-      var newTextFormat = format ?? new TextFormat();
+      var newFormat = format ?? new InlineFormat();
       switch (inline)
       {
         case ContainerInline containerInline:
@@ -134,14 +135,14 @@ namespace Markdraw.MarkdownToDelta
           {
             case DelimiterInline delimiterInline:
               var literal = delimiterInline.ToLiteral();
-              document.Insert(new TextInsert(literal, newTextFormat));
+              document.Insert(new TextInsert(literal, newFormat));
               break;
             case EmphasisInline emphasisInline:
-              newTextFormat = emphasisInline.DelimiterCount switch {
-                (< 2) => newTextFormat with {
+              newFormat = emphasisInline.DelimiterCount switch {
+                (< 2) => newFormat with {
                   Italic = true
                 },
-                _ => newTextFormat with {
+                _ => newFormat with {
                   Bold = true
                 }
               };
@@ -150,39 +151,45 @@ namespace Markdraw.MarkdownToDelta
               if (linkInline.IsImage)
               {
                 var altText = GetText(linkInline);
-                document.Insert(new ImageInsert(linkInline.Url, altText, linkInline.Title ?? ""));
+                document.Insert(new ImageInsert(linkInline.Url, altText, linkInline.Title ?? "") with {
+                  Format = newFormat
+                });
                 return;
               }
 
-              newTextFormat = newTextFormat with {
+              newFormat = newFormat with {
                 Link = new ExistentLink(linkInline.Url, linkInline.Title ?? "")
               };
-
               break;
           }
 
           foreach (var child in containerInline)
           {
-            InsertText(document, child, newTextFormat);
+            InsertInline(document, child, newFormat);
           }
-
           break;
         case LeafInline leafInline:
-          Insert newInsert = leafInline switch {
-            AutolinkInline autolinkInline => new TextInsert(autolinkInline.Url, newTextFormat with {
-              Link = new ExistentLink(autolinkInline.Url)
-            }),
-            CodeInline codeInline => new TextInsert(codeInline.Content, newTextFormat with {
-              Code = true
-            }),
+          InlineInsert newInsert = leafInline switch {
+            AutolinkInline autolinkInline => new TextInsert(autolinkInline.Url),
+            CodeInline codeInline => new TextInsert(codeInline.Content),
             HtmlEntityInline htmlEntityInline => new InlineHtmlInsert(htmlEntityInline.Original.ToString()),
             HtmlInline htmlInline => new InlineHtmlInsert(htmlInline.Tag),
             LineBreakInline { IsHard: var hard } => hard ? new InlineHtmlInsert("<br />") : new TextInsert(" "),
-            LiteralInline literalInline => new TextInsert(literalInline.Content.ToString(), newTextFormat),
+            LiteralInline literalInline => new TextInsert(literalInline.Content.ToString()),
             _ => throw new ArgumentOutOfRangeException(nameof(inline))
           };
 
-          document.Insert(newInsert);
+          newFormat = leafInline switch {
+            AutolinkInline autolinkInline => newFormat with {
+              Link = new ExistentLink(autolinkInline.Url)
+            },
+            CodeInline => newFormat with {
+              Code = true
+            },
+            _ => newFormat
+          };
+
+          document.Insert(newInsert with { Format = newFormat });
           break;
         default:
           throw new ArgumentOutOfRangeException(nameof(inline));

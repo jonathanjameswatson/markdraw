@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.OperationSequences;
 
 namespace Markdraw.Tree

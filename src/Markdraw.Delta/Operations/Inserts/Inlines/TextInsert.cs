@@ -1,19 +1,17 @@
 using System;
 using Markdraw.Delta.Formats;
-using Markdraw.Delta.Links;
 
-namespace Markdraw.Delta.Operations.Inserts
+namespace Markdraw.Delta.Operations.Inserts.Inlines
 {
   public record TextInsert : InlineInsert
   {
 
-    public TextInsert(string text, TextFormat format)
+    public TextInsert(string text, InlineFormat format=null)
     {
       Text = text;
-      Format = format;
+      Format = format ?? new InlineFormat();
     }
 
-    public TextInsert(string text) : this(text, new TextFormat()) {}
     protected override int InsertLength => Text.Length;
 
     private readonly string _text;
@@ -28,19 +26,6 @@ namespace Markdraw.Delta.Operations.Inserts
         }
         _text = value;
       }
-    }
-
-    public TextFormat Format { get; init; }
-
-    public override TextInsert SetFormat(Format format)
-    {
-      if (format is TextFormat textFormat)
-      {
-        return this with {
-          Format = Format.Merge(textFormat)
-        };
-      }
-      return null;
     }
 
     public TextInsert Merge(TextInsert before)
@@ -73,12 +58,7 @@ namespace Markdraw.Delta.Operations.Inserts
 
     public override string ToString()
     {
-      var trimmed = Text.TrimStart();
-      var bold = Format.Bold == true ? $"**{trimmed}**" : trimmed;
-      var italic = Format.Italic == true ? $"*{bold}*" : bold;
-      if (Format.Link is not ExistentLink(var url, var title)) return italic;
-      var titleString = (title ?? "") == "" ? "" : $@" ""{title}""";
-      return $"[{italic}]({url}{titleString})";
+      return Format.Wrap(Text);
     }
   }
 }
