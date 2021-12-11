@@ -7,6 +7,5 @@ namespace Markdraw.Delta.Operations.Inserts
     {
       return "\n***\n";
     }
-
   }
 }

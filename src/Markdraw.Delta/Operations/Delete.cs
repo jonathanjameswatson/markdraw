@@ -1,8 +1,7 @@
 namespace Markdraw.Delta.Operations
 {
-  public record Delete : LengthOp
+  public record Delete(int Length) : LengthOp(Length)
   {
-    public Delete(int length) : base(length) {}
 
     public override string ToString()
     {

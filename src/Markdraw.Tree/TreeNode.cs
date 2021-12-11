@@ -10,6 +10,6 @@ namespace Markdraw.Tree
     protected DeltaTree ParentTree { get; set; }
     public int I { get; }
 
-    public int Length { get; protected set; }
+    public virtual int Length { get; protected set; }
   }
 }

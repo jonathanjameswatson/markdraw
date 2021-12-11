@@ -4,7 +4,6 @@
   {
 
     public string Content { get; init; }
-
   }
 
 }

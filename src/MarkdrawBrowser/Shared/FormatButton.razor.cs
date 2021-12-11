@@ -16,6 +16,5 @@ namespace MarkdrawBrowser.Shared
 
     [Parameter]
     public EventCallback<MouseEventArgs> EnabledClickCallback { get; set; }
-
   }
 }

@@ -1,9 +1,7 @@
 ﻿namespace Markdraw.Delta.Indents
 {
-  public record QuoteIndent : Indent
+  public record QuoteIndent(bool Start = false) : Indent
   {
-    public bool Start { get; init; }
-
     public override string ToString()
     {
       return ">";

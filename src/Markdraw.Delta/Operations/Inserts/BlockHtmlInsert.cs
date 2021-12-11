@@ -7,6 +7,5 @@
     {
       return $"\n{Content}\n";
     }
-
   }
 }

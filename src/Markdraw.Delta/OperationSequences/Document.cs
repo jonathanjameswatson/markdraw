@@ -36,14 +36,11 @@ namespace Markdraw.Delta.OperationSequences
 
       foreach (var op in transformation)
       {
-        var length = op.Length;
-
         switch (op)
         {
-          case Retain retain:
+          case Retain (var formatModifier, var length):
           {
-            var format = retain.Format;
-            var shouldFormat = format is not null;
+            var shouldFormat = formatModifier is not null;
 
             if (shouldFormat && opCharacterIndex != 0 && Get(opIndex) is TextInsert before)
             {
@@ -78,7 +75,7 @@ namespace Markdraw.Delta.OperationSequences
 
               if (shouldFormat)
               {
-                var newNext = next.SetFormat(format);
+                var newNext = next.SetFormat(formatModifier);
                 if (newNext is not null)
                 {
                   next = newNext;
@@ -113,7 +110,7 @@ namespace Markdraw.Delta.OperationSequences
 
             break;
           }
-          case Delete _:
+          case Delete (var length):
           {
             while (length > 0)
             {
@@ -227,7 +224,8 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     /// <summary>
-    ///   Finds the first <see cref="Format" /> of type <typeparamref name="T" /> in this document starting from position <paramref name="start" />,
+    ///   Finds the first <see cref="Format" /> of type <typeparamref name="T" /> in this document starting from position
+    ///   <paramref name="start" />,
     ///   returning <see langword="null" /> if nothing can be found past this position.
     /// </summary>
     /// <param name="start">The position to start searching, which must be positive.</param>

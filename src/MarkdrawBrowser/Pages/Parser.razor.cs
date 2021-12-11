@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Markdraw.Delta.OperationSequences;
+﻿using Markdraw.Delta.OperationSequences;
 using Markdraw.MarkdownToDelta;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -8,15 +7,16 @@ namespace MarkdrawBrowser.Pages
 {
   public partial class Parser : ComponentBase
   {
-    [Inject]
-    private IJSRuntime Js { get; set; }
 
     private const string Original = "# Parser\n\nUse this page to see how Markdraw handles Markdown.";
+    private Document _deltaOutput = GetDelta(Original);
+    private string _highlightedHtmlOutput;
+    private string _htmlOutput = GetHtml(Original);
 
     private string _input = Original;
-    private string _htmlOutput = GetHtml(Original);
-    private string _highlightedHtmlOutput;
-    private Document _deltaOutput = GetDelta(Original);
+
+    [Inject]
+    private IJSRuntime Js { get; set; }
 
     private string Input
     {

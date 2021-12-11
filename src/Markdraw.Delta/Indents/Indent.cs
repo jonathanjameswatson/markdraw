@@ -2,27 +2,20 @@ namespace Markdraw.Delta.Indents
 {
   public abstract record Indent
   {
-    public static QuoteIndent Quote => new() { Start = true };
-    public static CodeIndent Code => new();
-    public static ContinueIndent Continue => new();
-    public static BulletIndent LooseBullet => Bullet();
-    public static NumberIndent LooseNumber => Number();
+    public static readonly QuoteIndent Quote = new(true);
+    public static readonly CodeIndent Code = new();
+    public static readonly ContinueIndent Continue = new();
+    public static readonly BulletIndent LooseBullet = new(true, true);
+    public static readonly NumberIndent LooseNumber = new(1, true);
 
-    public static BulletIndent Bullet(bool start = true, bool loose = false)
+    public static NumberIndent Number(int start = 1, bool loose = true)
     {
-      return new BulletIndent {
-        Start = start,
-        Loose = loose
-      };
+      return new NumberIndent(start, loose);
     }
 
-    public static NumberIndent Number(int start = 1, bool loose = false)
+    public static BulletIndent Bullet(bool start = true, bool loose = true)
     {
-      return new NumberIndent {
-        Start = start,
-        Loose = loose
-      };
+      return new BulletIndent(start, loose);
     }
   }
-
 }

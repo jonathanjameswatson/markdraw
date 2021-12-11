@@ -7,13 +7,14 @@ namespace MarkdrawBrowser.Shared
 {
   public partial class Logo : ComponentBase
   {
+
+    private ElementReference _wheel;
+
     [Parameter]
     public Func<ElementReference> GetHoverElement { get; set; }
 
     [Inject]
     private IJSRuntime Js { get; set; }
-
-    private ElementReference _wheel;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

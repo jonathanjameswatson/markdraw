@@ -6,13 +6,14 @@ namespace MarkdrawBrowser.Shared
 {
   public partial class Editor : ComponentBase
   {
+
+    private ElementReference _editor;
+
     [Parameter]
     public string Content { get; set; }
 
     [Inject]
     private IJSRuntime Js { get; set; }
-
-    private ElementReference _editor;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

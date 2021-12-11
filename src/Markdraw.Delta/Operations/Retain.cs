@@ -2,20 +2,16 @@ using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations
 {
-  public record Retain : LengthOp
+  public record Retain(IFormatModifier FormatModifier, int Length) : LengthOp(Length)
   {
 
-    public Retain(int length) : base(length)
-    {
-      Format = null;
-    }
+    public Retain(int length) : this(null, length) {}
 
-    public Retain(int length, Format format) : base(length)
+    public void Deconstruct(out IFormatModifier formatModifier, out int length)
     {
-      Format = format;
+      formatModifier = FormatModifier;
+      length = Length;
     }
-
-    public Format Format { get; init; }
 
     public override string ToString()
     {

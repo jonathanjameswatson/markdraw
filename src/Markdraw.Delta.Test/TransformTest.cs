@@ -1,9 +1,9 @@
 using System.Collections.Immutable;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
-using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.OperationSequences;
+using Markdraw.Delta.Styles;
 using Xunit;
 
 namespace Markdraw.Delta.Test
@@ -27,9 +27,7 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsText()
     {
-      var turnBold = new InlineFormat {
-        Bold = true, Italic = null, Link = null, Code = null
-      };
+      var turnBold = new InlineFormatModifier(styles => styles.Add(Style.Bold));
 
       new Document()
         .Insert("A")
@@ -56,17 +54,18 @@ namespace Markdraw.Delta.Test
         .Insert("A")
         .Insert("A", InlineFormat.BoldPreset)
         .Transform(new Transformation().Retain(2, turnBold))
-        .Is(new Document().Insert("AA", InlineFormat.BoldPreset));
+        .Is(new Document()
+          .Insert("A", InlineFormat.BoldPreset)
+          .Insert("A", new InlineFormat(ImmutableList.Create<Style>(Style.Bold, Style.Bold)))
+        );
 
       new Document()
         .Insert("A", InlineFormat.BoldPreset)
         .Insert("A", InlineFormat.ItalicPreset)
         .Transform(new Transformation().Retain(2, turnBold))
         .Is(new Document()
-          .Insert("A", InlineFormat.BoldPreset)
-          .Insert("A", new InlineFormat {
-            Bold = true, Italic = true
-          })
+          .Insert("A", new InlineFormat(ImmutableList.Create<Style>(Style.Bold, Style.Bold)))
+          .Insert("A", new InlineFormat(ImmutableList.Create<Style>(Style.Italic, Style.Bold)))
         );
 
       new Document()
@@ -74,10 +73,9 @@ namespace Markdraw.Delta.Test
         .Insert("AA", InlineFormat.ItalicPreset)
         .Transform(new Transformation().Retain(1).Retain(2, turnBold))
         .Is(new Document()
-          .Insert("AA", InlineFormat.BoldPreset)
-          .Insert("A", new InlineFormat {
-            Bold = true, Italic = true
-          })
+          .Insert("A", InlineFormat.BoldPreset)
+          .Insert("A", new InlineFormat(ImmutableList.Create<Style>(Style.Bold, Style.Bold)))
+          .Insert("A", new InlineFormat(ImmutableList.Create<Style>(Style.Italic, Style.Bold)))
           .Insert("A", InlineFormat.ItalicPreset)
         );
 
@@ -94,13 +92,11 @@ namespace Markdraw.Delta.Test
     [Fact]
     public void Retain_FormatsLines()
     {
-      var turnQuote = new LineFormat {
-        Indents = ImmutableList.Create<Indent>(Indent.Quote), Header = null
-      };
+      var turnQuote = new LineFormatModifier(indents => indents.Insert(0, Indent.Quote));
 
-      new LineInsert(new LineFormat() {
+      new LineInsert(new LineFormat {
         Indents = ImmutableList.Create<Indent>(Indent.Quote)
-      }).Is(new LineInsert(new LineFormat() {
+      }).Is(new LineInsert(new LineFormat {
         Indents = ImmutableList.Create<Indent>(Indent.Quote)
       }));
 
@@ -159,27 +155,20 @@ namespace Markdraw.Delta.Test
         .Is(new Document().Insert("A").Insert("A", InlineFormat.BoldPreset).Insert("A"));
 
       new Document()
-        .Insert("AB", new InlineFormat {
-          Link = new ExistentLink("C")
-        })
+        .Insert("AB", new InlineFormat(ImmutableList.Create<Style>(Style.Link("C"))))
         .Transform(new Transformation().Retain(1).Insert("D"))
         .Is(
           new Document()
-            .Insert("A", new InlineFormat {
-              Link = new ExistentLink("C")
-            })
+            .Insert("A", new InlineFormat(ImmutableList.Create<Style>(Style.Link("C"))))
             .Insert("D")
-            .Insert("B", new InlineFormat {
-              Link = new ExistentLink("C")
-            }));
+            .Insert("B", new InlineFormat(ImmutableList.Create<Style>(Style.Link("C"))))
+        );
     }
 
     [Fact]
     public void Retain_FormatsTextWithNewLine()
     {
-      var turnBold = new InlineFormat {
-        Bold = true, Italic = null, Link = null
-      };
+      var turnBold = new InlineFormatModifier(styles => styles.Add(Style.Bold));
 
       new Document()
         .Insert("AAA")

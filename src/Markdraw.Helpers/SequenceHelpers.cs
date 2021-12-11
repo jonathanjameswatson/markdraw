@@ -12,7 +12,8 @@ namespace Markdraw.Helpers
     {
       IEnumerable<T> Enumerable()
       {
-        while (true) {
+        while (true)
+        {
           yield return repeated;
         }
       }
@@ -25,7 +26,8 @@ namespace Markdraw.Helpers
       IEnumerable<T> Enumerable()
       {
         yield return first;
-        while (true) {
+        while (true)
+        {
           yield return repeated;
         }
       }
@@ -40,6 +42,5 @@ namespace Markdraw.Helpers
         return sequence.Current;
       });
     }
-
   }
 }

@@ -5,6 +5,11 @@ namespace Markdraw.Delta.Indents
   public record NumberIndent : ListIndent
   {
     private readonly int _start;
+
+    public NumberIndent(int start = 0, bool loose = false) : base(loose)
+    {
+      Start = start;
+    }
     public int Start
     {
       get => _start;
@@ -17,6 +22,16 @@ namespace Markdraw.Delta.Indents
 
         _start = value;
       }
+    }
+
+    public override NumberIndent NextIndent => this with {
+      Start = 0
+    };
+
+    public void Deconstruct(out int start, out bool loose)
+    {
+      start = Start;
+      loose = Loose;
     }
 
     public override string ToString()

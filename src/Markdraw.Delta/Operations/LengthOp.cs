@@ -10,8 +10,7 @@ namespace Markdraw.Delta.Operations
     {
       Length = length;
     }
-
-    public override int Length
+    public int Length
     {
       get => _length;
       init
@@ -22,6 +21,11 @@ namespace Markdraw.Delta.Operations
         }
         _length = value;
       }
+    }
+
+    public void Deconstruct(out int length)
+    {
+      length = _length;
     }
 
     public override string ToString()

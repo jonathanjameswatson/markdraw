@@ -4,7 +4,6 @@ namespace Markdraw.Tree
 {
   public class BlockHtmlLeaf : Leaf
   {
-
     public BlockHtmlLeaf(BlockHtmlInsert blockHtmlInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
     {
       CorrespondingInsert = blockHtmlInsert;
@@ -16,6 +15,5 @@ namespace Markdraw.Tree
     {
       return CorrespondingInsert.Content;
     }
-
   }
 }

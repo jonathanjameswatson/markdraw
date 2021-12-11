@@ -11,12 +11,14 @@ namespace Markdraw.Helpers
       return string.Join("", url.SelectMany(c => {
         if (c < 128)
         {
-          return new [] {
+          return new[] {
             HtmlHelper.EscapeUrlCharacter(c) ?? c.ToString()
           };
         }
 
-        var bytes = Encoding.UTF8.GetBytes(new[] { c });
+        var bytes = Encoding.UTF8.GetBytes(new[] {
+          c
+        });
         return bytes.Select(b => $"%{b:X2}").ToArray();
       }));
     }
@@ -64,6 +66,5 @@ namespace Markdraw.Helpers
 
       return stringBuilder.ToString();
     }
-
   }
 }

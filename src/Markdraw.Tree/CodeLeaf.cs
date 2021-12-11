@@ -10,6 +10,7 @@ namespace Markdraw.Tree
     {
       CorrespondingInsert = codeInsert;
     }
+
     protected override CodeInsert CorrespondingInsert { get; }
 
     public override string ToString()

@@ -8,10 +8,10 @@ using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
-using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.OperationSequences;
+using Markdraw.Delta.Styles;
 using Markdraw.Helpers;
 
 namespace Markdraw.MarkdownToDelta
@@ -46,23 +46,29 @@ namespace Markdraw.MarkdownToDelta
               {
                 Debug.Assert(listBlock.OrderedStart != null, "listBlock.OrderedStart != null");
                 var newIndent = Indent.Number(int.Parse(listBlock.OrderedStart), loose);
-                newListSequence = SequenceHelpers.RepeatAfterFirst<ListIndent>(newIndent, newIndent with { Start = 0 });
+                newListSequence = SequenceHelpers.RepeatAfterFirst<ListIndent>(newIndent, newIndent with {
+                  Start = 0
+                });
               }
               else
               {
                 var newIndent = Indent.Bullet(true, loose);
-                newListSequence = SequenceHelpers.RepeatAfterFirst<ListIndent>(newIndent, newIndent with { Start = false });
+                newListSequence = SequenceHelpers.RepeatAfterFirst<ListIndent>(newIndent, newIndent with {
+                  Start = false
+                });
               }
               break;
             case ListItemBlock:
               Debug.Assert(listSequence != null, nameof(listSequence) + " != null");
               listSequence.MoveNext();
-              newIndentSequences = newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(listSequence.Current, Indent.Continue));
+              newIndentSequences = newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(listSequence.Current, listSequence.Current.NextIndent));
               break;
             case MarkdownDocument:
               break;
             case QuoteBlock:
-              newIndentSequences = newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(Indent.Quote, Indent.Quote with { Start = false }));
+              newIndentSequences = newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(Indent.Quote, Indent.Quote with {
+                Start = false
+              }));
               break;
             default:
               throw new ArgumentOutOfRangeException(nameof(block));
@@ -139,10 +145,10 @@ namespace Markdraw.MarkdownToDelta
             case EmphasisInline emphasisInline:
               newFormat = emphasisInline.DelimiterCount switch {
                 (< 2) => newFormat with {
-                  Italic = true
+                  Styles = newFormat.Styles.Add(Style.Italic)
                 },
                 _ => newFormat with {
-                  Bold = true
+                  Styles = newFormat.Styles.Add(Style.Bold)
                 }
               };
               break;
@@ -157,7 +163,7 @@ namespace Markdraw.MarkdownToDelta
               }
 
               newFormat = newFormat with {
-                Link = new ExistentLink(linkInline.Url, linkInline.Title ?? "")
+                Styles = newFormat.Styles.Add(Style.Link(linkInline.Url, linkInline.Title ?? ""))
               };
               break;
           }
@@ -180,7 +186,7 @@ namespace Markdraw.MarkdownToDelta
 
           newFormat = leafInline switch {
             AutolinkInline autolinkInline => newFormat with {
-              Link = new ExistentLink(autolinkInline.Url)
+              Styles = newFormat.Styles.Add(Style.Link(autolinkInline.Url))
             },
             CodeInline => newFormat with {
               Code = true
@@ -188,7 +194,9 @@ namespace Markdraw.MarkdownToDelta
             _ => newFormat
           };
 
-          document.Insert(newInsert with { Format = newFormat });
+          document.Insert(newInsert with {
+            Format = newFormat
+          });
           break;
         default:
           throw new ArgumentOutOfRangeException(nameof(inline));
@@ -207,6 +215,5 @@ namespace Markdraw.MarkdownToDelta
         _ => ""
       };
     }
-
   }
 }

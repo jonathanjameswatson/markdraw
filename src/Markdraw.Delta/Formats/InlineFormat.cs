@@ -1,58 +1,59 @@
+using System;
+using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
-using Markdraw.Delta.Links;
+using Markdraw.Delta.Styles;
 
 namespace Markdraw.Delta.Formats
 {
-  public record InlineFormat : Format
+  public record InlineFormat([NotNull] ImmutableList<Style> Styles, bool Code = false) : Format
   {
 
-    public static readonly InlineFormat BoldPreset = new() {
-      Bold = true
-    };
-    public static readonly InlineFormat ItalicPreset = new() {
-      Italic = true
-    };
-    public bool? Bold { get; init; } = false;
-    public bool? Italic { get; init; } = false;
-    public Link Link { get; init; } = new NonExistentLink();
-    public bool? Code { get; init; } = false;
+    public static readonly InlineFormat BoldPreset = new(ImmutableList.Create<Style>(Style.Bold));
+    public static readonly InlineFormat ItalicPreset = new(ImmutableList.Create<Style>(Style.Italic));
 
-    public InlineFormat Merge(InlineFormat other)
+    private readonly Lazy<int> _hashCode = new(() => {
+      var hash = new HashCode();
+      foreach (var style in Styles)
+      {
+        hash.Add(style);
+      }
+      hash.Add(Code);
+      return hash.ToHashCode();
+    });
+
+    public InlineFormat() : this(ImmutableList<Style>.Empty) {}
+
+    public virtual bool Equals(InlineFormat other)
     {
-      return new InlineFormat {
-        Bold = other.Bold ?? Bold, Italic = other.Italic ?? Italic, Link = Link.Merge(other.Link), Code = other.Code ?? Code
-      };
+      return other is not null && Code == other.Code && Styles.SequenceEqual(other.Styles);
     }
 
     public string Wrap(string text)
     {
-      var trimmed = text.TrimStart();
-      var bold = Bold == true ? $"**{trimmed}**" : trimmed;
-      var italic = Italic == true ? $"*{bold}*" : bold;
-      if (Link is not ExistentLink(var url, var title)) return italic;
-      var titleString = (title ?? "") == "" ? "" : $@" ""{title}""";
-      return $"[{italic}]({url}{titleString})";
+      var intermediate = text.TrimStart();
+      if (Code)
+      {
+        intermediate = $"`{intermediate}`";
+      }
+      return Styles.Aggregate(intermediate, (current, style) => style.Wrap(current));
+    }
+
+    public override int GetHashCode()
+    {
+      return _hashCode.Value;
     }
 
     public override string ToString()
     {
       var stringBuilder = new StringBuilder("{");
-      if (Bold == true)
+      var tags = Styles.Select(style => style.ToString());
+      if (Code)
       {
-        stringBuilder.Append(" BOLD ");
+        tags = tags.Append("<CODE>");
       }
-      if (Italic == true)
-      {
-        stringBuilder.Append(" ITALIC ");
-      }
-      if (Link is ExistentLink existentLink)
-      {
-        stringBuilder.Append($" {existentLink} ");
-      }
-      if (Code == true)
-      {
-        stringBuilder.Append(" CODE ");
-      }
+      stringBuilder.AppendJoin(" ", tags);
       stringBuilder.Append('}');
       return stringBuilder.ToString();
     }

@@ -2,7 +2,7 @@
 @layout EmptyLayout
 
 <div>
-  <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown" ModalsAvailable="true" />
+  <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown" ModalsAvailable="true"/>
 
   <div class="modal@(_modal != ModalOpen.None ? " is-active" : "")">
     <div class="modal-background"></div>
@@ -84,28 +84,28 @@
     <div class="container">
       <div class="columns is-mobile">
         <div class="column is-narrow format-buttons">
-          <FormatButton icon="format-bold" EnabledClickCallback="Bold" />
-          <FormatButton icon="format-italic" EnabledClickCallback="Italic" />
-          <FormatButton icon="code-tags" EnabledClickCallback="Code" />
-          <FormatButton icon="link" EnabledClickCallback="Link" />
+          <FormatButton icon="format-bold" EnabledClickCallback="Bold"/>
+          <FormatButton icon="format-italic" EnabledClickCallback="Italic"/>
+          <FormatButton icon="code-tags" EnabledClickCallback="Code"/>
+          <FormatButton icon="link" EnabledClickCallback="Link"/>
           <hr class="buttons-divider"/>
-          <FormatButton icon="format-quote-close" EnabledClickCallback="Quote" />
-          <FormatButton icon="format-list-bulleted" EnabledClickCallback="Bullet" />
-          <FormatButton icon="format-list-numbered" EnabledClickCallback="Number" />
+          <FormatButton icon="format-quote-close" EnabledClickCallback="Quote"/>
+          <FormatButton icon="format-list-bulleted" EnabledClickCallback="Bullet"/>
+          <FormatButton icon="format-list-numbered" EnabledClickCallback="Number"/>
           <hr class="buttons-divider"/>
-          <FormatButton icon="format-clear" EnabledClickCallback="Clear" />
-          <FormatButton icon="format-horizontal-align-left" EnabledClickCallback="ClearLine" />
+          <FormatButton icon="format-clear" EnabledClickCallback="Clear"/>
+          <FormatButton icon="format-horizontal-align-left" EnabledClickCallback="ClearLine"/>
           <hr class="buttons-divider"/>
-          <FormatButton icon="format-font-size-increase" EnabledClickCallback="HeaderUp" />
-          <FormatButton icon="format-font-size-decrease" EnabledClickCallback="HeaderDown" />
+          <FormatButton icon="format-font-size-increase" EnabledClickCallback="HeaderUp"/>
+          <FormatButton icon="format-font-size-decrease" EnabledClickCallback="HeaderDown"/>
           <hr class="buttons-divider"/>
-          <FormatButton icon="image" EnabledClickCallback="Image" />
-          <FormatButton icon="minus" EnabledClickCallback="Divider" />
-          <FormatButton icon="code-not-equal-variant" EnabledClickCallback="CodeBlock" ScrollFix="true" />
+          <FormatButton icon="image" EnabledClickCallback="Image"/>
+          <FormatButton icon="minus" EnabledClickCallback="Divider"/>
+          <FormatButton icon="code-not-equal-variant" EnabledClickCallback="CodeBlock" ScrollFix="true"/>
         </div>
 
         <div class="column content-container">
-          <Editor Content="@_content" @ref="_editor" />
+          <Editor Content="@_content" @ref="_editor"/>
         </div>
       </div>
     </div>

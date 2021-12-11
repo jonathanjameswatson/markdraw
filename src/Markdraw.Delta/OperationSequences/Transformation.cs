@@ -38,11 +38,11 @@ namespace Markdraw.Delta.OperationSequences
     ///   Adds a <see cref="Operations.Retain" /> with a given length and format to the end of this sequence of operations.
     /// </summary>
     /// <param name="amount">The length of the <see cref="Operations.Retain" />.</param>
-    /// <param name="format">The format of the <see cref="Operations.Retain" />.</param>
+    /// <param name="formatModifier">The format modifier of the <see cref="Operations.Retain" />.</param>
     /// <returns>This sequence of operations.</returns>
-    public Transformation Retain(int amount, Format format)
+    public Transformation Retain(int amount, IFormatModifier formatModifier)
     {
-      Add(new Retain(amount, format));
+      Add(new Retain(formatModifier, amount));
       return this;
     }
   }

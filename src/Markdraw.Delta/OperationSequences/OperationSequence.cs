@@ -12,10 +12,10 @@ namespace Markdraw.Delta.OperationSequences
 
   /// <summary>
   ///   A sequence of operations that can be extended to represent a Markdown document or transformation.
-  ///   This sequence may only contain elements of type <typeparamref name="T"/>.
+  ///   This sequence may only contain elements of type <typeparamref name="T" />.
   /// </summary>
   /// <remarks>
-  ///   <typeparamref name="TSelf"/> should be the derived class. It is used in chaining.
+  ///   <typeparamref name="TSelf" /> should be the derived class. It is used in chaining.
   /// </remarks>
   /// <typeparam name="T">A class that all elements in this sequence must be or extend.</typeparam>
   /// <typeparam name="TSelf">The class of instances returned by methods that use chaining.</typeparam>
@@ -72,7 +72,7 @@ namespace Markdraw.Delta.OperationSequences
     /// </summary>
     /// <param name="index">The index at which the operation is removed.</param>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   Thrown if <paramref name="index"/> is less than 0 or the number of operations or greater.
+    ///   Thrown if <paramref name="index" /> is less than 0 or the number of operations or greater.
     /// </exception>
     protected void RemoveAt(int index)
     {
@@ -85,7 +85,7 @@ namespace Markdraw.Delta.OperationSequences
     /// <param name="index">The index at which the returned operation is found.</param>
     /// <returns>The <paramref name="index" />th operation in this sequence.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   Thrown if <paramref name="index"/> is less than 0 or the number of operations or greater.
+    ///   Thrown if <paramref name="index" /> is less than 0 or the number of operations or greater.
     /// </exception>
     protected T Get(int index)
     {
@@ -99,7 +99,7 @@ namespace Markdraw.Delta.OperationSequences
     /// <param name="op">The operation that is put in the sequence.</param>
     /// <returns>The <paramref name="index" />th operation in this sequence.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   Thrown if <paramref name="index"/> is less than 0 or the number of operations or greater.
+    ///   Thrown if <paramref name="index" /> is less than 0 or the number of operations or greater.
     /// </exception>
     protected void Set(int index, T op)
     {
@@ -113,13 +113,14 @@ namespace Markdraw.Delta.OperationSequences
     /// </summary>
     /// <param name="index">The index at which a <see cref="TextInsert" /> should be attempted to be merged back.</param>
     /// <returns>
-    ///   Returns <see langword="null" /> if a merge doesn't occur or the previous length of the <see cref="TextInsert" /> behind
+    ///   Returns <see langword="null" /> if a merge doesn't occur or the previous length of the <see cref="TextInsert" />
+    ///   behind
     ///   what was the <paramref name="index" />th operation in this sequence of operations otherwise.
     /// </returns>
     protected int? MergeBack(int index)
     {
       if (index < 1 || index >= Length || Get(index) is not TextInsert after ||
-        Get(index - 1) is not TextInsert before) return null;
+          Get(index - 1) is not TextInsert before) return null;
       var beforeLength = before.Length;
       var merged = after.Merge(before);
       if (merged is null) return null;
@@ -139,8 +140,7 @@ namespace Markdraw.Delta.OperationSequences
     /// </exception>
     public TSelf Insert(Insert insert)
     {
-      var castedInsert = insert as T;
-      if (castedInsert is null)
+      if (insert is not T castedInsert)
       {
         throw new InvalidOperationException("Insert must be castable to T.");
       }
@@ -156,7 +156,7 @@ namespace Markdraw.Delta.OperationSequences
     /// <param name="text">A string of the contents of the text added to this sequence.</param>
     /// <param name="format">The format of the text added to this sequence.</param>
     /// <returns>This sequence of operations.</returns>
-    public TSelf Insert(string text, InlineFormat format=null)
+    public TSelf Insert(string text, InlineFormat format = null)
     {
       return Insert(new TextInsert(text, format ?? new InlineFormat()));
     }

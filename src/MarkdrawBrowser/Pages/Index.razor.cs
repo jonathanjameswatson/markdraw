@@ -5,10 +5,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
-using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.OperationSequences;
+using Markdraw.Delta.Styles;
 using Markdraw.Tree;
 using MarkdrawBrowser.Shared;
 using Microsoft.AspNetCore.Components;
@@ -18,35 +18,25 @@ namespace MarkdrawBrowser.Pages
 {
   public partial class Index : ComponentBase
   {
-    private string _markdown = "";
     private string _content = "<p>Loading...</p>";
     private DeltaTree _deltaTree;
     private Editor _editor;
 
-    private ModalOpen _modal = ModalOpen.None;
-    private string _modalLink = "";
-    private string _modalImageUrl = "";
-    private string _modalImageAlt = "";
-    private string _modalCodeLanguage = "";
-    private string _modalCodeContents = "";
-
     private DotNetObjectReference<Index> _indexRef;
+    private string _markdown = "";
+
+    private ModalOpen _modal = ModalOpen.None;
+    private string _modalCodeContents = "";
+    private string _modalCodeLanguage = "";
+    private string _modalImageAlt = "";
+    private string _modalImageUrl = "";
+    private string _modalLink = "";
 
     [Inject]
     private HttpClient Http { get; set; }
+
     [Inject]
     private IJSRuntime Js { get; set; }
-
-    private enum ModalOpen
-    {
-      None,
-      Image,
-      Link,
-      Code
-    }
-
-    // ReSharper disable once ClassNeverInstantiated.Local
-    private record Cursor(int Start, int End, int NextLine);
 
     private string Markdown
     {
@@ -73,7 +63,7 @@ namespace MarkdrawBrowser.Pages
       return await Js.InvokeAsync<Cursor>("getCursor");
     }
 
-    private async Task SetFormat(Format format)
+    private async Task SetFormat(IFormatModifier formatModifier)
     {
       var (start, i, nextLine) = await GetCursor();
       var transformation = new Transformation();
@@ -83,11 +73,11 @@ namespace MarkdrawBrowser.Pages
         transformation.Retain(start);
       }
 
-      var end = format is ILineFormatModifier ? nextLine : i;
+      var end = formatModifier is LineFormatModifier ? nextLine : i;
 
       if (end - start != 0)
       {
-        transformation.Retain(end - start, format);
+        transformation.Retain(end - start, formatModifier);
       }
 
       _deltaTree.Delta = _deltaTree.Delta.Transform(transformation);
@@ -126,23 +116,17 @@ namespace MarkdrawBrowser.Pages
 
     private async Task Bold()
     {
-      await SetFormat(new InlineFormat {
-        Bold = true, Italic = null, Link = null, Code = null
-      });
+      await SetFormat(new InlineFormatModifier(styles => styles.Insert(0, Style.Bold)));
     }
 
     private async Task Italic()
     {
-      await SetFormat(new InlineFormat {
-        Bold = null, Italic = true, Link = null, Code = null
-      });
+      await SetFormat(new InlineFormatModifier(styles => styles.Insert(0, Style.Italic)));
     }
 
     private async Task Code()
     {
-      await SetFormat(new InlineFormat {
-        Bold = null, Italic = null, Link = null, Code = true
-      });
+      await SetFormat(new InlineFormatModifier(null, _ => true));
     }
 
     private void Link()
@@ -153,8 +137,8 @@ namespace MarkdrawBrowser.Pages
     private async Task Quote()
     {
       await SetFormat(
-        new FunctionalLineFormat {
-          IndentsFunction = list => list.Insert(0, Indent.Quote)
+        new LineFormatModifier {
+          ModifyIndents = list => list.Insert(0, Indent.Quote)
         }
       );
     }
@@ -162,8 +146,8 @@ namespace MarkdrawBrowser.Pages
     private async Task Bullet()
     {
       await SetFormat(
-        new FunctionalLineFormat {
-          IndentsFunction = list => list.Insert(0, Indent.LooseBullet)
+        new LineFormatModifier {
+          ModifyIndents = list => list.Insert(0, Indent.LooseBullet)
         }
       );
     }
@@ -171,34 +155,34 @@ namespace MarkdrawBrowser.Pages
     private async Task Number()
     {
       await SetFormat(
-        new FunctionalLineFormat {
-          IndentsFunction = list => list.Insert(0, Indent.Number(2))
+        new LineFormatModifier {
+          ModifyIndents = list => list.Insert(0, Indent.Number(2))
         });
     }
 
     private async Task Clear()
     {
-      await SetFormat(new InlineFormat());
+      await SetFormat(new InlineFormatModifier(_ => ImmutableList<Style>.Empty, _ => false));
     }
 
     private async Task ClearLine()
     {
-      await SetFormat(new FunctionalLineFormat {
-        IndentsFunction = _ => ImmutableList<Indent>.Empty
+      await SetFormat(new LineFormatModifier {
+        ModifyIndents = _ => ImmutableList<Indent>.Empty
       });
     }
 
     private async Task HeaderUp()
     {
-      await SetFormat(new FunctionalLineFormat {
-        HeaderFunction = i => Math.Max((i + 6) % 7, 1)
+      await SetFormat(new LineFormatModifier {
+        ModifyHeader = i => Math.Max((i + 6) % 7, 1)
       });
     }
 
     private async Task HeaderDown()
     {
-      await SetFormat(new FunctionalLineFormat {
-        HeaderFunction = i => (i == 0 ? i : i + 1) % 7
+      await SetFormat(new LineFormatModifier {
+        ModifyHeader = i => (i == 0 ? i : i + 1) % 7
       });
     }
 
@@ -229,9 +213,7 @@ namespace MarkdrawBrowser.Pages
 
     private async Task SetLink()
     {
-      await SetFormat(new InlineFormat {
-        Bold = null, Italic = null, Link = new ExistentLink(_modalLink), Code = null
-      });
+      await SetFormat(new InlineFormatModifier(styles => styles.Insert(0, Style.Link(_modalLink))));
       Close();
     }
 
@@ -314,5 +296,16 @@ namespace MarkdrawBrowser.Pages
     {
       return _deltaTree.Delta.ToString();
     }
+
+    private enum ModalOpen
+    {
+      None,
+      Image,
+      Link,
+      Code
+    }
+
+    // ReSharper disable once ClassNeverInstantiated.Local
+    private record Cursor(int Start, int End, int NextLine);
   }
 }

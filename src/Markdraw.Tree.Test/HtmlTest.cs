@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Markdraw.Delta.Formats;
-using Markdraw.Delta.Links;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.Operations.Inserts.Inlines;
+using Markdraw.Delta.Styles;
 using Xunit;
 
 namespace Markdraw.Tree.Test
@@ -12,7 +13,7 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void EmptyContainer_IsDiv()
     {
-      new Container(new List<TreeNode>())
+      new BlockContainer(new List<TreeNode>())
         .ToString()
         .Is(@"<div></div>");
     }
@@ -20,10 +21,11 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void OneLine_IsParagraph()
     {
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(new TextInsert("A"))
           })
+
         })
         .ToString()
         .Is(@"<div><p>A</p></div>");
@@ -32,12 +34,14 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void TwoLines_AreTwoParagraph()
     {
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A"))
           }),
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("B")
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("B"))
           })
         })
         .ToString()
@@ -47,10 +51,11 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void Quote_IsBlockQuote()
     {
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new QuoteContainer(new List<TreeNode> {
-            new InlineLeaf(new List<InlineInsert> {
-              new TextInsert("A")
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(
+                new TextInsert("A"))
             })
           })
         })
@@ -61,10 +66,11 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void Bullets_AreUnorderedList()
     {
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new BulletsContainer(new List<TreeNode> {
-            new InlineLeaf(new List<InlineInsert> {
-              new TextInsert("A")
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(
+                new TextInsert("A"))
             })
           })
         })
@@ -75,10 +81,11 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void Numbers_AreOrderedList()
     {
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new NumbersContainer(new List<TreeNode> {
-            new InlineLeaf(new List<InlineInsert> {
-              new TextInsert("A")
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(
+                new TextInsert("A"))
             })
           })
         })
@@ -89,19 +96,22 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void MultipleIndents_AreAdjacent()
     {
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new NumbersContainer(new List<TreeNode> {
-            new InlineLeaf(new List<InlineInsert> {
-              new TextInsert("A")
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(
+                new TextInsert("A"))
             })
           }),
           new BulletsContainer(new List<TreeNode> {
-            new InlineLeaf(new List<InlineInsert> {
-              new TextInsert("B")
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(
+                new TextInsert("B"))
             })
           }),
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("C")
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("C"))
           }),
           new QuoteContainer(new List<TreeNode>())
         })
@@ -112,12 +122,13 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void MultipleIndents_AreNested()
     {
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new NumbersContainer(new List<TreeNode> {
             new BulletsContainer(new List<TreeNode> {
               new QuoteContainer(new List<TreeNode> {
-                new InlineLeaf(new List<InlineInsert> {
-                  new TextInsert("A")
+                new OuterInlineContainer(new List<TreeNode> {
+                  new InlineLeaf(
+                    new TextInsert("A"))
                 })
               })
             })
@@ -130,7 +141,7 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void Dividers_AreConvertedToHtml()
     {
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new DividerLeaf(new DividerInsert())
         })
         .ToString()
@@ -140,66 +151,72 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void CodeBlocks_AreConvertedToHtml()
     {
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new CodeLeaf(new CodeInsert("A", "B"))
         })
         .ToString()
-        .Is(@"<div><pre class=""language-B"" contenteditable=""false""><code class=""language-B"">A</code></pre></div>");
+        .Is(@"<div><pre><code class=""language-B"">A&#10;</code></pre></div>");
 
-      new Container(new List<TreeNode> {
+      new BlockContainer(new List<TreeNode> {
           new CodeLeaf(new CodeInsert("A"))
         })
         .ToString()
-        .Is(@"<div><pre class=""language-none"" contenteditable=""false""><code class=""language-none"">A</code></pre></div>");
+        .Is(@"<div><pre><code>A&#10;</code></pre></div>");
     }
 
     [Fact]
     public void Headers_AreConvertedToHtml()
     {
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
-          }, 1)
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A"))
+          }, null, 0, 1)
         })
         .ToString()
         .Is(@"<div><h1>A</h1></div>");
 
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
-          }, 2)
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A"))
+          }, null, 0, 2)
         })
         .ToString()
         .Is(@"<div><h2>A</h2></div>");
 
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
-          }, 3)
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A"))
+          }, null, 0, 3)
         })
         .ToString()
         .Is(@"<div><h3>A</h3></div>");
 
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
-          }, 4)
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A"))
+          }, null, 0, 4)
         })
         .ToString()
         .Is(@"<div><h4>A</h4></div>");
 
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
-          }, 5)
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A"))
+          }, null, 0, 5)
         })
         .ToString()
         .Is(@"<div><h5>A</h5></div>");
 
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A")
-          }, 6)
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A"))
+          }, null, 0, 6)
         })
         .ToString()
         .Is(@"<div><h6>A</h6></div>");
@@ -208,39 +225,20 @@ namespace Markdraw.Tree.Test
     [Fact]
     public void DoubleLinks_AreConvertedToHtml()
     {
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A"),
-            new TextInsert("B", new InlineFormat {
-              Link = new ExistentLink("C")
-            }),
-            new TextInsert("D")
-          }, 0)
+      new BlockContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(
+              new TextInsert("A")),
+            new LinkInlineContainer(new List<TreeNode> {
+              new InlineLeaf(
+                new TextInsert("B", new InlineFormat(ImmutableList.Create<Style>(Style.Link("C")))))
+            }, null, 0, "C"),
+            new InlineLeaf(
+              new TextInsert("D"))
+          })
         })
         .ToString()
         .Is(@"<div><p>A<a href=""C"">B</a>D</p></div>");
-    }
-
-    [Fact]
-    public void ItalicsAndLink_AreConvertedToHtml()
-    {
-      new Container(new List<TreeNode> {
-          new InlineLeaf(new List<InlineInsert> {
-            new TextInsert("A"),
-            new TextInsert("B", new InlineFormat {
-              Italic = true
-            }),
-            new TextInsert("C", new InlineFormat {
-              Italic = true, Link = new ExistentLink("F")
-            }),
-            new TextInsert("D", new InlineFormat {
-              Link = new ExistentLink("F")
-            }),
-            new TextInsert("E")
-          }, 0)
-        })
-        .ToString()
-        .Is(@"<div><p>A<em>B</em><a href=""F""><em>C</em>D</a>E</p></div>");
     }
   }
 }

@@ -1,26 +1,21 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts
 {
-  public record LineInsert : Insert
+  public record LineInsert([NotNull] LineFormat Format) : Insert
   {
 
-    public LineInsert(LineFormat format)
-    {
-      Format = format;
-    }
-
     public LineInsert() : this(new LineFormat()) {}
-    public LineFormat Format { get; init; }
 
-    public override LineInsert SetFormat(Format format)
+    public override LineInsert SetFormat(IFormatModifier formatModifier)
     {
-      if (format is not ILineFormatModifier lineFormatModifier) return null;
-      var result = lineFormatModifier.Modify(Format);
-      if (result is null) return null;
+      if (formatModifier is not IFormatModifier<LineFormat> lineFormatModifier) return null;
+      var newFormat = lineFormatModifier.Modify(Format);
+      if (newFormat is null) return null;
       return new LineInsert {
-        Format = result
+        Format = newFormat
       };
     }
 

@@ -5,6 +5,15 @@ namespace MarkdrawBrowser.Shared
 {
   public partial class NavBar : ComponentBase
   {
+
+    private bool _active = false;
+    private string _exportMarkdown;
+
+    private string _markdown;
+    private ModalOpen _modal = ModalOpen.Neither;
+
+    private ElementReference _navbarLogo;
+    private string _temporaryMarkdown;
     [Parameter]
     public string ImportMarkdown
     {
@@ -26,22 +35,6 @@ namespace MarkdrawBrowser.Shared
 
     [Parameter]
     public bool ModalsAvailable { get; set; }
-
-    private bool _active = false;
-
-    private string _markdown;
-    private string _temporaryMarkdown;
-    private string _exportMarkdown;
-
-    private ElementReference _navbarLogo;
-    private ModalOpen _modal = ModalOpen.Neither;
-
-    private enum ModalOpen
-    {
-      Neither,
-      Import,
-      Export
-    }
 
     private void ToggleActive()
     {
@@ -68,6 +61,13 @@ namespace MarkdrawBrowser.Shared
     {
       _exportMarkdown = ExportMarkdown();
       _modal = ModalOpen.Export;
+    }
+
+    private enum ModalOpen
+    {
+      Neither,
+      Import,
+      Export
     }
   }
 }

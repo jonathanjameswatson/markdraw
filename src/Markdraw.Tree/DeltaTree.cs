@@ -18,16 +18,18 @@ namespace Markdraw.Tree
       Delta = document;
       AddSpans = true;
     }
+
     public Document Delta
     {
       get => _delta;
       set
       {
         _delta = value;
-        Root = Container.CreateInstance(0, Delta, this);
+        Root = BlockContainer.CreateInstance(0, Delta, this);
       }
     }
-    public Container Root { get; private set; }
+
+    public BlockContainer Root { get; private set; }
 
     public bool AddSpans { get; set; }
 
@@ -36,15 +38,15 @@ namespace Markdraw.Tree
       Delta = MarkdownToDeltaConverter.Parse(markdown);
     }
 
-    public static Container Parse(string markdown)
+    public static BlockContainer Parse(string markdown)
     {
       var ops = MarkdownToDeltaConverter.Parse(markdown);
-      return Container.CreateInstance(0, ops);
+      return BlockContainer.CreateInstance(0, ops);
     }
 
-    public static Container Parse(Document document)
+    public static BlockContainer Parse(Document document)
     {
-      return Container.CreateInstance(0, document);
+      return BlockContainer.CreateInstance(0, document);
     }
   }
 }

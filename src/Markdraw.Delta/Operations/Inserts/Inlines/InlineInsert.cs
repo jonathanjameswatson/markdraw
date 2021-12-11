@@ -1,20 +1,19 @@
-﻿using Markdraw.Delta.Formats;
+﻿using System.Diagnostics.CodeAnalysis;
+using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines
 {
-  public abstract record InlineInsert : Insert
+  public abstract record InlineInsert([NotNull] InlineFormat Format) : Insert
   {
-    public InlineFormat Format { get; init; }
 
-    public override InlineInsert SetFormat(Format format)
+    public override InlineInsert SetFormat([NotNull] IFormatModifier formatModifier)
     {
-      if (format is InlineFormat textFormat)
-      {
-        return this with {
-          Format = Format.Merge(textFormat)
-        };
-      }
-      return null;
+      if (formatModifier is not IFormatModifier<InlineFormat> inlineFormatModifier) return null;
+      var newFormat = inlineFormatModifier.Modify(Format);
+      if (newFormat is null) return null;
+      return this with {
+        Format = newFormat
+      };
     }
   }
 }

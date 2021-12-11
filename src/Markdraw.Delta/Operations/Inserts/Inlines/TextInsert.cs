@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines
@@ -6,21 +7,26 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
   public record TextInsert : InlineInsert
   {
 
-    public TextInsert(string text, InlineFormat format=null)
+    private readonly string _text;
+
+    public TextInsert(string text, [NotNull] InlineFormat format) : base(format)
     {
       Text = text;
-      Format = format ?? new InlineFormat();
     }
 
-    protected override int InsertLength => Text.Length;
+    public TextInsert(string text) : this(text, new InlineFormat())
+    {
+      Text = text;
+    }
 
-    private readonly string _text;
+    public override int Length => Text.Length;
+    [NotNull]
     public string Text
     {
       get => _text;
       init
       {
-        if (value is null or "")
+        if (value.Equals(""))
         {
           throw new ArgumentOutOfRangeException(nameof(value), "Text must be a non-empty string.");
         }
@@ -31,13 +37,17 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
     public TextInsert Merge(TextInsert before)
     {
       if (!Format.Equals(before.Format)) return null;
-      return before with { Text = before.Text + Text };
+      return before with {
+        Text = before.Text + Text
+      };
     }
 
     public TextInsert Merge(TextInsert middle, TextInsert before)
     {
       if (!Format.Equals(middle.Format)) return null;
-      return before with { Text = before.Text + middle.Text + Text };
+      return before with {
+        Text = before.Text + middle.Text + Text
+      };
     }
 
     public TextInsert DeleteUpTo(int position)
@@ -53,7 +63,9 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
     {
       var startText = Text[..position];
       var endText = Text[position..];
-      return (this with { Text = startText }, new TextInsert(endText, Format));
+      return (this with {
+        Text = startText
+      }, new TextInsert(endText, Format));
     }
 
     public override string ToString()
