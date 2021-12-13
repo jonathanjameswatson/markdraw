@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Collections.Immutable;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
