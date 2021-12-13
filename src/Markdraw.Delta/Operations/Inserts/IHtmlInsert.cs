@@ -2,8 +2,6 @@
 {
   public interface IHtmlInsert
   {
-
     public string Content { get; init; }
   }
-
 }

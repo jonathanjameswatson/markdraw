@@ -33,3 +33,45 @@ dotnet_style_qualification_for_field = false:suggestion
 dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_property = false:suggestion
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+
+# ReSharper properties
+resharper_align_multiline_binary_expressions_chain = false
+resharper_autodetect_indent_settings = true
+resharper_blank_lines_after_block_statements = 0
+resharper_blank_lines_after_start_comment = 0
+resharper_blank_lines_around_property = 0
+resharper_csharp_blank_lines_around_field = 0
+resharper_csharp_blank_lines_around_invocable = 0
+resharper_csharp_empty_block_style = together_same_line
+resharper_csharp_space_around_alias_eq = false
+resharper_csharp_space_before_trailing_comment = false
+resharper_csharp_wrap_before_binary_opsign = true
+resharper_csharp_wrap_ternary_expr_style = wrap_if_long
+resharper_enforce_line_ending_style = true
+resharper_indent_preprocessor_other = do_not_change
+resharper_keep_existing_attribute_arrangement = true
+resharper_keep_existing_declaration_block_arrangement = true
+resharper_keep_existing_declaration_parens_arrangement = false
+resharper_keep_existing_initializer_arrangement = false
+resharper_keep_existing_linebreaks = false
+resharper_max_attribute_length_for_same_line = 70
+resharper_outdent_statement_labels = true
+resharper_place_accessorholder_attribute_on_same_line = false
+resharper_place_expr_accessor_on_single_line = true
+resharper_place_expr_property_on_single_line = true
+resharper_place_simple_anonymousmethod_on_single_line = false
+resharper_place_simple_embedded_statement_on_same_line = true
+resharper_place_simple_initializer_on_single_line = false
+resharper_place_type_attribute_on_same_line = if_owner_is_single_line
+resharper_show_autodetect_configure_formatting_tip = false
+resharper_space_within_empty_braces = false
+resharper_use_indent_from_vs = false
+resharper_xmldoc_keep_user_linebreaks = false
+
+# ReSharper inspection severities
+resharper_web_config_module_not_resolved_highlighting = warning
+resharper_web_config_type_not_resolved_highlighting = warning
+resharper_web_config_wrong_module_highlighting = warning
+
+[*.cs]
+max_line_length = 120

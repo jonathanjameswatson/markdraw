@@ -23,7 +23,8 @@ namespace Markdraw.MarkdownToDelta
       return ops;
     }
 
-    private static void Write(Document document, IMarkdownObject block, ImmutableList<IEnumerator<Indent>> indentSequences, IEnumerator<ListIndent> listSequence = null)
+    private static void Write(Document document, IMarkdownObject block,
+      ImmutableList<IEnumerator<Indent>> indentSequences, IEnumerator<ListIndent> listSequence = null)
     {
       var newIndentSequences = indentSequences;
       IEnumerator<ListIndent> newListSequence = null;
@@ -58,18 +59,20 @@ namespace Markdraw.MarkdownToDelta
             case ListItemBlock:
               Debug.Assert(listSequence != null, nameof(listSequence) + " != null");
               listSequence.MoveNext();
-              newIndentSequences = newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(listSequence.Current, listSequence.Current.NextIndent));
+              newIndentSequences =
+                newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(listSequence.Current,
+                  listSequence.Current.NextIndent));
               break;
             case MarkdownDocument:
               break;
             case QuoteBlock:
-              newIndentSequences = newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(Indent.Quote, Indent.Quote with {
-                Start = false
-              }));
+              newIndentSequences = newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(Indent.Quote,
+                Indent.Quote with {
+                  Start = false
+                }));
               break;
             default:
               throw new ArgumentOutOfRangeException(nameof(block));
-
           }
 
           if (containerBlock.Count == 0)
@@ -116,7 +119,6 @@ namespace Markdraw.MarkdownToDelta
               break;
             default:
               throw new ArgumentOutOfRangeException(nameof(block));
-
           }
 
           document.Insert(new LineInsert(new LineFormat {
@@ -197,7 +199,6 @@ namespace Markdraw.MarkdownToDelta
           break;
         default:
           throw new ArgumentOutOfRangeException(nameof(inline));
-
       }
     }
 

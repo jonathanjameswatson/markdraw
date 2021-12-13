@@ -7,7 +7,6 @@ namespace Markdraw.Delta.Formats
 {
   public record InlineFormat([NotNull] ImmutableList<Style> Styles, bool Code = false) : Format
   {
-
     public static readonly InlineFormat BoldPreset = new(ImmutableList.Create<Style>(Style.Bold));
     public static readonly InlineFormat ItalicPreset = new(ImmutableList.Create<Style>(Style.Italic));
 

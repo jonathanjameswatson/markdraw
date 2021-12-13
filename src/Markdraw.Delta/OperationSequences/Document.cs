@@ -5,25 +5,15 @@ using Markdraw.Delta.Operations.Inserts.Inlines;
 
 namespace Markdraw.Delta.OperationSequences
 {
-  /// <summary>
-  ///   A sequence of <see cref="Operations.Inserts.Insert" />s representing a Markdown document.
-  /// </summary>
-  /// <remarks>
-  ///   Each unique document is represented by one canonical sequence of inserts.
-  /// </remarks>
+  /// <summary>A sequence of <see cref="Operations.Inserts.Insert" />s representing a Markdown document.</summary>
+  /// <remarks>Each unique document is represented by one canonical sequence of inserts.</remarks>
   public class Document : OperationSequence<Insert, Document>
   {
-    /// <summary>
-    ///   The number of characters in the document.
-    /// </summary>
-    /// <remarks>
-    ///   Certain inserts result in one character, such as dividers and code blocks.
-    /// </remarks>
+    /// <summary>The number of characters in the document.</summary>
+    /// <remarks>Certain inserts result in one character, such as dividers and code blocks.</remarks>
     public int Characters => this.Sum(op => op.Length);
 
-    /// <summary>
-    ///   Transforms this document with a transformation.
-    /// </summary>
+    /// <summary>Transforms this document with a transformation.</summary>
     /// <param name="transformation">A transformation.</param>
     /// <returns>This document.</returns>
     public Document Transform(IEnumerable<Op> transformation)
@@ -221,15 +211,14 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     /// <summary>
-    ///   Finds the first <see cref="Format" /> of type <typeparamref name="T" /> in this document starting from position
-    ///   <paramref name="start" />,
-    ///   returning <see langword="null" /> if nothing can be found past this position.
+    ///   Finds the first <see cref="Format" /> of type <typeparamref name="T" /> in this document starting from
+    ///   position <paramref name="start" />, returning <see langword="null" /> if nothing can be found past this position.
     /// </summary>
     /// <param name="start">The position to start searching, which must be positive.</param>
     /// <typeparam name="T">The type of <see cref="Format" /> that must be found.</typeparam>
     /// <returns>
-    ///   The first <see cref="Format" /> of type <typeparamref name="T" /> found or <see langword="null" /> if this does
-    ///   not exist.
+    ///   The first <see cref="Format" /> of type <typeparamref name="T" /> found or <see langword="null" /> if this
+    ///   does not exist.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="start" /> is negative.</exception>
     public T GetFirstFormat<T>(int start) where T : Format
@@ -269,9 +258,7 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     // ReSharper disable once RedundantOverriddenMember
-    /// <summary>
-    ///   Converts this document to a Markdown string.
-    /// </summary>
+    /// <summary>Converts this document to a Markdown string.</summary>
     /// <returns>A Markdown string representing this document.</returns>
     public override string ToString()
     {

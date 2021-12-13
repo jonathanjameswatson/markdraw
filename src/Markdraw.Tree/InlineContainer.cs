@@ -9,7 +9,8 @@ namespace Markdraw.Tree
   {
     protected InlineContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-    protected InlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
+    protected InlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(
+      elementsInside, deltaTree, i) {}
 
     protected override string Tag => "p";
     protected sealed override bool AllLeaves => true;
@@ -25,7 +26,8 @@ namespace Markdraw.Tree
       return style;
     }
 
-    protected override InlineContainer CreateChildContainer(Style style, IEnumerable<InlineInsert> document, int depth, int i)
+    protected override InlineContainer CreateChildContainer(Style style, IEnumerable<InlineInsert> document, int depth,
+      int i)
     {
       return style switch {
         Bold => BoldInlineContainer.CreateInstance(depth, document, ParentTree, i),

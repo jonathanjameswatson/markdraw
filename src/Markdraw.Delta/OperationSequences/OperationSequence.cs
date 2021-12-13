@@ -7,23 +7,19 @@ using Markdraw.Delta.Operations.Inserts.Inlines;
 
 namespace Markdraw.Delta.OperationSequences
 {
-
   /// <summary>
-  ///   A sequence of operations that can be extended to represent a Markdown document or transformation.
-  ///   This sequence may only contain elements of type <typeparamref name="T" />.
+  ///   A sequence of operations that can be extended to represent a Markdown document or transformation. This
+  ///   sequence may only contain elements of type <typeparamref name="T" />.
   /// </summary>
-  /// <remarks>
-  ///   <typeparamref name="TSelf" /> should be the derived class. It is used in chaining.
-  /// </remarks>
+  /// <remarks><typeparamref name="TSelf" /> should be the derived class. It is used in chaining.</remarks>
   /// <typeparam name="T">A class that all elements in this sequence must be or extend.</typeparam>
   /// <typeparam name="TSelf">The class of instances returned by methods that use chaining.</typeparam>
-  public abstract class OperationSequence<T, TSelf> : IEnumerable<T> where T : Op where TSelf : OperationSequence<T, TSelf>
+  public abstract class OperationSequence<T, TSelf> : IEnumerable<T>
+    where T : Op where TSelf : OperationSequence<T, TSelf>
   {
     private readonly List<T> _ops = new();
 
-    /// <summary>
-    ///   The number of operations stored.
-    /// </summary>
+    /// <summary>The number of operations stored.</summary>
     public int Length => _ops.Count;
 
     /// <inheritdoc cref="IEnumerable{T}.GetEnumerator()" />
@@ -39,8 +35,8 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     /// <summary>
-    ///   Inserts <paramref name="op" /> as the <paramref name="index" />th operation in this sequence.
-    ///   If <paramref name="index" /> is the number of operations or greater, the operation is added to the end.
+    ///   Inserts <paramref name="op" /> as the <paramref name="index" />th operation in this sequence. If
+    ///   <paramref name="index" /> is the number of operations or greater, the operation is added to the end.
     /// </summary>
     /// <param name="index">The index at which the operation is inserted.</param>
     /// <param name="op">The operation that is inserted.</param>
@@ -56,48 +52,43 @@ namespace Markdraw.Delta.OperationSequences
       }
     }
 
-    /// <summary>
-    ///   Appends <paramref name="op" /> to this sequence of operations without attempting to merge it.
-    /// </summary>
+    /// <summary>Appends <paramref name="op" /> to this sequence of operations without attempting to merge it.</summary>
     /// <param name="op">The operation that is added.</param>
     protected void Add(T op)
     {
       _ops.Add(op);
     }
 
-    /// <summary>
-    ///   Removes the <paramref name="index" />th operation in this sequence.
-    /// </summary>
+    /// <summary>Removes the <paramref name="index" />th operation in this sequence.</summary>
     /// <param name="index">The index at which the operation is removed.</param>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   Thrown if <paramref name="index" /> is less than 0 or the number of operations or greater.
+    ///   Thrown if <paramref name="index" /> is less than 0 or the number of
+    ///   operations or greater.
     /// </exception>
     protected void RemoveAt(int index)
     {
       _ops.RemoveAt(index);
     }
 
-    /// <summary>
-    ///   Gets the <paramref name="index" />th operation in this sequence.
-    /// </summary>
+    /// <summary>Gets the <paramref name="index" />th operation in this sequence.</summary>
     /// <param name="index">The index at which the returned operation is found.</param>
     /// <returns>The <paramref name="index" />th operation in this sequence.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   Thrown if <paramref name="index" /> is less than 0 or the number of operations or greater.
+    ///   Thrown if <paramref name="index" /> is less than 0 or the number of
+    ///   operations or greater.
     /// </exception>
     protected T Get(int index)
     {
       return _ops[index];
     }
 
-    /// <summary>
-    ///   Sets the <paramref name="index" />th operation in this sequence to operation <paramref name="op" />.
-    /// </summary>
+    /// <summary>Sets the <paramref name="index" />th operation in this sequence to operation <paramref name="op" />.</summary>
     /// <param name="index">The index at which the returned operation is found.</param>
     /// <param name="op">The operation that is put in the sequence.</param>
     /// <returns>The <paramref name="index" />th operation in this sequence.</returns>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   Thrown if <paramref name="index" /> is less than 0 or the number of operations or greater.
+    ///   Thrown if <paramref name="index" /> is less than 0 or the number of
+    ///   operations or greater.
     /// </exception>
     protected void Set(int index, T op)
     {
@@ -106,19 +97,19 @@ namespace Markdraw.Delta.OperationSequences
 
     /// <summary>
     ///   If <paramref name="index" /> is the index of any <see cref="TextInsert" /> that is not the first operation in
-    ///   this sequence of operations, then this method will merge it with a <see cref="TextInsert" /> behind it with the
-    ///   same format if one exists.
+    ///   this sequence of operations, then this method will merge it with a <see cref="TextInsert" /> behind it with the same
+    ///   format if one exists.
     /// </summary>
     /// <param name="index">The index at which a <see cref="TextInsert" /> should be attempted to be merged back.</param>
     /// <returns>
-    ///   Returns <see langword="null" /> if a merge doesn't occur or the previous length of the <see cref="TextInsert" />
-    ///   behind
-    ///   what was the <paramref name="index" />th operation in this sequence of operations otherwise.
+    ///   Returns <see langword="null" /> if a merge doesn't occur or the previous length of the
+    ///   <see cref="TextInsert" /> behind what was the <paramref name="index" />th operation in this sequence of operations
+    ///   otherwise.
     /// </returns>
     protected int? MergeBack(int index)
     {
-      if (index < 1 || index >= Length || Get(index) is not TextInsert after ||
-          Get(index - 1) is not TextInsert before) return null;
+      if (index < 1 || index >= Length || Get(index) is not TextInsert after
+          || Get(index - 1) is not TextInsert before) return null;
       var beforeLength = before.Length;
       var merged = after.Merge(before);
       if (merged is null) return null;
@@ -128,13 +119,14 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     /// <summary>
-    ///   Adds a <see cref="Operations.Inserts.Insert" /> to the end of this sequence of operations, which is then normalised.
+    ///   Adds a <see cref="Operations.Inserts.Insert" /> to the end of this sequence of operations, which is then
+    ///   normalised.
     /// </summary>
     /// <param name="insert">The insert to be added.</param>
     /// <returns>This sequence of operations.</returns>
     /// <exception cref="InvalidOperationException">
-    ///   This method must not be ran on classes where <see cref="Operations.Inserts.Insert" /> does
-    ///   not extend <typeparamref name="T" />.
+    ///   This method must not be ran on classes where
+    ///   <see cref="Operations.Inserts.Insert" /> does not extend <typeparamref name="T" />.
     /// </exception>
     public TSelf Insert(Insert insert)
     {
@@ -159,9 +151,7 @@ namespace Markdraw.Delta.OperationSequences
       return Insert(new TextInsert(text, format ?? new InlineFormat()));
     }
 
-    /// <summary>
-    ///   Appends a document to this sequence of operations, which is returned.
-    /// </summary>
+    /// <summary>Appends a document to this sequence of operations, which is returned.</summary>
     /// <param name="inserts">A document.</param>
     public void InsertMany(Document inserts)
     {
@@ -169,12 +159,11 @@ namespace Markdraw.Delta.OperationSequences
       {
         Insert(insert);
       }
-
     }
 
     /// <summary>
-    ///   Returns a representation of this operation sequence with inserts being represented
-    ///   by Markdown strings and other operations being represented by their string forms.
+    ///   Returns a representation of this operation sequence with inserts being represented by Markdown strings and
+    ///   other operations being represented by their string forms.
     /// </summary>
     /// <returns>This instance's string representation.</returns>
     public override string ToString()

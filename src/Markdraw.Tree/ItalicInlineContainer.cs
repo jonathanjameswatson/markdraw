@@ -6,11 +6,13 @@ namespace Markdraw.Tree
   {
     private ItalicInlineContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-    public ItalicInlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
+    public ItalicInlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(
+      elementsInside, deltaTree, i) {}
 
     protected override string Tag => "em";
 
-    public static ItalicInlineContainer CreateInstance(int depth, IEnumerable<InlineInsert> document, DeltaTree deltaTree = null, int i = 0)
+    public static ItalicInlineContainer CreateInstance(int depth, IEnumerable<InlineInsert> document,
+      DeltaTree deltaTree = null, int i = 0)
     {
       var container = new ItalicInlineContainer(deltaTree, i);
       container.Initialise(depth, document, i);

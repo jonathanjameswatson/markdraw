@@ -4,5 +4,4 @@
   {
     public abstract ListIndent NextIndent { get; }
   }
-
 }

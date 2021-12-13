@@ -5,7 +5,6 @@ namespace Markdraw.Tree
 {
   public class CodeLeaf : Leaf
   {
-
     public CodeLeaf(CodeInsert codeInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
     {
       CorrespondingInsert = codeInsert;

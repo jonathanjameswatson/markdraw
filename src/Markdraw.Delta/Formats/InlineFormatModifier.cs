@@ -9,7 +9,8 @@ namespace Markdraw.Delta.Formats
 
   public delegate bool CodeModifier(bool code);
 
-  public record InlineFormatModifier(StyleModifier ModifyStyles = null, CodeModifier ModifyCode = null) : IFormatModifier<InlineFormat>
+  public record InlineFormatModifier
+    (StyleModifier ModifyStyles = null, CodeModifier ModifyCode = null) : IFormatModifier<InlineFormat>
   {
     public InlineFormat Modify([NotNull] InlineFormat format)
     {

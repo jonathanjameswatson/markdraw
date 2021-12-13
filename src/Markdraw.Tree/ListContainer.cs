@@ -7,7 +7,8 @@
       Loose = loose;
     }
 
-    protected ListContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0, bool loose = true) : base(elementsInside, deltaTree, i)
+    protected ListContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0, bool loose = true) :
+      base(elementsInside, deltaTree, i)
     {
       Loose = loose;
     }

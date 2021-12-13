@@ -5,7 +5,6 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
 {
   public record TextInsert : InlineInsert
   {
-
     private readonly string _text;
 
     public TextInsert(string text, [NotNull] InlineFormat format) : base(format)

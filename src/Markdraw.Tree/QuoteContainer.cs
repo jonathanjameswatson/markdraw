@@ -6,7 +6,8 @@ namespace Markdraw.Tree
   {
     private QuoteContainer(DeltaTree deltaTree, int i) : base(deltaTree, i) {}
 
-    public QuoteContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
+    public QuoteContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside,
+      deltaTree, i) {}
 
     protected override string Tag => "blockquote";
 

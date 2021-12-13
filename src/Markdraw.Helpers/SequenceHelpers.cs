@@ -4,7 +4,6 @@ namespace Markdraw.Helpers
 {
   public static class SequenceHelpers
   {
-
     private static IEnumerator<T> Repeat<T>(T repeated)
     {
       IEnumerable<T> Enumerable()

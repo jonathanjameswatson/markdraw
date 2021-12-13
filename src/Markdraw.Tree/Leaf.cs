@@ -4,7 +4,6 @@ namespace Markdraw.Tree
 {
   public abstract class Leaf : TreeNode
   {
-
     protected Leaf(DeltaTree deltaTree, int i) : base(deltaTree, i)
     {
       Length = 1;

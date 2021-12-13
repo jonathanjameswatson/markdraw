@@ -19,5 +19,4 @@ namespace Markdraw.Delta.Styles
       return "<Style>";
     }
   }
-
 }

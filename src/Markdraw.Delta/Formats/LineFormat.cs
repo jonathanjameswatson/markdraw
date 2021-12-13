@@ -6,7 +6,6 @@ namespace Markdraw.Delta.Formats
 {
   public record LineFormat([NotNull] ImmutableList<Indent> Indents, int Header = 0) : Format
   {
-
     public static readonly LineFormat QuotePreset = new(ImmutableList.Create<Indent>(Indent.Quote));
     public static readonly LineFormat BulletPreset = new(ImmutableList.Create<Indent>(Indent.LooseBullet));
     public static readonly LineFormat NumberPreset = new(ImmutableList.Create<Indent>(Indent.LooseNumber));

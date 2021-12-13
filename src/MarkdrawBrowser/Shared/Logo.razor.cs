@@ -5,7 +5,6 @@ namespace MarkdrawBrowser.Shared
 {
   public partial class Logo : ComponentBase
   {
-
     private ElementReference _wheel;
 
     [Parameter]

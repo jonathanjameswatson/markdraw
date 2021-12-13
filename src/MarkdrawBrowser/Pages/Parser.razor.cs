@@ -7,7 +7,6 @@ namespace MarkdrawBrowser.Pages
 {
   public partial class Parser : ComponentBase
   {
-
     private const string Original = "# Parser\n\nUse this page to see how Markdraw handles Markdown.";
     private Document _deltaOutput = GetDelta(Original);
     private string _highlightedHtmlOutput;

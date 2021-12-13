@@ -132,28 +132,23 @@ namespace MarkdrawBrowser.Pages
 
     private async Task Quote()
     {
-      await SetFormat(
-        new LineFormatModifier {
-          ModifyIndents = list => list.Insert(0, Indent.Quote)
-        }
-      );
+      await SetFormat(new LineFormatModifier {
+        ModifyIndents = list => list.Insert(0, Indent.Quote)
+      });
     }
 
     private async Task Bullet()
     {
-      await SetFormat(
-        new LineFormatModifier {
-          ModifyIndents = list => list.Insert(0, Indent.LooseBullet)
-        }
-      );
+      await SetFormat(new LineFormatModifier {
+        ModifyIndents = list => list.Insert(0, Indent.LooseBullet)
+      });
     }
 
     private async Task Number()
     {
-      await SetFormat(
-        new LineFormatModifier {
-          ModifyIndents = list => list.Insert(0, Indent.Number(2))
-        });
+      await SetFormat(new LineFormatModifier {
+        ModifyIndents = list => list.Insert(0, Indent.Number(2))
+      });
     }
 
     private async Task Clear()
@@ -189,12 +184,8 @@ namespace MarkdrawBrowser.Pages
 
     private async Task Divider()
     {
-      await InsertElements(
-        new Document()
-          .Insert(new LineInsert())
-          .Insert(new DividerInsert())
-          .Insert(new LineInsert())
-      );
+      await InsertElements(new Document().Insert(new LineInsert()).Insert(new DividerInsert())
+        .Insert(new LineInsert()));
     }
 
     private void CodeBlock()
@@ -215,21 +206,14 @@ namespace MarkdrawBrowser.Pages
 
     private async Task AddImage()
     {
-      await InsertElements(
-        new Document()
-          .Insert(new ImageInsert(_modalImageUrl, _modalImageAlt))
-      );
+      await InsertElements(new Document().Insert(new ImageInsert(_modalImageUrl, _modalImageAlt)));
       Close();
     }
 
     private async Task AddCode()
     {
-      await InsertElements(
-        new Document()
-          .Insert(new LineInsert())
-          .Insert(new CodeInsert(_modalCodeContents, _modalCodeLanguage))
-          .Insert(new LineInsert())
-      );
+      await InsertElements(new Document().Insert(new LineInsert())
+        .Insert(new CodeInsert(_modalCodeContents, _modalCodeLanguage)).Insert(new LineInsert()));
       Close();
     }
 

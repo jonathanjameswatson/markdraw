@@ -6,7 +6,6 @@ namespace Markdraw.Delta.Operations.Inserts
 {
   public record LineInsert([NotNull] LineFormat Format) : Insert
   {
-
     public LineInsert() : this(new LineFormat()) {}
 
     public override LineInsert SetFormat(IFormatModifier formatModifier)

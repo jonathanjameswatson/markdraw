@@ -3,18 +3,11 @@ using Markdraw.Delta.Operations;
 
 namespace Markdraw.Delta.OperationSequences
 {
-  /// <summary>
-  ///   A sequence of inserts representing a transformation.
-  /// </summary>
-  /// <remarks>
-  ///   Transformations are not canonical, so two different transformations may have the same effect.
-  /// </remarks>
+  /// <summary>A sequence of inserts representing a transformation.</summary>
+  /// <remarks>Transformations are not canonical, so two different transformations may have the same effect.</remarks>
   public class Transformation : OperationSequence<Op, Transformation>
   {
-
-    /// <summary>
-    ///   Adds a <see cref="Operations.Delete" /> with a given length to the end of this transformation.
-    /// </summary>
+    /// <summary>Adds a <see cref="Operations.Delete" /> with a given length to the end of this transformation.</summary>
     /// <param name="amount">The length of the <see cref="Operations.Delete" />.</param>
     /// <returns>This sequence of operations.</returns>
     public Transformation Delete(int amount)
@@ -24,7 +17,8 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     /// <summary>
-    ///   Adds a <see cref="Operations.Retain" /> with a given length and no formatting to the end of this transformation.
+    ///   Adds a <see cref="Operations.Retain" /> with a given length and no formatting to the end of this
+    ///   transformation.
     /// </summary>
     /// <param name="amount">The length of the <see cref="Operations.Retain" />.</param>
     /// <returns>This sequence of operations.</returns>
@@ -35,7 +29,8 @@ namespace Markdraw.Delta.OperationSequences
     }
 
     /// <summary>
-    ///   Adds a <see cref="Operations.Retain" /> with a given length and format to the end of this sequence of operations.
+    ///   Adds a <see cref="Operations.Retain" /> with a given length and format to the end of this sequence of
+    ///   operations.
     /// </summary>
     /// <param name="amount">The length of the <see cref="Operations.Retain" />.</param>
     /// <param name="formatModifier">The format modifier of the <see cref="Operations.Retain" />.</param>

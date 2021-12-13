@@ -9,7 +9,8 @@ namespace Markdraw.Delta.Formats
 
   public delegate int HeaderModifier(int header);
 
-  public record LineFormatModifier(IndentsModifier ModifyIndents = null, HeaderModifier ModifyHeader = null) : IFormatModifier<LineFormat>
+  public record LineFormatModifier
+    (IndentsModifier ModifyIndents = null, HeaderModifier ModifyHeader = null) : IFormatModifier<LineFormat>
   {
     public LineFormat Modify([NotNull] LineFormat format)
     {

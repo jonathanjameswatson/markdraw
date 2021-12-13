@@ -6,11 +6,13 @@ namespace Markdraw.Tree
   {
     private CodeInlineContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-    public CodeInlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
+    public CodeInlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(
+      elementsInside, deltaTree, i) {}
 
     protected override string Tag => "code";
 
-    public static CodeInlineContainer CreateInstance(IEnumerable<InlineInsert> document, DeltaTree deltaTree = null, int i = 0)
+    public static CodeInlineContainer CreateInstance(IEnumerable<InlineInsert> document, DeltaTree deltaTree = null,
+      int i = 0)
     {
       var container = new CodeInlineContainer(deltaTree, i);
       var length = 0;

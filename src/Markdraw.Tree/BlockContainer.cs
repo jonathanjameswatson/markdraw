@@ -8,16 +8,17 @@ namespace Markdraw.Tree
 {
   public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
   {
-
     protected BlockContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-    public BlockContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
+    public BlockContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside,
+      deltaTree, i) {}
 
     protected virtual bool LooseInlines => true;
 
     protected sealed override bool AllLeaves => false;
 
-    public static BlockContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree deltaTree = null, int i = 0)
+    public static BlockContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree deltaTree = null,
+      int i = 0)
     {
       var container = new BlockContainer(deltaTree, i);
       container.Initialise(depth, document, i);
@@ -46,12 +47,14 @@ namespace Markdraw.Tree
       };
     }
 
-    protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<Insert> document, int depth, int i)
+    protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<Insert> document, int depth,
+      int i)
     {
       return indent switch {
         QuoteIndent => QuoteContainer.CreateInstance(depth, document, ParentTree, i),
         BulletIndent { Loose: var loose } => BulletsContainer.CreateInstance(depth, document, ParentTree, i, loose),
-        NumberIndent { Loose: var loose, Start: var start } => NumbersContainer.CreateInstance(depth, document, ParentTree, i, start, loose),
+        NumberIndent { Loose: var loose, Start: var start } => NumbersContainer.CreateInstance(depth, document,
+          ParentTree, i, start, loose),
         CodeIndent => QuoteContainer.CreateInstance(depth, document, ParentTree, i),
         _ => CreateInstance(depth, document, ParentTree, i)
       };

@@ -7,14 +7,11 @@ namespace SpecFileGen
 {
   internal static class Program
   {
-
     private const string SpecName = "CommonMark v. 0.29";
     private const string FileName = "CommonMark.md";
-    private static readonly string ProgramDirectory =
-      Path.GetFullPath(
-        Path.Combine(
-          Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(),
-          "../../../"));
+    private static readonly string ProgramDirectory = Path.GetFullPath(Path.Combine(
+      Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(),
+      "../../../"));
 
     private static readonly StringBuilder StringBuilder = new(1 << 20);// 1 MB
 
@@ -148,9 +145,7 @@ namespace SpecFileGen
         }
         else Line();
 
-        WriteTest(name, compressedName, ++number, lines,
-          commentOffset, commentEnd,
-          markdownOffset, markdownEnd,
+        WriteTest(name, compressedName, ++number, lines, commentOffset, commentEnd, markdownOffset, markdownEnd,
           htmlOffset, htmlEnd);
       }
 
@@ -168,7 +163,8 @@ namespace SpecFileGen
       return source;
     }
 
-    private static void WriteTest(string name, string compressedName, int number, string[] lines, int commentOffset, int commentEnd, int markdownOffset, int markdownEnd, int htmlOffset, int htmlEnd)
+    private static void WriteTest(string name, string compressedName, int number, string[] lines, int commentOffset,
+      int commentEnd, int markdownOffset, int markdownEnd, int htmlOffset, int htmlEnd)
     {
       if (commentOffset != commentEnd)
       {
@@ -247,28 +243,15 @@ namespace SpecFileGen
     }
     private static string Escape(string input)
     {
-      return input
-          .Replace("→", "\t")
-          .Replace("\\", "\\\\")
-          .Replace("\"", "\\\"")
-          .Replace("\0", "\\0")
-          .Replace("\a", "\\a")
-          .Replace("\b", "\\b")
-          .Replace("\f", "\\f")
-          .Replace("\n", "\\n")
-          .Replace("\r", "\\r")
-          .Replace("\t", "\\t")
-          .Replace("\v", "\\v")
-        ;
+      return input.Replace("→", "\t").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\0", "\\0")
+        .Replace("\a", "\\a").Replace("\b", "\\b").Replace("\f", "\\f").Replace("\n", "\\n").Replace("\r", "\\r")
+        .Replace("\t", "\\t").Replace("\v", "\\v");
     }
     private static string CompressedName(string name)
     {
-      return name.Replace(',', ' ')
-        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-        .Aggregate("",
-          (current, part) =>
-            current + (char.IsLower(part[0]) ? char.ToUpper(part[0]) + (part.Length > 1 ? part[1..] : "") : part)
-        );
+      return name.Replace(',', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries).Aggregate("",
+        (current, part) => current
+          + (char.IsLower(part[0]) ? char.ToUpper(part[0]) + (part.Length > 1 ? part[1..] : "") : part));
     }
     private static bool IsEmpty(string str)
     {

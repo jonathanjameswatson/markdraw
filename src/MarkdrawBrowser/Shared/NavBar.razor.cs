@@ -4,7 +4,6 @@ namespace MarkdrawBrowser.Shared
 {
   public partial class NavBar : ComponentBase
   {
-
     private bool _active = false;
     private string _exportMarkdown;
 

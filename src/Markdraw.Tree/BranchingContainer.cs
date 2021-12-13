@@ -6,14 +6,12 @@ using Markdraw.Delta.Operations.Inserts;
 namespace Markdraw.Tree
 {
   public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> : Container
-    where TBranchMarker : class
-    where TBranchInsert : Insert
-    where TInsert : Insert
+    where TBranchMarker : class where TBranchInsert : Insert where TInsert : Insert
   {
-
     protected BranchingContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-    protected BranchingContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside, deltaTree, i) {}
+    protected BranchingContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(
+      elementsInside, deltaTree, i) {}
 
     protected virtual bool AllLeaves => false;
 
@@ -22,7 +20,8 @@ namespace Markdraw.Tree
     [return: NotNull]
     protected abstract ImmutableList<TBranchMarker> GetBranchMarkers([NotNull] TBranchInsert branchInsert);
 
-    protected abstract BranchingContainer<TBranchMarker, TBranchInsert, TInsert> CreateChildContainer(TBranchMarker branchMarker, IEnumerable<TInsert> document, int depth, int i);
+    protected abstract BranchingContainer<TBranchMarker, TBranchInsert, TInsert> CreateChildContainer(
+      TBranchMarker branchMarker, IEnumerable<TInsert> document, int depth, int i);
 
     protected abstract int AddLeaves(IEnumerable<TInsert> document, TBranchInsert lastInsert, int i);
 
@@ -48,7 +47,8 @@ namespace Markdraw.Tree
           if (foundBranchMarker)
           {
             var goneBack = branchMarkers.Count <= depth;
-            if (goneBack || branchMarkers[depth] is not ContinueIndent && !branchMarkers[depth].Equals(NextBranchMarker(lastBranchMarker)))
+            if (goneBack || branchMarkers[depth] is not ContinueIndent
+                && !branchMarkers[depth].Equals(NextBranchMarker(lastBranchMarker)))
             {
               currentI = AddContainer(lastBranchMarker, opBuffer, depth + 1, currentI);
               currentI += 1;
@@ -141,5 +141,4 @@ namespace Markdraw.Tree
       return i + newContainer.Length;
     }
   }
-
 }

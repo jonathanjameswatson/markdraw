@@ -5,7 +5,6 @@ namespace MarkdrawBrowser.Shared
 {
   public partial class Editor : ComponentBase
   {
-
     private ElementReference _editor;
 
     [Parameter]
