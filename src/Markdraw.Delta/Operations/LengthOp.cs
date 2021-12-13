@@ -1,5 +1,3 @@
-using System;
-
 namespace Markdraw.Delta.Operations
 {
   public abstract record LengthOp : Op

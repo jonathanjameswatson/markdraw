@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Markdraw.Tree
+﻿namespace Markdraw.Tree
 {
   public abstract class ListContainer : BlockContainer
   {

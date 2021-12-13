@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Operations;
 using Markdraw.Delta.Operations.Inserts;

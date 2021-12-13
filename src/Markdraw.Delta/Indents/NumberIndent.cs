@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Markdraw.Delta.Indents
+﻿namespace Markdraw.Delta.Indents
 {
   public record NumberIndent : ListIndent
   {

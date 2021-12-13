@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Tree

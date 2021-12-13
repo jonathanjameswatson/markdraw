@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Markdraw.Delta.Operations.Inserts.Inlines;
+﻿using Markdraw.Delta.Operations.Inserts.Inlines;
 
 namespace Markdraw.Tree
 {

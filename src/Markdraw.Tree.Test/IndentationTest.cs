@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.Indents;

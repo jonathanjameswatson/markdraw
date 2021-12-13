@@ -1,4 +1,3 @@
-using System;
 using Markdraw.Delta.Formats;
 using Markdraw.Delta.OperationSequences;
 using Xunit;

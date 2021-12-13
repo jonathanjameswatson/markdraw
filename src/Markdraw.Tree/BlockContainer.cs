@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.Operations.Inserts.Inlines;

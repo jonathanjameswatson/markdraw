@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Markdraw.Delta.Styles;
 
 namespace Markdraw.Delta.Formats
