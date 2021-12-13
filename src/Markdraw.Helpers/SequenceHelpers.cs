@@ -1,6 +1,4 @@
-﻿
-
-// ReSharper disable IteratorNeverReturns
+﻿// ReSharper disable IteratorNeverReturns
 
 namespace Markdraw.Helpers
 {
