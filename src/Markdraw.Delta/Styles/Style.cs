@@ -1,20 +1,19 @@
-﻿namespace Markdraw.Delta.Styles
+﻿namespace Markdraw.Delta.Styles;
+
+public abstract record Style
 {
-  public abstract record Style
+  public static Bold Bold => new();
+  public static Italic Italic => new();
+
+  public static Link Link(string url = "", string title = "")
   {
-    public static Bold Bold => new();
-    public static Italic Italic => new();
+    return new Link(url, title);
+  }
 
-    public static Link Link(string url = "", string title = "")
-    {
-      return new Link(url, title);
-    }
+  public abstract string Wrap(string contents);
 
-    public abstract string Wrap(string contents);
-
-    public override string ToString()
-    {
-      return "<Style>";
-    }
+  public override string ToString()
+  {
+    return "<Style>";
   }
 }

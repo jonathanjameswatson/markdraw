@@ -1,10 +1,9 @@
-﻿namespace Markdraw.Delta.Operations.Inserts
+﻿namespace Markdraw.Delta.Operations.Inserts;
+
+public record BlockHtmlInsert(string Content = "") : Insert, IHtmlInsert
 {
-  public record BlockHtmlInsert(string Content = "") : Insert, IHtmlInsert
+  public override string ToString()
   {
-    public override string ToString()
-    {
-      return $"\n{Content}\n";
-    }
+    return $"\n{Content}\n";
   }
 }

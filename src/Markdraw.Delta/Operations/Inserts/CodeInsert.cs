@@ -1,10 +1,9 @@
-namespace Markdraw.Delta.Operations.Inserts
+namespace Markdraw.Delta.Operations.Inserts;
+
+public record CodeInsert(string Text = "", string Tag = "") : Insert
 {
-  public record CodeInsert(string Text = "", string Tag = "") : Insert
+  public override string ToString()
   {
-    public override string ToString()
-    {
-      return $"\n```{Tag}\n{Text}\n```\n";
-    }
+    return $"\n```{Tag}\n{Text}\n```\n";
   }
 }

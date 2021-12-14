@@ -1,19 +1,18 @@
 using Markdraw.Delta.Operations.Inserts;
 
-namespace Markdraw.Tree
+namespace Markdraw.Tree;
+
+public class DividerLeaf : Leaf
 {
-  public class DividerLeaf : Leaf
+  public DividerLeaf(DividerInsert dividerInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
   {
-    public DividerLeaf(DividerInsert dividerInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
-    {
-      CorrespondingInsert = dividerInsert;
-    }
+    CorrespondingInsert = dividerInsert;
+  }
 
-    protected override DividerInsert CorrespondingInsert { get; }
+  protected override DividerInsert CorrespondingInsert { get; }
 
-    public override string ToString()
-    {
-      return @"<hr />";
-    }
+  public override string ToString()
+  {
+    return @"<hr />";
   }
 }

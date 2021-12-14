@@ -1,19 +1,18 @@
 ﻿using Markdraw.Delta.Operations.Inserts;
 
-namespace Markdraw.Tree
+namespace Markdraw.Tree;
+
+public class BlockHtmlLeaf : Leaf
 {
-  public class BlockHtmlLeaf : Leaf
+  public BlockHtmlLeaf(BlockHtmlInsert blockHtmlInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
   {
-    public BlockHtmlLeaf(BlockHtmlInsert blockHtmlInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
-    {
-      CorrespondingInsert = blockHtmlInsert;
-    }
+    CorrespondingInsert = blockHtmlInsert;
+  }
 
-    protected override BlockHtmlInsert CorrespondingInsert { get; }
+  protected override BlockHtmlInsert CorrespondingInsert { get; }
 
-    public override string ToString()
-    {
-      return CorrespondingInsert.Content;
-    }
+  public override string ToString()
+  {
+    return CorrespondingInsert.Content;
   }
 }

@@ -1,52 +1,51 @@
 using Markdraw.Delta.OperationSequences;
 using Markdraw.MarkdownToDelta;
 
-namespace Markdraw.Tree
+namespace Markdraw.Tree;
+
+public class DeltaTree
 {
-  public class DeltaTree
+  private Document _delta;
+
+  public DeltaTree(string markdown = "")
   {
-    private Document _delta;
+    Delta = MarkdownToDeltaConverter.Parse(markdown);
+    AddSpans = true;
+  }
 
-    public DeltaTree(string markdown = "")
+  public DeltaTree(Document document)
+  {
+    Delta = document;
+    AddSpans = true;
+  }
+
+  public Document Delta
+  {
+    get => _delta;
+    set
     {
-      Delta = MarkdownToDeltaConverter.Parse(markdown);
-      AddSpans = true;
+      _delta = value;
+      Root = BlockContainer.CreateInstance(0, Delta, this);
     }
+  }
 
-    public DeltaTree(Document document)
-    {
-      Delta = document;
-      AddSpans = true;
-    }
+  public BlockContainer Root { get; private set; }
 
-    public Document Delta
-    {
-      get => _delta;
-      set
-      {
-        _delta = value;
-        Root = BlockContainer.CreateInstance(0, Delta, this);
-      }
-    }
+  public bool AddSpans { get; set; }
 
-    public BlockContainer Root { get; private set; }
+  public void SetWithMarkdown(string markdown)
+  {
+    Delta = MarkdownToDeltaConverter.Parse(markdown);
+  }
 
-    public bool AddSpans { get; set; }
+  public static BlockContainer Parse(string markdown)
+  {
+    var ops = MarkdownToDeltaConverter.Parse(markdown);
+    return BlockContainer.CreateInstance(0, ops);
+  }
 
-    public void SetWithMarkdown(string markdown)
-    {
-      Delta = MarkdownToDeltaConverter.Parse(markdown);
-    }
-
-    public static BlockContainer Parse(string markdown)
-    {
-      var ops = MarkdownToDeltaConverter.Parse(markdown);
-      return BlockContainer.CreateInstance(0, ops);
-    }
-
-    public static BlockContainer Parse(Document document)
-    {
-      return BlockContainer.CreateInstance(0, document);
-    }
+  public static BlockContainer Parse(Document document)
+  {
+    return BlockContainer.CreateInstance(0, document);
   }
 }

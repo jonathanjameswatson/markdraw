@@ -1,42 +1,41 @@
 ﻿// ReSharper disable IteratorNeverReturns
 
-namespace Markdraw.Helpers
+namespace Markdraw.Helpers;
+
+public static class SequenceHelpers
 {
-  public static class SequenceHelpers
+  private static IEnumerator<T> Repeat<T>(T repeated)
   {
-    private static IEnumerator<T> Repeat<T>(T repeated)
+    IEnumerable<T> Enumerable()
     {
-      IEnumerable<T> Enumerable()
+      while (true)
       {
-        while (true)
-        {
-          yield return repeated;
-        }
+        yield return repeated;
       }
-
-      return Enumerable().GetEnumerator();
     }
 
-    public static IEnumerator<T> RepeatAfterFirst<T>(T first, T repeated)
+    return Enumerable().GetEnumerator();
+  }
+
+  public static IEnumerator<T> RepeatAfterFirst<T>(T first, T repeated)
+  {
+    IEnumerable<T> Enumerable()
     {
-      IEnumerable<T> Enumerable()
+      yield return first;
+      while (true)
       {
-        yield return first;
-        while (true)
-        {
-          yield return repeated;
-        }
+        yield return repeated;
       }
-
-      return Enumerable().GetEnumerator();
     }
 
-    public static IEnumerable<T> YieldFromSequences<T>(IEnumerable<IEnumerator<T>> sequences)
-    {
-      return sequences.Select(sequence => {
-        sequence.MoveNext();
-        return sequence.Current;
-      });
-    }
+    return Enumerable().GetEnumerator();
+  }
+
+  public static IEnumerable<T> YieldFromSequences<T>(IEnumerable<IEnumerator<T>> sequences)
+  {
+    return sequences.Select(sequence => {
+      sequence.MoveNext();
+      return sequence.Current;
+    });
   }
 }

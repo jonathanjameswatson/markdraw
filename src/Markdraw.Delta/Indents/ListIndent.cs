@@ -1,7 +1,6 @@
-﻿namespace Markdraw.Delta.Indents
+﻿namespace Markdraw.Delta.Indents;
+
+public abstract record ListIndent(bool Loose) : Indent
 {
-  public abstract record ListIndent(bool Loose) : Indent
-  {
-    public abstract ListIndent NextIndent { get; }
-  }
+  public abstract ListIndent NextIndent { get; }
 }

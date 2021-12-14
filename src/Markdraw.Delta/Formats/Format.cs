@@ -1,10 +1,9 @@
-namespace Markdraw.Delta.Formats
+namespace Markdraw.Delta.Formats;
+
+public abstract record Format
 {
-  public abstract record Format
+  public override string ToString()
   {
-    public override string ToString()
-    {
-      return "{Format}";
-    }
+    return "{Format}";
   }
 }

@@ -1,4 +1,3 @@
-namespace Markdraw.Delta.Operations
-{
-  public abstract record Op {}
-}
+namespace Markdraw.Delta.Operations;
+
+public abstract record Op {}

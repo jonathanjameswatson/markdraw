@@ -1,7 +1,6 @@
-﻿namespace Markdraw.Delta.Operations.Inserts
+﻿namespace Markdraw.Delta.Operations.Inserts;
+
+public interface IHtmlInsert
 {
-  public interface IHtmlInsert
-  {
-    public string Content { get; init; }
-  }
+  public string Content { get; init; }
 }

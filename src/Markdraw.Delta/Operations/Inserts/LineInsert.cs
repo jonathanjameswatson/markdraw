@@ -1,45 +1,44 @@
 using System.Text;
 using Markdraw.Delta.Formats;
 
-namespace Markdraw.Delta.Operations.Inserts
+namespace Markdraw.Delta.Operations.Inserts;
+
+public record LineInsert(LineFormat Format) : Insert
 {
-  public record LineInsert(LineFormat Format) : Insert
+  public LineInsert() : this(new LineFormat()) {}
+
+  public override LineInsert? SetFormat(IFormatModifier formatModifier)
   {
-    public LineInsert() : this(new LineFormat()) {}
+    if (formatModifier is not IFormatModifier<LineFormat> lineFormatModifier) return null;
+    var newFormat = lineFormatModifier.Modify(Format);
+    if (newFormat is null) return null;
+    return new LineInsert {
+      Format = newFormat
+    };
+  }
 
-    public override LineInsert? SetFormat(IFormatModifier formatModifier)
+  public override string ToString()
+  {
+    return $@"[\n {Format}]";
+  }
+
+  public string LineInsertString()
+  {
+    var stringBuilder = new StringBuilder();
+
+    foreach (var indent in Format.Indents)
     {
-      if (formatModifier is not IFormatModifier<LineFormat> lineFormatModifier) return null;
-      var newFormat = lineFormatModifier.Modify(Format);
-      if (newFormat is null) return null;
-      return new LineInsert {
-        Format = newFormat
-      };
+      stringBuilder.Append(indent);
     }
 
-    public override string ToString()
+    if (Format.Header == 0) return stringBuilder.ToString();
+
+    for (var i = 0; i < Format.Header; i++)
     {
-      return $@"[\n {Format}]";
+      stringBuilder.Append('#');
     }
+    stringBuilder.Append(' ');
 
-    public string LineInsertString()
-    {
-      var stringBuilder = new StringBuilder();
-
-      foreach (var indent in Format.Indents)
-      {
-        stringBuilder.Append(indent);
-      }
-
-      if (Format.Header == 0) return stringBuilder.ToString();
-
-      for (var i = 0; i < Format.Header; i++)
-      {
-        stringBuilder.Append('#');
-      }
-      stringBuilder.Append(' ');
-
-      return stringBuilder.ToString();
-    }
+    return stringBuilder.ToString();
   }
 }

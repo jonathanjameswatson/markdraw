@@ -1,10 +1,9 @@
-namespace Markdraw.Delta.Operations.Inserts
+namespace Markdraw.Delta.Operations.Inserts;
+
+public record DividerInsert : Insert
 {
-  public record DividerInsert : Insert
+  public override string ToString()
   {
-    public override string ToString()
-    {
-      return "\n***\n";
-    }
+    return "\n***\n";
   }
 }
