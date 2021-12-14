@@ -13,7 +13,7 @@ internal static class Program
     Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(),
     "../../../"));
 
-  private static readonly StringBuilder StringBuilder = new(1 << 20);// 1 MB
+  private static readonly StringBuilder StringBuilder = new(1 << 20); // 1 MB
 
   private static void Main()
   {
@@ -23,15 +23,21 @@ internal static class Program
     var outputPath = Path.ChangeExtension(inputPath, "generated.cs");
     File.WriteAllText(outputPath, source);
   }
+
   private static void Write(string text)
   {
     StringBuilder.Append(text);
   }
-  private static void Line(string text = null)
+
+  private static void Line(string? text = null)
   {
-    if (text != null) StringBuilder.Append(text);
+    if (text is not null)
+    {
+      StringBuilder.Append(text);
+    }
     StringBuilder.Append('\n');
   }
+
   private static void Indent(int count = 1)
   {
     StringBuilder.Append(new string(' ', 2 * count));
@@ -79,7 +85,7 @@ internal static class Program
           var level = line.IndexOf(' ', StringComparison.Ordinal);
           while (headings.Count != 0)
           {
-            Debug.Assert(headings.Last != null, "headings.Last != null");
+            Debug.Assert(headings.Last is not null, "headings.Last is not null");
             if (headings.Last.Value.Level < level) break;
             headings.RemoveLast();
           }
@@ -87,13 +93,17 @@ internal static class Program
           headings.AddLast((heading, CompressedName(heading), level));
 
           foreach (var (nextHeading, _, _) in headings)
+          {
             nameBuilder.Append(nextHeading + " / ");
+          }
           nameBuilder.Length -= 3;
           name = nameBuilder.ToString();
           nameBuilder.Length = 0;
 
           foreach (var (_, compressed, _) in headings)
+          {
             nameBuilder.Append(compressed);
+          }
           compressedName = nameBuilder.ToString();
           nameBuilder.Length = 0;
 
@@ -102,7 +112,9 @@ internal static class Program
         i++;
 
         if (!IsEmpty(line))
+        {
           commentEnd = i;
+        }
 
         if (i != lines.Length) continue;
         if (commentOffset != commentEnd)
@@ -228,31 +240,40 @@ internal static class Program
     for (var i = markdownOffset; i < markdownEnd; i++)
     {
       Write(Escape(lines[i]));
-      if (i != markdownEnd - 1) Write("\\n");
+      if (i != markdownEnd - 1)
+      {
+        Write("\\n");
+      }
     }
     Write("\").Is(Parser.Prettify(\"");
     for (var i = htmlOffset; i < htmlEnd; i++)
     {
       Write(Escape(lines[i]));
-      if (i != htmlEnd - 1) Write("\\n");
+      if (i != htmlEnd - 1)
+      {
+        Write("\\n");
+      }
     }
     Line("\"));");
 
     Indent(2);
     Line("}");
   }
+
   private static string Escape(string input)
   {
     return input.Replace("→", "\t").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\0", "\\0")
       .Replace("\a", "\\a").Replace("\b", "\\b").Replace("\f", "\\f").Replace("\n", "\\n").Replace("\r", "\\r")
       .Replace("\t", "\\t").Replace("\v", "\\v");
   }
+
   private static string CompressedName(string name)
   {
     return name.Replace(',', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries).Aggregate("",
       (current, part) => current
         + (char.IsLower(part[0]) ? char.ToUpper(part[0]) + (part.Length > 1 ? part[1..] : "") : part));
   }
+
   private static bool IsEmpty(string str)
   {
     return str.All(t => t == ' ');
