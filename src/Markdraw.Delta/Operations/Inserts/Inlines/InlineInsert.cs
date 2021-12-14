@@ -1,11 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Markdraw.Delta.Formats;
+﻿using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines
 {
-  public abstract record InlineInsert([NotNull] InlineFormat Format) : Insert
+  public abstract record InlineInsert(InlineFormat Format) : Insert
   {
-    public override InlineInsert SetFormat([NotNull] IFormatModifier formatModifier)
+    public override InlineInsert? SetFormat(IFormatModifier formatModifier)
     {
       if (formatModifier is not IFormatModifier<InlineFormat> inlineFormatModifier) return null;
       var newFormat = inlineFormatModifier.Modify(Format);

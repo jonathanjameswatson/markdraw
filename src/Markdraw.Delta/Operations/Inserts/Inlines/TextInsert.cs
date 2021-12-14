@@ -1,13 +1,12 @@
-using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines
 {
   public record TextInsert : InlineInsert
   {
-    private readonly string _text;
+    private readonly string _text = "";
 
-    public TextInsert(string text, [NotNull] InlineFormat format) : base(format)
+    public TextInsert(string text, InlineFormat format) : base(format)
     {
       Text = text;
     }
@@ -18,7 +17,6 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
     }
 
     public override int Length => Text.Length;
-    [NotNull]
     public string Text
     {
       get => _text;
@@ -32,7 +30,7 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
       }
     }
 
-    public TextInsert Merge(TextInsert before)
+    public TextInsert? Merge(TextInsert before)
     {
       if (!Format.Equals(before.Format)) return null;
       return before with {
@@ -40,7 +38,7 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
       };
     }
 
-    public TextInsert Merge(TextInsert middle, TextInsert before)
+    public TextInsert? Merge(TextInsert middle, TextInsert before)
     {
       if (!Format.Equals(middle.Format)) return null;
       return before with {
@@ -48,17 +46,18 @@ namespace Markdraw.Delta.Operations.Inserts.Inlines
       };
     }
 
-    public TextInsert DeleteUpTo(int position)
+    public TextInsert? DeleteUpTo(int position)
     {
+      if (position >= Length) return null;
       var newText = Text.Substring(position, Length - position);
-      if (newText.Length == 0) return null;
       return this with {
         Text = newText
       };
     }
 
-    public (TextInsert, TextInsert) SplitAt(int position)
+    public (TextInsert, TextInsert)? SplitAt(int position)
     {
+      if (position == 0 || position >= Length) return null;
       var startText = Text[..position];
       var endText = Text[position..];
       return (this with {

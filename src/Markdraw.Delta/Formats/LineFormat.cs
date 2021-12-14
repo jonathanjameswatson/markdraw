@@ -1,10 +1,9 @@
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Indents;
 
 namespace Markdraw.Delta.Formats
 {
-  public record LineFormat([NotNull] ImmutableList<Indent> Indents, int Header = 0) : Format
+  public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format
   {
     public static readonly LineFormat QuotePreset = new(ImmutableList.Create<Indent>(Indent.Quote));
     public static readonly LineFormat BulletPreset = new(ImmutableList.Create<Indent>(Indent.LooseBullet));
@@ -23,7 +22,7 @@ namespace Markdraw.Delta.Formats
 
     public LineFormat() : this(ImmutableList<Indent>.Empty) {}
 
-    public virtual bool Equals(LineFormat other)
+    public virtual bool Equals(LineFormat? other)
     {
       return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
     }

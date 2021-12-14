@@ -5,21 +5,77 @@ using Markdraw.Delta.Operations.Inserts.Inlines;
 
 namespace Markdraw.Delta.OperationSequences
 {
-  /// <summary>A sequence of <see cref="Operations.Inserts.Insert" />s representing a Markdown document.</summary>
+  internal abstract record TransformState(int InsertIndex);
+
+  internal abstract record InsertTransformState(int InsertIndex, Insert Insert) : TransformState(InsertIndex);
+
+  internal record AtomTransformState(int InsertIndex, Insert Insert) : InsertTransformState(InsertIndex, Insert);
+
+  internal record SplittableTransformState
+    (int InsertIndex, int CharacterIndex, TextInsert TextInsert) : InsertTransformState(InsertIndex, TextInsert);
+
+  internal record FinalTransformState(int InsertIndex) : TransformState(InsertIndex);
+
+  internal record SplitResult(SplittableTransformState CurrentState, TextInsert Before);
+
+  /// <summary>A sequence of <see cref="Insert" />s representing a Markdown document.</summary>
   /// <remarks>Each unique document is represented by one canonical sequence of inserts.</remarks>
   public class Document : OperationSequence<Insert, Document>
   {
     /// <summary>The number of characters in the document.</summary>
     /// <remarks>Certain inserts result in one character, such as dividers and code blocks.</remarks>
-    public int Characters => this.Sum(op => op.Length);
+    public int Characters => this.Sum(insert => insert.Length);
 
     /// <summary>Transforms this document with a transformation.</summary>
     /// <param name="transformation">A transformation.</param>
     /// <returns>This document.</returns>
     public Document Transform(IEnumerable<Op> transformation)
     {
-      var opIndex = 0;
-      var opCharacterIndex = 0;
+      TransformState GetTransformState(int insertIndex)
+      {
+        if (insertIndex == Length)
+        {
+          return new FinalTransformState(insertIndex);
+        }
+
+        return Get(insertIndex) switch {
+          TextInsert textInsert => new SplittableTransformState(insertIndex, 0, textInsert),
+          var insert => new AtomTransformState(insertIndex, insert)
+        };
+      }
+
+      var transformState = GetTransformState(0);
+
+      SplitResult SplitAtCharacterIndex(SplittableTransformState splittableTransformState, int characterIndex)
+      {
+        var (opIndex, _, textInsert) = splittableTransformState;
+        switch (textInsert.SplitAt(characterIndex))
+        {
+          case var (newBefore, after):
+            Set(opIndex, newBefore);
+            InsertOp(opIndex + 1, after);
+            var newSplittableTransformState = new SplittableTransformState(opIndex + 1, 0, after);
+            transformState = newSplittableTransformState;
+            return new SplitResult(newSplittableTransformState, newBefore);
+          default:
+            throw new InvalidOperationException("Text insert couldn't be split.");
+        }
+      }
+
+      SplittableTransformState? TryMergeBack(SplittableTransformState splittableTransformState)
+      {
+        var (opIndex, _, _) = splittableTransformState;
+        switch (MergeBack(opIndex))
+        {
+          case null:
+            return null;
+          case var beforeLength:
+            var newSplittableTransformState = new SplittableTransformState(opIndex - 1, (int)beforeLength,
+              (Get(opIndex - 1) as TextInsert)!);
+            transformState = newSplittableTransformState;
+            return newSplittableTransformState;
+        }
+      }
 
       foreach (var op in transformation)
       {
@@ -27,150 +83,147 @@ namespace Markdraw.Delta.OperationSequences
         {
           case Retain (var formatModifier, var length):
           {
-            var shouldFormat = formatModifier is not null;
-
-            if (shouldFormat && opCharacterIndex != 0 && Get(opIndex) is TextInsert before)
+            if (formatModifier is not null
+                && transformState is SplittableTransformState(_, var initialCharacterIndex and > 0, _)
+                  initialSplittableTransformState)
             {
-              var (newBefore, after) = before.SplitAt(opCharacterIndex);
-              Set(opIndex, newBefore);
-              InsertOp(opIndex + 1, after);
-              opIndex += 1;
-              opCharacterIndex = 0;
+              SplitAtCharacterIndex(initialSplittableTransformState, initialCharacterIndex);
             }
 
-            while (length > 0)
+            var remainingRetainLength = length;
+            while (remainingRetainLength > 0)
             {
-              var next = Get(opIndex);
-              var lengthRemaining = next.Length - opCharacterIndex;
-              var advanced = Math.Min(lengthRemaining, length);
-
-              opCharacterIndex = (opCharacterIndex + advanced) % next.Length;
-              length -= advanced;
-
-              if (opCharacterIndex != 0)
+              switch (transformState)
               {
-                if (shouldFormat)
-                {
-                  var textInsert = next as TextInsert;
-                  var (newBefore, after) = textInsert.SplitAt(opCharacterIndex);
-                  next = newBefore;
-                  opCharacterIndex = 0;
-                  Set(opIndex, newBefore);
-                  InsertOp(opIndex + 1, after);
-                }
-              }
+                case FinalTransformState:
+                  throw new InvalidOperationException("Cannot retain past the end of a document.");
+                case InsertTransformState insertTransformState:
+                  var (currentInsertIndex, currentInsert) = insertTransformState;
 
-              if (shouldFormat)
-              {
-                var newNext = next.SetFormat(formatModifier);
-                if (newNext is not null)
-                {
-                  next = newNext;
-                  Set(opIndex, next);
-                }
-
-                if (opIndex >= 1)
-                {
-                  var beforeLength = MergeBack(opIndex);
-                  if (beforeLength is not null)
+                  var maximumProgress = currentInsert.Length;
+                  if (transformState is SplittableTransformState(_, var currentCharacterIndex, _)
+                      splittableTransformState)
                   {
-                    opIndex -= 1;
+                    maximumProgress -= currentCharacterIndex;
+                    if (formatModifier is not null
+                        && currentCharacterIndex + remainingRetainLength < currentInsert.Length)
+                    {
+                      (_, currentInsert) = SplitAtCharacterIndex(splittableTransformState,
+                        currentCharacterIndex + remainingRetainLength);
+                      // may need to update transform state here later
+                    }
                   }
-                }
-              }
 
-              if (opCharacterIndex == 0)
-              {
-                opIndex += 1;
+                  var progress = Math.Min(maximumProgress, remainingRetainLength);
+                  remainingRetainLength -= progress;
+
+                  if (formatModifier is not null)
+                  {
+                    var newInsert = currentInsert.SetFormat(formatModifier);
+                    if (newInsert is not null)
+                    {
+                      currentInsert = newInsert;
+                      Set(currentInsertIndex, currentInsert);
+                    }
+
+                    if (currentInsertIndex >= 1 && MergeBack(currentInsertIndex) is not null)
+                    {
+                      currentInsertIndex -= 1;
+                    }
+                  }
+
+                  transformState = transformState switch {
+                    SplittableTransformState(_, var characterIndex, var textInsert) currentSplittableTransformState when
+                      characterIndex + progress < textInsert.Length => currentSplittableTransformState with {
+                        CharacterIndex = characterIndex + progress
+                      },
+                    _ => GetTransformState(currentInsertIndex + 1)
+                  };
+
+                  break;
               }
             }
 
-            if (shouldFormat && opIndex < Length && opIndex >= 1)
+            if (formatModifier is not null
+                && transformState is SplittableTransformState(> 0, _, _) finalSplittableTransformState)
             {
-              var beforeLength = MergeBack(opIndex);
-              if (beforeLength is not null)
-              {
-                opCharacterIndex += (int)beforeLength;
-                opIndex -= 1;
-              }
+              TryMergeBack(finalSplittableTransformState);
             }
 
             break;
           }
           case Delete (var length):
           {
-            while (length > 0)
+            var remainingDeleteLength = length;
+            while (remainingDeleteLength > 0)
             {
-              var next = Get(opIndex);
-              if (next is TextInsert nextTextInsert)
+              switch (transformState)
               {
-                if (opCharacterIndex != 0)
-                {
-                  var (newBefore, after) = nextTextInsert.SplitAt(opCharacterIndex);
-                  opCharacterIndex = 0;
-                  Set(opIndex, newBefore);
-                  opIndex += 1;
-                  InsertOp(opIndex, after);
-                  nextTextInsert = after;
-                }
+                case FinalTransformState:
+                  throw new InvalidOperationException("Cannot delete past the end of a document.");
+                case SplittableTransformState(var currentInsertIndex, var currentCharacterIndex, var currentTextInsert)
+                  splittableTransformState:
+                  if (currentCharacterIndex > 0)
+                  {
+                    (splittableTransformState, _) = SplitAtCharacterIndex(splittableTransformState,
+                      currentCharacterIndex);
+                    (currentInsertIndex, _, currentTextInsert) = splittableTransformState;
+                  }
 
-                var lengthRemaining = nextTextInsert.Length - opCharacterIndex;
-                var toDelete = Math.Min(lengthRemaining, length);
-                var deleted = nextTextInsert.DeleteUpTo(toDelete);
-                length -= toDelete;
+                  var amountDeleted = Math.Min(currentTextInsert.Length, remainingDeleteLength);
+                  remainingDeleteLength -= amountDeleted;
 
-                if (deleted is null)
-                {
-                  RemoveAt(opIndex);
-                }
-                else
-                {
-                  Set(opIndex, deleted);
-                }
-
-                opCharacterIndex = deleted is null ? 0 : opCharacterIndex;
+                  switch (currentTextInsert.DeleteUpTo(amountDeleted))
+                  {
+                    case null:
+                      RemoveAt(currentInsertIndex);
+                      transformState = GetTransformState(currentInsertIndex);
+                      break;
+                    case var newTextInsert:
+                      Set(currentInsertIndex, newTextInsert);
+                      currentTextInsert = newTextInsert;
+                      transformState = splittableTransformState with {
+                        Insert = currentTextInsert
+                      };
+                      break;
+                  }
+                  break;
+                case AtomTransformState(var currentInsertIndex, _):
+                  remainingDeleteLength -= 1;
+                  RemoveAt(currentInsertIndex);
+                  transformState = GetTransformState(currentInsertIndex);
+                  break;
               }
-              else
-              {
-                RemoveAt(opIndex);
-                length -= 1;
-              }
+            }
 
-              var beforeLength = MergeBack(opIndex);
-              if (beforeLength is null) continue;
-              opIndex -= 1;
-              opCharacterIndex += (int)beforeLength;
+            if (transformState is SplittableTransformState(> 0, _, _) finalSplittableTransformState)
+            {
+              TryMergeBack(finalSplittableTransformState);
             }
 
             break;
           }
-          case Insert insert when opCharacterIndex == 0:
+          case Insert insert
+            when transformState is SplittableTransformState(_, > 0 and var currentCharacterIndex, _)
+              splittableTransformState:
           {
-            InsertOp(opIndex, insert);
+            var ((currentInsertIndex, _, after), newBefore) = SplitAtCharacterIndex(splittableTransformState,
+              currentCharacterIndex);
+            InsertOp(currentInsertIndex, insert);
+            currentInsertIndex += 1;
+            transformState = GetTransformState(currentInsertIndex);
 
-            if (opIndex == Length - 1)
+            if (insert is TextInsert middle)
             {
-              MergeBack(Length - 1);
-            }
-            else
-            {
-              var beforeLength = MergeBack(opIndex);
-              if (beforeLength is not null)
+              var merged = after.Merge(middle, newBefore);
+              if (merged is not null)
               {
-                opIndex -= 1;
-                opCharacterIndex += (int)beforeLength;
-              }
-            }
-
-            opIndex += 1;
-
-            if (opIndex < Length - 1)
-            {
-              var beforeLength = MergeBack(opIndex);
-              if (beforeLength is not null)
-              {
-                opIndex -= 1;
-                opCharacterIndex += (int)beforeLength;
+                RemoveAt(currentInsertIndex);
+                RemoveAt(currentInsertIndex - 1);
+                currentInsertIndex -= 2;
+                Set(currentInsertIndex, merged);
+                transformState = new SplittableTransformState(currentInsertIndex, newBefore.Length + middle.Length,
+                  merged);
               }
             }
 
@@ -178,28 +231,29 @@ namespace Markdraw.Delta.OperationSequences
           }
           case Insert insert:
           {
-            if (Get(opIndex) is TextInsert before)
-            {
-              var (newBefore, after) = before.SplitAt(opCharacterIndex);
-              Set(opIndex, newBefore);
-              InsertOp(opIndex + 1, insert);
-              InsertOp(opIndex + 2, after);
-              opIndex += 2;
-              opCharacterIndex = 0;
+            var currentInsertIndex = transformState.InsertIndex;
 
-              if (op is TextInsert middle)
+            InsertOp(currentInsertIndex, insert);
+            transformState = GetTransformState(currentInsertIndex);
+
+            if (transformState is SplittableTransformState splittableTransformState)
+            {
+              switch (TryMergeBack(splittableTransformState))
               {
-                var beforeAndMiddleLength = newBefore.Length + middle.Length;
-                var merged = after.Merge(middle, newBefore);
-                if (merged is not null)
-                {
-                  RemoveAt(opIndex);
-                  RemoveAt(opIndex - 1);
-                  opIndex -= 2;
-                  Set(opIndex, merged);
-                  opCharacterIndex += beforeAndMiddleLength;
-                }
+                case null:
+                  break;
+                case var (newInsertIndex, _, _):
+                  currentInsertIndex = newInsertIndex;
+                  break;
               }
+            }
+
+            currentInsertIndex += 1;
+            transformState = GetTransformState(currentInsertIndex);
+
+            if (transformState is SplittableTransformState finalSplittableTransformState)
+            {
+              TryMergeBack(finalSplittableTransformState);
             }
 
             break;
@@ -221,7 +275,7 @@ namespace Markdraw.Delta.OperationSequences
     ///   does not exist.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="start" /> is negative.</exception>
-    public T GetFirstFormat<T>(int start) where T : Format
+    public T? GetFirstFormat<T>(int start) where T : Format
     {
       if (start < 0)
       {

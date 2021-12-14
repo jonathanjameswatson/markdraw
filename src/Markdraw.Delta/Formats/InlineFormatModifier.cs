@@ -1,18 +1,16 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Styles;
 
 namespace Markdraw.Delta.Formats
 {
-  [return: NotNull]
-  public delegate ImmutableList<Style> StyleModifier([NotNull] ImmutableList<Style> styles);
+  public delegate ImmutableList<Style> StyleModifier(ImmutableList<Style> styles);
 
   public delegate bool CodeModifier(bool code);
 
   public record InlineFormatModifier
-    (StyleModifier ModifyStyles = null, CodeModifier ModifyCode = null) : IFormatModifier<InlineFormat>
+    (StyleModifier? ModifyStyles = null, CodeModifier? ModifyCode = null) : IFormatModifier<InlineFormat>
   {
-    public InlineFormat Modify([NotNull] InlineFormat format)
+    public InlineFormat? Modify(InlineFormat format)
     {
       var (styles, code) = format;
       var newStyles = ModifyStyles?.Invoke(styles) ?? styles;

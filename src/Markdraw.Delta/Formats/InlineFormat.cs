@@ -1,11 +1,10 @@
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Markdraw.Delta.Styles;
 
 namespace Markdraw.Delta.Formats
 {
-  public record InlineFormat([NotNull] ImmutableList<Style> Styles, bool Code = false) : Format
+  public record InlineFormat(ImmutableList<Style> Styles, bool Code = false) : Format
   {
     public static readonly InlineFormat BoldPreset = new(ImmutableList.Create<Style>(Style.Bold));
     public static readonly InlineFormat ItalicPreset = new(ImmutableList.Create<Style>(Style.Italic));
@@ -22,7 +21,7 @@ namespace Markdraw.Delta.Formats
 
     public InlineFormat() : this(ImmutableList<Style>.Empty) {}
 
-    public virtual bool Equals(InlineFormat other)
+    public virtual bool Equals(InlineFormat? other)
     {
       return other is not null && Code == other.Code && Styles.SequenceEqual(other.Styles);
     }

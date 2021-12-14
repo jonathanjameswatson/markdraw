@@ -1,17 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Markdraw.Delta.Styles
+﻿namespace Markdraw.Delta.Styles
 {
-  public record Link([NotNull] string Url = "", [NotNull] string Title = "") : Style
+  public record Link(string Url = "", string Title = "") : Style
   {
-    [return: NotNull]
-    public Link Merge([NotNull] Link other)
+    public Link Merge(Link other)
     {
       var (url, title) = other;
       return new Link(url.Equals("") ? Url : url, title.Equals("") ? Title : title);
     }
 
-    [return: NotNull]
     public override string Wrap(string contents)
     {
       var titleString = Title == "" ? "" : $@" ""{Title}""";

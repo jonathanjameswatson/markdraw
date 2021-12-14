@@ -1,13 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Markdraw.Delta.Styles
+﻿namespace Markdraw.Delta.Styles
 {
   public abstract record Style
   {
     public static Bold Bold => new();
     public static Italic Italic => new();
 
-    public static Link Link([NotNull] string url = "", [NotNull] string title = "")
+    public static Link Link(string url = "", string title = "")
     {
       return new Link(url, title);
     }

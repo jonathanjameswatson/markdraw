@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts
@@ -7,7 +6,7 @@ namespace Markdraw.Delta.Operations.Inserts
   {
     public virtual int Length => 1;
 
-    public virtual Insert SetFormat([NotNull] IFormatModifier formatModifier)
+    public virtual Insert? SetFormat(IFormatModifier formatModifier)
     {
       return null;
     }

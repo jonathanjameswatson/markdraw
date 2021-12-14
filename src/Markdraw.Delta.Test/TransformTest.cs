@@ -122,5 +122,31 @@ namespace Markdraw.Delta.Test
         .Transform(new Transformation().Retain(1).Insert(new LineInsert()).Insert("B")).Is(new Document().Insert("A")
           .Insert(new LineInsert()).Insert("BAA").Insert(new LineInsert()));
     }
+
+    [Fact]
+    public void Delete_ThrowsWithTooMuch()
+    {
+      Assert.Throws<InvalidOperationException>(() => new Document().Transform(new Transformation().Delete(1)));
+
+      Assert.Throws<InvalidOperationException>(() =>
+        new Document().Insert("A").Transform(new Transformation().Delete(2)));
+
+      Assert.Throws<InvalidOperationException>(() =>
+        new Document().Insert(new DividerInsert()).Insert(new DividerInsert())
+          .Transform(new Transformation().Delete(3)));
+    }
+
+    [Fact]
+    public void Retain_ThrowsWithTooMuch()
+    {
+      Assert.Throws<InvalidOperationException>(() => new Document().Transform(new Transformation().Retain(1)));
+
+      Assert.Throws<InvalidOperationException>(() =>
+        new Document().Insert("A").Transform(new Transformation().Retain(2)));
+
+      Assert.Throws<InvalidOperationException>(() =>
+        new Document().Insert(new DividerInsert()).Insert(new DividerInsert())
+          .Transform(new Transformation().Retain(3)));
+    }
   }
 }

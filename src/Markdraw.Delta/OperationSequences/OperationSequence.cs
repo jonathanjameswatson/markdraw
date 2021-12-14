@@ -113,7 +113,7 @@ namespace Markdraw.Delta.OperationSequences
       var beforeLength = before.Length;
       var merged = after.Merge(before);
       if (merged is null) return null;
-      Set(index - 1, merged as T);
+      Set(index - 1, (merged as T)!);
       RemoveAt(index);
       return beforeLength;
     }
@@ -136,7 +136,7 @@ namespace Markdraw.Delta.OperationSequences
       }
       Add(castedInsert);
       MergeBack(Length - 1);
-      return this as TSelf;
+      return (this as TSelf)!;
     }
 
     /// <summary>
@@ -146,19 +146,17 @@ namespace Markdraw.Delta.OperationSequences
     /// <param name="text">A string of the contents of the text added to this sequence.</param>
     /// <param name="format">The format of the text added to this sequence.</param>
     /// <returns>This sequence of operations.</returns>
-    public TSelf Insert(string text, InlineFormat format = null)
+    public TSelf Insert(string text, InlineFormat? format = null)
     {
       return Insert(new TextInsert(text, format ?? new InlineFormat()));
     }
 
     /// <summary>Appends a document to this sequence of operations, which is returned.</summary>
     /// <param name="inserts">A document.</param>
-    public void InsertMany(Document inserts)
+    /// <returns>This sequence of operations.</returns>
+    public TSelf InsertMany(Document inserts)
     {
-      foreach (var insert in inserts)
-      {
-        Insert(insert);
-      }
+      return inserts.Aggregate((this as TSelf)!, (_, insert) => Insert(insert));
     }
 
     /// <summary>
