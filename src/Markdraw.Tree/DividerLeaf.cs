@@ -4,7 +4,7 @@ namespace Markdraw.Tree;
 
 public class DividerLeaf : Leaf
 {
-  public DividerLeaf(DividerInsert dividerInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
+  public DividerLeaf(DividerInsert dividerInsert, DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i)
   {
     CorrespondingInsert = dividerInsert;
   }

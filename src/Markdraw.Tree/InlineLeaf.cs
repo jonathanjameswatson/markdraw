@@ -5,7 +5,7 @@ namespace Markdraw.Tree;
 
 public class InlineLeaf : Leaf
 {
-  public InlineLeaf(InlineInsert inlineInsert, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
+  public InlineLeaf(InlineInsert inlineInsert, DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i)
   {
     CorrespondingInsert = inlineInsert;
   }

@@ -2,12 +2,12 @@
 
 public abstract class ListContainer : BlockContainer
 {
-  protected ListContainer(DeltaTree deltaTree = null, int i = 0, bool loose = true) : base(deltaTree, i)
+  protected ListContainer(DeltaTree? deltaTree = null, int i = 0, bool loose = true) : base(deltaTree, i)
   {
     Loose = loose;
   }
 
-  protected ListContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0, bool loose = true) :
+  protected ListContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0, bool loose = true) :
     base(elementsInside, deltaTree, i)
   {
     Loose = loose;

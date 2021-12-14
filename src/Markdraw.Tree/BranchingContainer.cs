@@ -1,36 +1,34 @@
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
 
 namespace Markdraw.Tree;
 
-public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> : Container
-  where TBranchMarker : class where TBranchInsert : Insert where TInsert : Insert
+public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> : Container where TBranchMarker : class
+  where TBranchInsert : Insert
+  where TInsert : Insert
 {
-  protected BranchingContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
+  protected BranchingContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-  protected BranchingContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(
+  protected BranchingContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0) : base(
     elementsInside, deltaTree, i) {}
 
   protected virtual bool AllLeaves => false;
 
   protected abstract TBranchMarker NextBranchMarker(TBranchMarker branchMarker);
 
-  [return: NotNull]
-  protected abstract ImmutableList<TBranchMarker> GetBranchMarkers([NotNull] TBranchInsert branchInsert);
+  protected abstract ImmutableList<TBranchMarker> GetBranchMarkers(TBranchInsert branchInsert);
 
   protected abstract BranchingContainer<TBranchMarker, TBranchInsert, TInsert> CreateChildContainer(
     TBranchMarker branchMarker, IEnumerable<TInsert> document, int depth, int i);
 
-  protected abstract int AddLeaves(IEnumerable<TInsert> document, TBranchInsert lastInsert, int i);
+  protected abstract int AddLeaves(IEnumerable<TInsert> document, TBranchInsert? lastInsert, int i);
 
   protected void Initialise(int depth, IEnumerable<TInsert> document, int i)
   {
     var opBuffer = new List<TInsert>();
     var leafOpBuffer = new List<TInsert>();
-    var foundBranchMarker = false;
-    TBranchMarker lastBranchMarker = null;
+    TBranchMarker? lastBranchMarker = null;
     var currentI = i;
 
     foreach (var insert in document)
@@ -44,7 +42,7 @@ public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> 
           leafOpBuffer.Add(insert);
         }
 
-        if (foundBranchMarker)
+        if (lastBranchMarker is not null)
         {
           var goneBack = branchMarkers.Count <= depth;
           if (goneBack || branchMarkers[depth] is not ContinueIndent
@@ -55,7 +53,7 @@ public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> 
 
             if (goneBack)
             {
-              foundBranchMarker = false;
+              lastBranchMarker = null;
               currentI = AddLeaves(leafOpBuffer, branchInsert, currentI);
               currentI += 1;
             }
@@ -80,7 +78,6 @@ public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> 
           if (branchMarkers.Count > depth)
           {
             lastBranchMarker = branchMarkers[depth];
-            foundBranchMarker = true;
 
             opBuffer = leafOpBuffer;
 
@@ -109,7 +106,7 @@ public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> 
       }
     }
 
-    if (foundBranchMarker)
+    if (lastBranchMarker is not null)
     {
       currentI = AddContainer(lastBranchMarker, opBuffer, depth + 1, currentI);
       currentI += 1;

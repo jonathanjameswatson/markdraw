@@ -5,9 +5,9 @@ namespace Markdraw.Tree;
 
 public abstract class Container : TreeNode, IEnumerable<TreeNode>
 {
-  protected Container(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
+  protected Container(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-  protected Container(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i)
+  protected Container(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i)
   {
     ElementsInside = elementsInside;
   }

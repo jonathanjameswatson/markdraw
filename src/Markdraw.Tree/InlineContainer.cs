@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.Styles;
 
@@ -7,16 +6,15 @@ namespace Markdraw.Tree;
 
 public abstract class InlineContainer : BranchingContainer<Style, InlineInsert, InlineInsert>
 {
-  protected InlineContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
+  protected InlineContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-  protected InlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(
+  protected InlineContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0) : base(
     elementsInside, deltaTree, i) {}
 
   protected override string Tag => "p";
   protected sealed override bool AllLeaves => true;
 
-  [return: NotNull]
-  protected override ImmutableList<Style> GetBranchMarkers([NotNull] InlineInsert inlineInsert)
+  protected override ImmutableList<Style> GetBranchMarkers(InlineInsert inlineInsert)
   {
     return inlineInsert.Format.Styles;
   }
@@ -37,9 +35,9 @@ public abstract class InlineContainer : BranchingContainer<Style, InlineInsert, 
     };
   }
 
-  protected override int AddLeaves(IEnumerable<InlineInsert> document, InlineInsert lastInlineInsert, int i)
+  protected override int AddLeaves(IEnumerable<InlineInsert> document, InlineInsert? lastInlineInsert, int i)
   {
-    if (lastInlineInsert.Format.Code)
+    if (lastInlineInsert?.Format.Code ?? false)
     {
       var codeContainer = CodeInlineContainer.CreateInstance(document, ParentTree, i);
       ElementsInside.Add(codeContainer);

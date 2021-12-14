@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.Operations.Inserts.Inlines;
@@ -8,16 +7,16 @@ namespace Markdraw.Tree;
 
 public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
 {
-  protected BlockContainer(DeltaTree deltaTree = null, int i = 0) : base(deltaTree, i) {}
+  protected BlockContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-  public BlockContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0) : base(elementsInside,
+  public BlockContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0) : base(elementsInside,
     deltaTree, i) {}
 
   protected virtual bool LooseInlines => true;
 
   protected sealed override bool AllLeaves => false;
 
-  public static BlockContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree deltaTree = null,
+  public static BlockContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree? deltaTree = null,
     int i = 0)
   {
     var container = new BlockContainer(deltaTree, i);
@@ -25,8 +24,7 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
     return container;
   }
 
-  [return: NotNull]
-  protected override ImmutableList<Indent> GetBranchMarkers([NotNull] LineInsert lineInsert)
+  protected override ImmutableList<Indent> GetBranchMarkers(LineInsert lineInsert)
   {
     return lineInsert.Format.Indents;
   }
@@ -47,8 +45,7 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
     };
   }
 
-  protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<Insert> document, int depth,
-    int i)
+  protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<Insert> document, int depth, int i)
   {
     return indent switch {
       QuoteIndent => QuoteContainer.CreateInstance(depth, document, ParentTree, i),
@@ -60,9 +57,9 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
     };
   }
 
-  protected override int AddLeaves(IEnumerable<Insert> document, LineInsert lastLineInsert, int i)
+  protected override int AddLeaves(IEnumerable<Insert> document, LineInsert? lastLineInsert, int i)
   {
-    var header = lastLineInsert?.Format?.Header ?? 0;
+    var header = lastLineInsert?.Format.Header ?? 0;
     var inlineBuffer = new List<InlineInsert>();
     var newI = i;
 
@@ -93,7 +90,7 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
           DividerInsert dividerInsert => new DividerLeaf(dividerInsert, ParentTree, newI),
           CodeInsert codeInsert => new CodeLeaf(codeInsert, ParentTree, newI),
           BlockHtmlInsert blockHtmlInsert => new BlockHtmlLeaf(blockHtmlInsert, ParentTree, newI),
-          _ => null
+          _ => throw new ArgumentOutOfRangeException(nameof(document))
         };
 
         ElementsInside.Add(newElement);

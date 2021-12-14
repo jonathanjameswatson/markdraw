@@ -4,14 +4,14 @@ namespace Markdraw.Tree;
 
 public class OuterInlineContainer : InlineContainer
 {
-  private OuterInlineContainer(DeltaTree deltaTree = null, int i = 0, int header = 0, bool loose = true) :
+  private OuterInlineContainer(DeltaTree? deltaTree = null, int i = 0, int header = 0, bool loose = true) :
     base(deltaTree, i)
   {
     Header = header;
     Loose = loose;
   }
 
-  public OuterInlineContainer(List<TreeNode> elementsInside, DeltaTree deltaTree = null, int i = 0, int header = 0,
+  public OuterInlineContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0, int header = 0,
     bool loose = true) : base(elementsInside, deltaTree, i)
   {
     Header = header;
@@ -26,7 +26,7 @@ public class OuterInlineContainer : InlineContainer
   protected override string EndingTag => Loose ? $"</{Tag}>" : "";
 
   public static OuterInlineContainer CreateInstance(int depth, IEnumerable<InlineInsert> document,
-    DeltaTree deltaTree = null, int i = 0, int header = 0, bool loose = false)
+    DeltaTree? deltaTree = null, int i = 0, int header = 0, bool loose = false)
   {
     var container = new OuterInlineContainer(deltaTree, i, header, loose);
     container.Initialise(depth, document, i);

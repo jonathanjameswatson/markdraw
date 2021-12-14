@@ -6,26 +6,21 @@ namespace Markdraw.Tree;
 public class DeltaTree
 {
   private Document _delta;
-
-  public DeltaTree(string markdown = "")
-  {
-    Delta = MarkdownToDeltaConverter.Parse(markdown);
-    AddSpans = true;
-  }
+  public DeltaTree(string markdown = "") : this(MarkdownToDeltaConverter.Parse(markdown)) {}
 
   public DeltaTree(Document document)
   {
-    Delta = document;
+    _delta = document;
+    Root = BlockContainer.CreateInstance(0, _delta, this);
     AddSpans = true;
   }
-
   public Document Delta
   {
     get => _delta;
     set
     {
       _delta = value;
-      Root = BlockContainer.CreateInstance(0, Delta, this);
+      Root = BlockContainer.CreateInstance(0, _delta, this);
     }
   }
 

@@ -4,13 +4,16 @@ namespace Markdraw.Tree;
 
 public abstract class Leaf : TreeNode
 {
-  protected Leaf(DeltaTree deltaTree, int i) : base(deltaTree, i)
-  {
-    Length = 1;
-  }
+  protected Leaf(DeltaTree? deltaTree, int i) : base(deltaTree, i) {}
   protected abstract Insert CorrespondingInsert { get; }
 
-  public override bool Equals(object obj)
+  public override int Length
+  {
+    get => 1;
+    protected set => throw new InvalidOperationException("Length of a leaf cannot be set.");
+  }
+
+  public override bool Equals(object? obj)
   {
     return obj is Leaf x && x.CorrespondingInsert.Equals(CorrespondingInsert);
   }
