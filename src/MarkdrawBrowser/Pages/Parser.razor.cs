@@ -8,14 +8,13 @@ namespace MarkdrawBrowser.Pages;
 public partial class Parser : ComponentBase
 {
   private const string Original = "# Parser\n\nUse this page to see how Markdraw handles Markdown.";
+  private static readonly string OriginalHtmlOutput = GetHtml(Original);
+
   private Document _deltaOutput = GetDelta(Original);
-  private string _highlightedHtmlOutput;
-  private string _htmlOutput = GetHtml(Original);
+  private string _highlightedHtmlOutput = OriginalHtmlOutput;
+  private string _htmlOutput = OriginalHtmlOutput;
 
   private string _input = Original;
-
-  [Inject]
-  private IJSRuntime Js { get; set; }
 
   private string Input
   {
@@ -41,7 +40,7 @@ public partial class Parser : ComponentBase
 
   private string HighlightHtml(string html)
   {
-    return ((IJSInProcessRuntime)Js).Invoke<string>("window.highlightHtml", html);
+    return ((IJSInProcessRuntime)_js).Invoke<string>("window.highlightHtml", html);
   }
 
   /*

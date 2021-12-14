@@ -5,13 +5,15 @@ namespace MarkdrawBrowser.Shared;
 public partial class NavBar : ComponentBase
 {
   private bool _active = false;
-  private string _exportMarkdown;
 
-  private string _markdown;
+  private string _exportMarkdown = "";
+
+  private string _markdown = "";
+
   private ModalOpen _modal = ModalOpen.Neither;
 
   private ElementReference _navbarLogo;
-  private string _temporaryMarkdown;
+  private string _temporaryMarkdown = "";
   [Parameter]
   public string ImportMarkdown
   {
@@ -29,7 +31,7 @@ public partial class NavBar : ComponentBase
   public EventCallback<string> ImportMarkdownChanged { get; set; }
 
   [Parameter]
-  public Func<string> ExportMarkdown { get; set; }
+  public Func<string>? ExportMarkdown { get; set; }
 
   [Parameter]
   public bool ModalsAvailable { get; set; }
@@ -57,6 +59,7 @@ public partial class NavBar : ComponentBase
 
   private void Export()
   {
+    if (ExportMarkdown is null) throw new InvalidOperationException("ExportMarkdown is not set.");
     _exportMarkdown = ExportMarkdown();
     _modal = ModalOpen.Export;
   }

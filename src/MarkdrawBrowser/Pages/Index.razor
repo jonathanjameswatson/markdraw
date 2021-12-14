@@ -1,6 +1,9 @@
 @page "/"
 @layout EmptyLayout
 
+@inject HttpClient _http;
+@inject IJSRuntime _js;
+
 <div>
   <NavBar @bind-ImportMarkdown="Markdown" ExportMarkdown="ExportMarkdown" ModalsAvailable="true"/>
 

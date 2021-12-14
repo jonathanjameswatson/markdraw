@@ -5,13 +5,13 @@ namespace MarkdrawBrowser.Shared;
 public partial class TabPage : ComponentBase
 {
   [CascadingParameter]
-  private Tabs Parent { get; set; }
+  private Tabs? Parent { get; set; }
 
   [Parameter]
-  public RenderFragment ChildContent { get; set; }
+  public RenderFragment? ChildContent { get; set; }
 
   [Parameter]
-  public string Text { get; set; }
+  public string? Text { get; set; }
 
   protected override void OnInitialized()
   {

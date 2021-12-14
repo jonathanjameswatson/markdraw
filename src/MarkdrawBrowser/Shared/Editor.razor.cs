@@ -8,18 +8,15 @@ public partial class Editor : ComponentBase
   private ElementReference _editor;
 
   [Parameter]
-  public string Content { get; set; }
-
-  [Inject]
-  private IJSRuntime Js { get; set; }
+  public string Content { get; set; } = "";
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
     if (firstRender)
     {
-      await Js.InvokeVoidAsync("setUp", _editor);
+      await _js.InvokeVoidAsync("setUp", _editor);
     }
 
-    await Js.InvokeVoidAsync("renderMarkdown", _editor, Content);
+    await _js.InvokeVoidAsync("renderMarkdown", _editor, Content);
   }
 }

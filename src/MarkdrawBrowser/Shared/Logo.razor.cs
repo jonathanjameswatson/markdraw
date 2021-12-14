@@ -8,10 +8,7 @@ public partial class Logo : ComponentBase
   private ElementReference _wheel;
 
   [Parameter]
-  public Func<ElementReference> GetHoverElement { get; set; }
-
-  [Inject]
-  private IJSRuntime Js { get; set; }
+  public Func<ElementReference>? GetHoverElement { get; set; }
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
@@ -22,7 +19,7 @@ public partial class Logo : ComponentBase
 
     if (firstRender)
     {
-      await Js.InvokeVoidAsync("setupLogo", GetHoverElement(), _wheel);
+      await _js.InvokeVoidAsync("setupLogo", GetHoverElement(), _wheel);
     }
   }
 }

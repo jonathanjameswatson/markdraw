@@ -15,10 +15,10 @@ namespace MarkdrawBrowser.Pages;
 public partial class Index : ComponentBase
 {
   private string _content = "<p>Loading...</p>";
-  private DeltaTree _deltaTree;
-  private Editor _editor;
+  private DeltaTree _deltaTree = new();
+  private Editor? _editor;
 
-  private DotNetObjectReference<Index> _indexRef;
+  private DotNetObjectReference<Index>? _indexRef;
   private string _markdown = "";
 
   private ModalOpen _modal = ModalOpen.None;
@@ -27,12 +27,6 @@ public partial class Index : ComponentBase
   private string _modalImageAlt = "";
   private string _modalImageUrl = "";
   private string _modalLink = "";
-
-  [Inject]
-  private HttpClient Http { get; set; }
-
-  [Inject]
-  private IJSRuntime Js { get; set; }
 
   private string Markdown
   {
@@ -48,15 +42,15 @@ public partial class Index : ComponentBase
   protected override async Task OnInitializedAsync()
   {
     _indexRef = DotNetObjectReference.Create(this);
-    await Js.InvokeVoidAsync("setReference", _indexRef);
+    await _js.InvokeVoidAsync("setReference", _indexRef);
     _deltaTree = new DeltaTree(_markdown);
     const string url = "https://raw.githubusercontent.com/jonathanjameswatson/markdraw/main/sample.md";
-    Markdown = await Http.GetStringAsync(url);
+    Markdown = await _http.GetStringAsync(url);
   }
 
   private async Task<Cursor> GetCursor()
   {
-    return await Js.InvokeAsync<Cursor>("getCursor");
+    return await _js.InvokeAsync<Cursor>("getCursor");
   }
 
   private async Task SetFormat(IFormatModifier formatModifier)
@@ -184,8 +178,7 @@ public partial class Index : ComponentBase
 
   private async Task Divider()
   {
-    await InsertElements(new Document().Insert(new LineInsert()).Insert(new DividerInsert())
-      .Insert(new LineInsert()));
+    await InsertElements(new Document().Insert(new LineInsert()).Insert(new DividerInsert()).Insert(new LineInsert()));
   }
 
   private void CodeBlock()
@@ -222,7 +215,7 @@ public partial class Index : ComponentBase
   {
     var splitText = new List<string>(text.Split("\n"));
     var lastTextFormat = _deltaTree.Delta.GetFirstFormat<InlineFormat>(cursor.Start);
-    LineFormat lastLineFormat = null;
+    LineFormat? lastLineFormat = null;
     var ops = new Document();
 
     foreach (var part in splitText.GetRange(0, splitText.Count - 1))
@@ -234,7 +227,7 @@ public partial class Index : ComponentBase
         ops.Insert(part, lastTextFormat);
       }
 
-      ops.Insert(new LineInsert(lastLineFormat));
+      ops.Insert(new LineInsert(lastLineFormat ?? new LineFormat()));
     }
 
     var final = splitText[^1];

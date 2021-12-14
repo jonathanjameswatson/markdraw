@@ -7,9 +7,9 @@ public partial class Tabs : ComponentBase
   private readonly List<TabPage> _pages = new();
 
   [Parameter]
-  public RenderFragment ChildContent { get; set; }
+  public RenderFragment? ChildContent { get; set; }
 
-  public TabPage ActivePage { get; private set; }
+  public TabPage? ActivePage { get; private set; }
 
   internal void AddPage(TabPage tabPage)
   {

@@ -6,7 +6,7 @@ namespace MarkdrawBrowser.Shared;
 public partial class FormatButton : ComponentBase
 {
   [Parameter]
-  public string Icon { get; set; } = "";
+  public string? Icon { get; set; } = "";
 
   [Parameter]
   public bool ScrollFix { get; set; }
