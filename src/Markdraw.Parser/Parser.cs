@@ -4,7 +4,7 @@ using NUglify.Html;
 
 namespace Markdraw.Parser;
 
-public class Parser
+public static class Parser
 {
   public static string Parse(string markdown)
   {
