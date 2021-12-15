@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Text;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Containers;
 
 public abstract class Container : TreeNode, IEnumerable<TreeNode>
 {

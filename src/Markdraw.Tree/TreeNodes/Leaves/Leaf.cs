@@ -1,6 +1,6 @@
 using Markdraw.Delta.Operations.Inserts;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Leaves;
 
 public abstract class Leaf : TreeNode
 {

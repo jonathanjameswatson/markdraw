@@ -1,6 +1,7 @@
 ﻿using Markdraw.Delta.Operations.Inserts.Inlines;
+using Markdraw.Tree.TreeNodes.Leaves;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Containers.InlineContainers;
 
 public class CodeInlineContainer : Container
 {

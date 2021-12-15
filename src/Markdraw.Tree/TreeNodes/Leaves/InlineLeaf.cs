@@ -1,7 +1,7 @@
 ﻿using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Helpers;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Leaves;
 
 public class InlineLeaf : Leaf
 {

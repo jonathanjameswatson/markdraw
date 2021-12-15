@@ -3,6 +3,10 @@ using Markdraw.Delta.Formats;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.Styles;
+using Markdraw.Tree.TreeNodes;
+using Markdraw.Tree.TreeNodes.Containers.BlockContainers;
+using Markdraw.Tree.TreeNodes.Containers.InlineContainers;
+using Markdraw.Tree.TreeNodes.Leaves;
 using Xunit;
 
 namespace Markdraw.Tree.Test;

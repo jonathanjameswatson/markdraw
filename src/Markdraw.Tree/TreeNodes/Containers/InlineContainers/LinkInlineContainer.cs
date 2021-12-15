@@ -1,9 +1,9 @@
 ﻿using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Helpers;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Containers.InlineContainers;
 
-public class LinkInlineContainer : InlineContainer
+public class LinkInlineContainer : InlineBranchingContainer
 {
   private LinkInlineContainer(DeltaTree? deltaTree = null, int i = 0, string url = "", string title = "") :
     base(deltaTree, i)

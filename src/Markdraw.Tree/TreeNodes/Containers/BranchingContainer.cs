@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Containers;
 
 public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> : Container where TBranchMarker : class
   where TBranchInsert : Insert

@@ -2,8 +2,10 @@
 using Markdraw.Delta.Indents;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Delta.Operations.Inserts.Inlines;
+using Markdraw.Tree.TreeNodes.Containers.InlineContainers;
+using Markdraw.Tree.TreeNodes.Leaves;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Containers.BlockContainers;
 
 public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
 {

@@ -1,4 +1,4 @@
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes;
 
 public abstract class TreeNode
 {

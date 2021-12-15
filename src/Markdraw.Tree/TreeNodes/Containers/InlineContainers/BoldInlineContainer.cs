@@ -1,8 +1,8 @@
 ﻿using Markdraw.Delta.Operations.Inserts.Inlines;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Containers.InlineContainers;
 
-public class BoldInlineContainer : InlineContainer
+public class BoldInlineContainer : InlineBranchingContainer
 {
   private BoldInlineContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 

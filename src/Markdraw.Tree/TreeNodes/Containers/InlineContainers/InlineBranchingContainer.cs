@@ -1,14 +1,15 @@
 ﻿using System.Collections.Immutable;
 using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Delta.Styles;
+using Markdraw.Tree.TreeNodes.Leaves;
 
-namespace Markdraw.Tree;
+namespace Markdraw.Tree.TreeNodes.Containers.InlineContainers;
 
-public abstract class InlineContainer : BranchingContainer<Style, InlineInsert, InlineInsert>
+public abstract class InlineBranchingContainer : BranchingContainer<Style, InlineInsert, InlineInsert>
 {
-  protected InlineContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
+  protected InlineBranchingContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
-  protected InlineContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0) : base(
+  protected InlineBranchingContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0) : base(
     elementsInside, deltaTree, i) {}
 
   protected override string Tag => "p";
@@ -24,7 +25,7 @@ public abstract class InlineContainer : BranchingContainer<Style, InlineInsert, 
     return style;
   }
 
-  protected override InlineContainer CreateChildContainer(Style style, IEnumerable<InlineInsert> document, int depth,
+  protected override InlineBranchingContainer CreateChildContainer(Style style, IEnumerable<InlineInsert> document, int depth,
     int i)
   {
     return style switch {
