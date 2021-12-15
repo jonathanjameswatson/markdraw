@@ -4,7 +4,7 @@ import 'regenerator-runtime/runtime.js';
 import rangy from 'rangy';
 import { default as animate, stop } from "animateplus";
 
-import { default as runPrism, highlightHtml } from './prism';
+import { default as runPrism, highlightHtml, highlightJson } from './prism';
 import binarySearch from './binarySearch';
 
 const cursor = {
@@ -181,6 +181,8 @@ window.renderMarkdown = (editor, content) => {
 }
 
 window.highlightHtml = highlightHtml;
+
+window.highlightJson = highlightJson;
 
 window.getCursor = () => cursor;
 
