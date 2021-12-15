@@ -10,19 +10,20 @@
     "@babel/preset-env": "^7.14.7",
     "babel-loader": "^8.2.2",
     "browser-sync": "^2.27.4",
-    "concurrently": "^6.2.0",
     "core-js": "^3.15.2",
     "cross-env": "^7.0.3",
     "gulp": "^4.0.2",
     "gulp-sass": "^5.0.0",
     "js-yaml": "^4.1.0",
     "node-sass": "^6.0.1",
+    "npm-run-all": "^4.1.5",
     "webpack": "^5.44.0",
     "webpack-stream": "^6.1.2"
   },
   "scripts": {
     "watch": "cross-env NODE_ENV='development' yarn gulp watch",
-    "dev": "concurrently --kill-others --handle-input \"dotnet watch --project src/MarkdrawBrowser run\" \"yarn run watch\"",
+    "dotnet-watch": "dotnet watch --project src/MarkdrawBrowser run",
+    "dev": "run-p watch dotnet-watch",
     "prod": "cross-env NODE_ENV='production' yarn gulp build",
     "build": "cross-env NODE_ENV='production' yarn gulp build && dotnet publish src/MarkdrawBrowser/MarkdrawBrowser.csproj -c Release -o release --nologo",
     "docs": "docfx metadata doc/docfx.json && node doc/nest.js && docfx build doc/docfx.json"
