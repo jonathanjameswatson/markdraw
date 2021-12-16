@@ -1,20 +1,22 @@
 const path = require("path");
-const webpack = require("webpack");
 
 module.exports = {
   resolve: {
     extensions: [".js"],
   },
-  mode: process.env.NODE_ENV,
+  mode: process.env.NODE_ENV ?? "development",
   devtool: process.env.NODE_ENV === "production" ? "none" : "inline-source-map",
   module: {
     rules: [
       {
         test: /\.js?$/,
+        include: path.resolve(__dirname, 'src/MarkdrawBrowser/JavaScript'),
         loader: {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env"],
+            cacheCompression: false,
+            cacheDirectory: true,
           },
         },
       },
@@ -22,7 +24,7 @@ module.exports = {
   },
   entry: "./src/MarkdrawBrowser/JavaScript/index.js",
   output: {
-    path: path.join(__dirname, "/MarkdrawBrowser/wwwroot"),
+    path: path.resolve(__dirname, "src/MarkdrawBrowser/wwwroot"),
     filename: "markdrawBrowser.bundle.js",
   },
 };

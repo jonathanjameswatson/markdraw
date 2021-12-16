@@ -4,8 +4,8 @@
 /*global process*/
 
 const gulp = require("gulp");
+const changed = require('gulp-changed');
 const sass = require("gulp-sass")(require("node-sass"));
-const browserSync = require("browser-sync").create();
 const webpack_stream = require("webpack-stream");
 const webpack_config = require("./webpack.config.js");
 
@@ -24,63 +24,29 @@ const dirs = {
   },
 };
 
-const production = process.env.NODE_ENV === "production";
-
-const stylesTask = function stylesTask(done) {
-  gulp
+const buildStyles = () => gulp
     .src(`${dirs.scss.src}/*.scss`)
+    .pipe(changed(dirs.scss.dest))
     .pipe(sass().on("error", sass.logError))
     .pipe(gulp.dest(dirs.scss.dest));
+buildStyles.displayName = 'build-styles';
 
-  if (!production) {
-    browserSync.reload();
-    done();
-  }
+const buildScripts = () => webpack_stream(webpack_config).pipe(gulp.dest(dirs.js.dest));
+buildScripts.displayName = 'build-scripts';
+
+const buildGrammars = () => gulp
+  .src([`${dirs.grammars.src}/**`])
+  .pipe(changed(dirs.grammars.dest))
+  .pipe(gulp.dest(dirs.grammars.dest));
+buildGrammars.displayName = 'build-grammars';
+
+const build = gulp.parallel(buildStyles, buildScripts, buildGrammars);
+
+const watch = () => {
+  gulp.watch(`${dirs.scss.src}/**/*.scss`, { ignoreInitial: false }, buildStyles);
+  gulp.watch(`${dirs.js.src}/**/*.js`, { ignoreInitial: false }, buildScripts);
 };
 
-const scriptsTask = function scriptsTask(done) {
-  webpack_stream(webpack_config).pipe(gulp.dest(dirs.js.dest));
-
-  if (!production) {
-    browserSync.reload();
-    done();
-  }
-};
-
-const grammarsTask = function grammarsTask(done) {
-  gulp.src([`${dirs.grammars.src}/**`]).pipe(gulp.dest(dirs.grammars.dest));
-};
-
-const watchTask = function watchTask() {
-  stylesTask(() => null);
-  scriptsTask(() => null);
-  grammarsTask(() => null);
-
-  browserSync.init({
-    proxy: "http://localhost:5000",
-    open: false,
-    notify: false,
-    minify: false,
-    ghostMode: false,
-    online: false,
-    ui: false,
-  });
-
-  gulp.watch(`${dirs.scss.src}/**/*.scss`, gulp.series(stylesTask));
-  gulp.watch(`${dirs.js.src}/**/*.js`, gulp.series(scriptsTask));
-};
-
-const buildTask = function buildTask() {
-  return new Promise(function (resolve) {
-    gulp.task("styles")();
-    gulp.task("scripts")();
-    gulp.task("grammars")();
-    resolve();
-  });
-};
-
-gulp.task("styles", stylesTask);
-gulp.task("scripts", scriptsTask);
-gulp.task("grammars", grammarsTask);
-gulp.task("watch", watchTask);
-gulp.task("build", buildTask);
+exports.watch = watch;
+exports.build = build;
+exports.buildGrammars = buildGrammars;
