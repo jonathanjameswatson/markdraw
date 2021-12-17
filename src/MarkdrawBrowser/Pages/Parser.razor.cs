@@ -63,7 +63,7 @@ public partial class Parser : ComponentBase
 
   private static string GetMarkdrawHtml(DeltaTree input)
   {
-    return Markdraw.Parser.Parser.Prettify(input.ToString());
+    return Markdraw.Parser.Parser.Prettify(string.Join(' ', input.Root.Select(child => child.ToString())));
   }
 
   private static string GetMarkdigHtml(MarkdownDocument input)
