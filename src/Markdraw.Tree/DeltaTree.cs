@@ -44,4 +44,9 @@ public class DeltaTree
   {
     return BlockContainer.CreateInstance(0, document);
   }
+
+  public override string ToString()
+  {
+    return Root.ToString();
+  }
 }

@@ -17,14 +17,14 @@
       <Tabs>
         <TabPage Text="Preview">
           <div class="content">
-            @((MarkupString)_markdrawHtmlOutput)
+            @((MarkupString)_markdrawHtml)
           </div>
         </TabPage>
         <TabPage Text="Markdraw HTML">
           <div class="content">
             <pre class="language-html">
 <code>
-@((MarkupString)_highlightedMarkdrawHtmlOutput)
+@((MarkupString)_highlightedMarkdrawHtml)
 </code>
 </pre>
           </div>
@@ -33,28 +33,31 @@
           <div class="content">
             <pre class="language-html">
 <code>
-@((MarkupString)_highlightedMarkdigHtmlOutput)
+@((MarkupString)_highlightedMarkdigHtml)
 </code>
 </pre>
           </div>
         </TabPage>
-        <!--<TabPage Text="Markdig AST">
-          <div class="content">
-            <pre class="language-json">
-<code>
-@((MarkupString)_highlightedMarkdigAstOutput)
-</code>
-</pre>
-          </div>
-        </TabPage>-->
-        <TabPage Text="Markdraw Delta">
+        <TabPage Text="Delta">
           <div class="tags">
-            @foreach (var tag in _deltaOutput)
+            @foreach (var tag in _delta)
             {
               <span class="tag is-dark is-medium">@tag.ToString()</span>
             }
           </div>
         </TabPage>
+        <TabPage Text="DeltaTree">
+          <Inspector BaseObject="_deltaTree" />
+        </TabPage>
+        <!--<TabPage Text="Markdig AST">
+          <div class="content">
+            <pre class="language-json">
+<code>
+
+</code>
+</pre>
+          </div>
+        </TabPage>-->
       </Tabs>
     </div>
   </div>

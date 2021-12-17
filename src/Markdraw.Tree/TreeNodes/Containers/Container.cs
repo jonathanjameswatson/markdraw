@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Markdraw.Tree.TreeNodes.Containers;
 
@@ -16,7 +17,8 @@ public abstract class Container : TreeNode, IEnumerable<TreeNode>
   protected virtual string StartingTag => $"<{Tag}>";
   protected virtual string EndingTag => $"</{Tag}>";
   protected virtual bool WrapAllInside => false;
-  protected List<TreeNode> ElementsInside { get; } = new();
+
+  public List<TreeNode> ElementsInside { get; } = new();
 
   IEnumerator IEnumerable.GetEnumerator()
   {

@@ -1,9 +1,10 @@
+using System.Collections;
 using System.Collections.Immutable;
 using Markdraw.Delta.Indents;
 
 namespace Markdraw.Delta.Formats;
 
-public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format
+public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format, IEnumerable<Indent>
 {
   public static readonly LineFormat QuotePreset = new(ImmutableList.Create<Indent>(Indent.Quote));
   public static readonly LineFormat BulletPreset = new(ImmutableList.Create<Indent>(Indent.LooseBullet));
@@ -25,6 +26,16 @@ public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format
   public virtual bool Equals(LineFormat? other)
   {
     return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
+  }
+
+  IEnumerator IEnumerable.GetEnumerator()
+  {
+    return GetEnumerator();
+  }
+
+  public IEnumerator<Indent> GetEnumerator()
+  {
+    return Indents.GetEnumerator();
   }
 
   public override int GetHashCode()

@@ -12,6 +12,12 @@ public class InlineLeaf : Leaf
 
   protected override InlineInsert CorrespondingInsert { get; }
 
+  public override int Length
+  {
+    get => CorrespondingInsert.Length;
+    protected set => throw new InvalidOperationException("Change the corresponding insert instead.");
+  }
+
   private static string GetContents(InlineInsert inlineInsert)
   {
     return inlineInsert switch {

@@ -1,10 +1,11 @@
+using System.Collections;
 using System.Collections.Immutable;
 using System.Text;
 using Markdraw.Delta.Styles;
 
 namespace Markdraw.Delta.Formats;
 
-public record InlineFormat(ImmutableList<Style> Styles, bool Code = false) : Format
+public record InlineFormat(ImmutableList<Style> Styles, bool Code = false) : Format, IEnumerable<Style>
 {
   public static readonly InlineFormat BoldPreset = new(ImmutableList.Create<Style>(Style.Bold));
   public static readonly InlineFormat ItalicPreset = new(ImmutableList.Create<Style>(Style.Italic));
@@ -34,6 +35,16 @@ public record InlineFormat(ImmutableList<Style> Styles, bool Code = false) : For
       intermediate = $"`{intermediate}`";
     }
     return Styles.Aggregate(intermediate, (current, style) => style.Wrap(current));
+  }
+
+  IEnumerator IEnumerable.GetEnumerator()
+  {
+    return GetEnumerator();
+  }
+
+  public IEnumerator<Style> GetEnumerator()
+  {
+    return Styles.GetEnumerator();
   }
 
   public override int GetHashCode()
