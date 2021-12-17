@@ -6,18 +6,25 @@ module.exports = {
     rules: [
       {
         test: /\.(js)$/,
-        exclude: /node_modules/,
-        use: ['babel-loader']
+        include: path.resolve(__dirname, 'src/MarkdrawBrowser/JavaScript'),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ["@babel/preset-env"],
+            cacheCompression: false,
+            cacheDirectory: true,
+          },
+        },
       },
     ],
   },
   resolve: {
-    extensions: ['*', '.js'],
+    extensions: ['.js'],
   },
   output: {
     path: path.resolve(__dirname, './src/MarkdrawBrowser/wwwroot'),
     filename: 'markdrawBrowser.bundle.js',
   },
   mode: process.env.NODE_ENV ?? 'development',
-  devtool: process.env.NODE_ENV === 'production' ? 'none' : 'inline-source-map',
+  devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',
 };
