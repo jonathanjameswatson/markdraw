@@ -1,0 +1,92 @@
+﻿@using System.Collections
+
+<div class="inspector">
+  <div class="buttons">
+    <Button EnabledClickCallback="Reset" Disabled="@(Object == BaseObject)">Reset</Button>
+    <Button EnabledClickCallback="Back" Disabled="@(_history.Count == 0)">Back</Button>
+  </div>
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Property</th>
+        <th>Type</th>
+        <th>Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      @foreach (var (propertyName, (propertyObject, propertyType, isPropertyBasic)) in _properties)
+      {
+        <tr>
+          <td>
+            <code>
+              @propertyName
+            </code>
+          </td>
+          <td>
+            <code>
+              @propertyType
+            </code>
+          </td>
+          <td>
+            <code>
+              @if (!isPropertyBasic)
+              {
+                <a @onclick="@(() => Object = propertyObject)">
+                  @propertyObject.ToString()
+                </a>
+              }
+              else
+              {
+                <span>
+                  @propertyObject.ToString()
+                </span>
+              }
+            </code>
+          </td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  </div>
+
+  @if (_contents is not null)
+  {
+    <div class="table-container">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Contents</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var (childObject, childType, isChildBasic) in _contents)
+        {
+          <tr>
+            <td>
+              <code>
+                @childType
+              </code>:
+              <code>
+                @if (!isChildBasic)
+                {
+                  <a @onclick="@(() => Object = childObject)">
+                    @childObject.ToString()
+                  </a>
+                }
+                else
+                {
+                  <span>
+                    @childObject.ToString()
+                  </span>
+                }
+              </code>
+            </td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
