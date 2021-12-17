@@ -39,25 +39,14 @@
           </div>
         </TabPage>
         <TabPage Text="Delta">
-          <div class="tags">
-            @foreach (var tag in _delta)
-            {
-              <span class="tag is-dark is-medium">@tag.ToString()</span>
-            }
-          </div>
+          <Inspector BaseObject="_delta" />
         </TabPage>
         <TabPage Text="DeltaTree">
           <Inspector BaseObject="_deltaTree" />
         </TabPage>
-        <!--<TabPage Text="Markdig AST">
-          <div class="content">
-            <pre class="language-json">
-<code>
-
-</code>
-</pre>
-          </div>
-        </TabPage>-->
+        <TabPage Text="Markdig AST">
+          <Inspector BaseObject="_markdigAst" />
+        </TabPage>
       </Tabs>
     </div>
   </div>

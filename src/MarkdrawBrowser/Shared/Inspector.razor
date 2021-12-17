@@ -33,14 +33,14 @@
             <code>
               @if (!isPropertyBasic)
               {
-                <a @onclick="@(() => Object = propertyObject)">
-                  @propertyObject.ToString()
+                <a @onclick="@(() => Object = propertyObject ?? Object)">
+                  @(propertyObject?.ToString() ?? "null")
                 </a>
               }
               else
               {
                 <span>
-                  @propertyObject.ToString()
+                  @(propertyObject?.ToString() ?? "null")
                 </span>
               }
             </code>
@@ -71,14 +71,14 @@
               <code>
                 @if (!isChildBasic)
                 {
-                  <a @onclick="@(() => Object = childObject)">
-                    @childObject.ToString()
+                  <a @onclick="@(() => Object = childObject ?? Object)">
+                    @(childObject?.ToString() ?? "null")
                   </a>
                 }
                 else
                 {
                   <span>
-                    @childObject.ToString()
+                    @(childObject?.ToString() ?? "null")
                   </span>
                 }
               </code>

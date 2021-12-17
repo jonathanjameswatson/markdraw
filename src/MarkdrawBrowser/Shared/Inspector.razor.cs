@@ -5,18 +5,19 @@ using Microsoft.AspNetCore.Components;
 
 namespace MarkdrawBrowser.Shared;
 
-internal record ObjectInformation(object Object, string ObjectType, bool IsBasic)
+internal record ObjectInformation(object? Object, string ObjectType, bool IsBasic)
 {
-  public ObjectInformation(object obj) : this(obj, obj.GetType().Name, IsObjectBasic(obj)) {}
+  public ObjectInformation(object? obj) : this(obj, obj?.GetType().Name ?? "null", IsObjectBasic(obj)) {}
 
   private static bool IsTypeOfType(Type type)
   {
     return typeof(Type).IsAssignableFrom(type);
   }
 
-  private static bool IsObjectBasic(object obj)
+  private static bool IsObjectBasic(object? obj)
   {
-    return IsTypeOfType(obj.GetType()) || obj is int or string or bool or null or char or long or double or IList;
+    return obj is null || IsTypeOfType(obj.GetType()) || obj is int or string or bool or null or char or long or double or
+    IList;
   }
 }
 
@@ -47,9 +48,19 @@ public partial class Inspector : ComponentBase
       _object = value;
       _properties = value.GetType()
         .GetProperties(BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.Public
-          | BindingFlags.NonPublic).Select(property =>
-            (property.Name, new ObjectInformation(property.GetValue(value) ?? "Couldn't dereference."))
-          ).ToList();
+          | BindingFlags.NonPublic)
+        .Select(property => {
+          try
+          {
+            return (property.Name, new ObjectInformation(property.GetValue(value)));
+          }
+          catch
+          {
+            return (property.Name, new ObjectInformation("[COULD NOT EVALUATE]", property.GetType().ToString(), true));
+          }
+
+        })
+        .ToList();
       _contents = value switch {
         IEnumerable<object> enumerable => enumerable.Select(obj => new ObjectInformation(obj)).ToList(),
         _ => null

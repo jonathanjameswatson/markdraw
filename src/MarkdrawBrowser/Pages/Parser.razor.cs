@@ -1,14 +1,8 @@
-﻿using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Markdig;
-using Markdig.Helpers;
+﻿using Markdig;
+using Markdig.Syntax;
 using Markdraw.Delta.OperationSequences;
 using Markdraw.MarkdownToDelta;
 using Markdraw.Tree;
-using Markdraw.Tree.TreeNodes.Containers;
-using Markdraw.Tree.TreeNodes.Containers.BlockContainers;
-using Markdraw.Tree.TreeNodes.Containers.InlineContainers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -20,18 +14,17 @@ public partial class Parser : ComponentBase
   private static readonly Document OriginalDelta = GetDelta(Original);
   private static readonly DeltaTree OriginalDeltaTree = GetDeltaTree(OriginalDelta);
   private static readonly string OriginalMarkdrawHtml = GetMarkdrawHtml(OriginalDeltaTree);
-  private static readonly string OriginalMarkdigHtml = GetMarkdigHtml(Original);
-  // private static readonly string OriginalMarkdigAstJson = GetMarkdigAstJson(Original);
+  private static readonly MarkdownDocument OriginalMarkdigAst = GetMarkdigAst(Original);
+  private static readonly string OriginalMarkdigHtml = GetMarkdigHtml(OriginalMarkdigAst);
 
   private string _markdrawHtml = OriginalMarkdrawHtml;
   private string _markdigHtml = OriginalMarkdigHtml;
   private Document _delta = OriginalDelta;
   private DeltaTree _deltaTree = OriginalDeltaTree;
-  // private string _markdigAstJson = OriginalMarkdigAstJson;
+  private MarkdownDocument _markdigAst = OriginalMarkdigAst;
 
   private string _highlightedMarkdrawHtml = OriginalMarkdrawHtml;
   private string _highlightedMarkdigHtml = OriginalMarkdigHtml;
-  // private string _highlightedMarkdigAstJson = OriginalMarkdigAstJson;
 
   private string _input = Original;
 
@@ -46,14 +39,13 @@ public partial class Parser : ComponentBase
 
       _deltaTree = GetDeltaTree(_delta);
 
+      _markdigAst = GetMarkdigAst(value);
+
       _markdrawHtml = GetMarkdrawHtml(_deltaTree);
       _highlightedMarkdrawHtml = HighlightHtml(_markdrawHtml);
 
-      _markdigHtml = GetMarkdigHtml(value);
+      _markdigHtml = GetMarkdigHtml(_markdigAst);
       _highlightedMarkdigHtml = HighlightHtml(_markdigHtml);
-
-      // _markdigAstJson = GetMarkdigAstJson(value);
-      // _highlightedMarkdigAstJson = HighlightJson(_markdigAstJson);
     }
   }
 
@@ -61,7 +53,7 @@ public partial class Parser : ComponentBase
   {
     _highlightedMarkdrawHtml = HighlightHtml(_markdrawHtml);
     _highlightedMarkdigHtml = HighlightHtml(_markdigHtml);
-    // _highlightedMarkdigAstJson = HighlightJson(_markdigAstJson);
+
   }
 
   private static DeltaTree GetDeltaTree(Document input)
@@ -71,12 +63,12 @@ public partial class Parser : ComponentBase
 
   private static string GetMarkdrawHtml(DeltaTree input)
   {
-    return Markdraw.Parser.Parser.Prettify(input.ToString() ?? "");
+    return Markdraw.Parser.Parser.Prettify(input.ToString());
   }
 
-  private static string GetMarkdigHtml(string input)
+  private static string GetMarkdigHtml(MarkdownDocument input)
   {
-    return Markdraw.Parser.Parser.Prettify(Markdown.ToHtml(input));
+    return Markdraw.Parser.Parser.Prettify(input.ToHtml());
   }
 
   private static Document GetDelta(string input)
@@ -84,25 +76,13 @@ public partial class Parser : ComponentBase
     return MarkdownToDeltaConverter.Parse(input);
   }
 
-  private static string GetMarkdigAstJson(string input)
+  private static MarkdownDocument GetMarkdigAst(string input)
   {
-    return JsonSerializer.Serialize(Markdown.Parse(input), new JsonSerializerOptions {
-      ReferenceHandler = ReferenceHandler.IgnoreCycles,
-      WriteIndented = true,
-      Converters = {
-        // new StringSliceJsonConverter()
-      },
-      DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-    });
+    return Markdown.Parse(input);
   }
 
   private string HighlightHtml(string html)
   {
     return ((IJSInProcessRuntime)_js).Invoke<string>("window.highlightHtml", html);
-  }
-
-  private string HighlightJson(string json)
-  {
-    return ((IJSInProcessRuntime)_js).Invoke<string>("window.highlightJson", json);
   }
 }
