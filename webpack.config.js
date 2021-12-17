@@ -1,4 +1,5 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: path.resolve(__dirname, './src/MarkdrawBrowser/JavaScript/index.js'),
@@ -27,4 +28,11 @@ module.exports = {
   },
   mode: process.env.NODE_ENV ?? 'development',
   devtool: process.env.NODE_ENV === 'production' ? false : 'inline-source-map',
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      })
+    ],
+  },
 };
