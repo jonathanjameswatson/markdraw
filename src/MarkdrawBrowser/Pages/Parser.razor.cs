@@ -11,15 +11,13 @@ namespace MarkdrawBrowser.Pages;
 public partial class Parser : ComponentBase
 {
   private const string Original = "# Parser\n\nUse this page to see how Markdraw handles Markdown.";
-  private static readonly Document OriginalDelta = GetDelta(Original);
-  private static readonly DeltaTree OriginalDeltaTree = GetDeltaTree(OriginalDelta);
+  private static readonly DeltaTree OriginalDeltaTree = GetDeltaTree(GetDelta(Original));
   private static readonly string OriginalMarkdrawHtml = GetMarkdrawHtml(OriginalDeltaTree);
   private static readonly MarkdownDocument OriginalMarkdigAst = GetMarkdigAst(Original);
   private static readonly string OriginalMarkdigHtml = GetMarkdigHtml(OriginalMarkdigAst);
 
   private string _markdrawHtml = OriginalMarkdrawHtml;
   private string _markdigHtml = OriginalMarkdigHtml;
-  private Document _delta = OriginalDelta;
   private DeltaTree _deltaTree = OriginalDeltaTree;
   private MarkdownDocument _markdigAst = OriginalMarkdigAst;
 
@@ -35,9 +33,9 @@ public partial class Parser : ComponentBase
     {
       _input = value;
 
-      _delta = GetDelta(value);
+      var delta = GetDelta(value);
 
-      _deltaTree = GetDeltaTree(_delta);
+      _deltaTree = GetDeltaTree(delta);
 
       _markdigAst = GetMarkdigAst(value);
 
