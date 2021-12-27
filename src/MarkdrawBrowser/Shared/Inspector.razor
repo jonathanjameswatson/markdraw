@@ -7,7 +7,7 @@
   </div>
 
   <div class="table-container">
-    <table class="table">
+    <table class="table is-fullwidth">
       <thead>
       <tr>
         <th>Property</th>
@@ -34,13 +34,13 @@
               @if (!isPropertyBasic)
               {
                 <a @onclick="@(() => Object = propertyObject ?? Object)">
-                  @(propertyObject?.ToString() ?? "null")
+                  @LinkString(propertyObject)
                 </a>
               }
               else
               {
                 <span>
-                  @(propertyObject?.ToString() ?? "null")
+                  @LinkString(propertyObject)
                 </span>
               }
             </code>
@@ -54,36 +54,47 @@
   @if (_contents is not null)
   {
     <div class="table-container">
-      <table class="table">
+      <table class="table is-fullwidth">
         <thead>
         <tr>
           <th>Contents</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var (childObject, childType, isChildBasic) in _contents)
+        @if (_contents.Count == 0)
         {
           <tr>
             <td>
-              <code>
-                @childType
-              </code>:
-              <code>
-                @if (!isChildBasic)
-                {
-                  <a @onclick="@(() => Object = childObject ?? Object)">
-                    @(childObject?.ToString() ?? "null")
-                  </a>
-                }
-                else
-                {
-                  <span>
-                    @(childObject?.ToString() ?? "null")
-                  </span>
-                }
-              </code>
+              No contents
             </td>
           </tr>
+        }
+        else
+        {
+          @foreach (var (childObject, childType, isChildBasic) in _contents)
+          {
+            <tr>
+              <td>
+                <code>
+                  @childType
+                </code>:
+                <code>
+                  @if (!isChildBasic)
+                  {
+                    <a @onclick="@(() => Object = childObject ?? Object)">
+                      @LinkString(childObject)
+                    </a>
+                  }
+                  else
+                  {
+                    <span>
+                      @LinkString(childObject)
+                    </span>
+                  }
+                </code>
+              </td>
+            </tr>
+          }
         }
         </tbody>
       </table>

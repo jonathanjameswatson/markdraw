@@ -79,4 +79,13 @@ public partial class Inspector : ComponentBase
     Object = _history.Pop();
     _history.Pop();
   }
+
+  private static string LinkString(object? obj)
+  {
+    return obj?.ToString() switch {
+      "" => @"""""",
+      null => "null",
+      var x => x
+    };
+  }
 }

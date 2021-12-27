@@ -81,12 +81,4 @@ $render-button-dividers: false;
   padding-bottom: 0 !important;
 }
 
-.inspector .table-container {
-  overflow-x: auto;
-}
-
-.inspector table {
-  min-width: 100%;
-}
-
 @import 'prism';
