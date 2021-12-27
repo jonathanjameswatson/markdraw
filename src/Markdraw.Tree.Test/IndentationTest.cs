@@ -63,8 +63,10 @@ public class IndentationTest
     DeltaTree.Parse(new Document().Insert("A").Insert(new LineInsert(LineFormat.BulletPreset))).Is(new BlockContainer(
       new List<TreeNode> {
         new BulletsContainer(new List<TreeNode> {
-          new OuterInlineContainer(new List<TreeNode> {
-            new InlineLeaf(new TextInsert("A"))
+          new ListItemContainer(new List<TreeNode> {
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(new TextInsert("A"))
+            })
           })
         })
       }));
@@ -76,8 +78,10 @@ public class IndentationTest
     DeltaTree.Parse(new Document().Insert("A").Insert(new LineInsert(LineFormat.NumberPreset))).Is(new BlockContainer(
       new List<TreeNode> {
         new NumbersContainer(new List<TreeNode> {
-          new OuterInlineContainer(new List<TreeNode> {
-            new InlineLeaf(new TextInsert("A"))
+          new ListItemContainer(new List<TreeNode> {
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(new TextInsert("A"))
+            })
           })
         })
       }));
@@ -90,13 +94,17 @@ public class IndentationTest
       .Insert(new LineInsert(LineFormat.BulletPreset)).Insert("C").Insert(new LineInsert())
       .Insert(new LineInsert(LineFormat.QuotePreset))).Is(new BlockContainer(new List<TreeNode> {
       new NumbersContainer(new List<TreeNode> {
-        new OuterInlineContainer(new List<TreeNode> {
-          new InlineLeaf(new TextInsert("A"))
+        new ListItemContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(new TextInsert("A"))
+          })
         })
       }),
       new BulletsContainer(new List<TreeNode> {
-        new OuterInlineContainer(new List<TreeNode> {
-          new InlineLeaf(new TextInsert("B"))
+        new ListItemContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(new TextInsert("B"))
+          })
         })
       }),
       new OuterInlineContainer(new List<TreeNode> {
@@ -109,7 +117,7 @@ public class IndentationTest
   }
 
   [Fact]
-  public void MultipleIndents_WorkInside()
+  public void MultipleIndents_DoNotNest()
   {
     DeltaTree.Parse(new Document().Insert("A").Insert(new LineInsert(LineFormat.NumberPreset)).Insert("B").Insert(
       new LineInsert(new LineFormat {
@@ -120,20 +128,38 @@ public class IndentationTest
       Indents = ImmutableList.Create<Indent>(Indent.Number(0), Indent.Bullet(false))
     }))).Is(new BlockContainer(new List<TreeNode> {
       new NumbersContainer(new List<TreeNode> {
-        new OuterInlineContainer(new List<TreeNode> {
-          new InlineLeaf(new TextInsert("A"))
+        new ListItemContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(new TextInsert("A"))
+          })
         }),
-        new BulletsContainer(new List<TreeNode> {
-          new OuterInlineContainer(new List<TreeNode> {
-            new InlineLeaf(new TextInsert("B"))
-          }),
-          new QuoteContainer(new List<TreeNode> {
-            new OuterInlineContainer(new List<TreeNode> {
-              new InlineLeaf(new TextInsert("C"))
+        new ListItemContainer(new List<TreeNode> {
+          new BulletsContainer(new List<TreeNode> {
+            new ListItemContainer(new List<TreeNode> {
+              new OuterInlineContainer(new List<TreeNode> {
+                new InlineLeaf(new TextInsert("B"))
+              })
             })
-          }),
-          new OuterInlineContainer(new List<TreeNode> {
-            new InlineLeaf(new TextInsert("D"))
+          })
+        }),
+        new ListItemContainer(new List<TreeNode> {
+          new BulletsContainer(new List<TreeNode> {
+            new ListItemContainer(new List<TreeNode> {
+              new QuoteContainer(new List<TreeNode> {
+                new OuterInlineContainer(new List<TreeNode> {
+                  new InlineLeaf(new TextInsert("C"))
+                })
+              })
+            })
+          })
+        }),
+        new ListItemContainer(new List<TreeNode> {
+          new BulletsContainer(new List<TreeNode> {
+            new ListItemContainer(new List<TreeNode> {
+              new OuterInlineContainer(new List<TreeNode> {
+                new InlineLeaf(new TextInsert("D"))
+              })
+            })
           })
         })
       })
@@ -147,10 +173,14 @@ public class IndentationTest
       Indents = ImmutableList.Create<Indent>(Indent.Number(2), Indent.LooseBullet, Indent.Quote)
     }))).Is(new BlockContainer(new List<TreeNode> {
       new NumbersContainer(new List<TreeNode> {
-        new BulletsContainer(new List<TreeNode> {
-          new QuoteContainer(new List<TreeNode> {
-            new OuterInlineContainer(new List<TreeNode> {
-              new InlineLeaf(new TextInsert("A"))
+        new ListItemContainer(new List<TreeNode> {
+          new BulletsContainer(new List<TreeNode> {
+            new ListItemContainer(new List<TreeNode> {
+              new QuoteContainer(new List<TreeNode> {
+                new OuterInlineContainer(new List<TreeNode> {
+                  new InlineLeaf(new TextInsert("A"))
+                })
+              })
             })
           })
         })
@@ -167,15 +197,21 @@ public class IndentationTest
       .Insert(new LineInsert(new LineFormat(ImmutableList.Create<Indent>(Indent.Number(0)))))).Is(new BlockContainer(
       new List<TreeNode> {
         new NumbersContainer(new List<TreeNode> {
-          new BulletsContainer(new List<TreeNode> {
-            new QuoteContainer(new List<TreeNode> {
-              new OuterInlineContainer(new List<TreeNode> {
-                new InlineLeaf(new TextInsert("A"))
+          new ListItemContainer(new List<TreeNode> {
+            new BulletsContainer(new List<TreeNode> {
+              new ListItemContainer(new List<TreeNode> {
+                new QuoteContainer(new List<TreeNode> {
+                  new OuterInlineContainer(new List<TreeNode> {
+                    new InlineLeaf(new TextInsert("A"))
+                  })
+                })
               })
             })
           }),
-          new OuterInlineContainer(new List<TreeNode> {
-            new InlineLeaf(new TextInsert("B"))
+          new ListItemContainer(new List<TreeNode> {
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(new TextInsert("B"))
+            })
           })
         })
       }));

@@ -4,7 +4,7 @@ public record NumberIndent : ListIndent
 {
   private readonly int _start;
 
-  public NumberIndent(int start = 0, bool loose = false) : base(loose)
+  public NumberIndent(int start = 0, bool loose = true) : base(loose)
   {
     Start = start;
   }

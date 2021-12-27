@@ -57,7 +57,7 @@ public static class MarkdownToDeltaConverter
             listSequence.MoveNext();
             newIndentSequences =
               newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(listSequence.Current,
-                listSequence.Current.NextIndent));
+                Indent.Continue));
             break;
           case ListItemBlock:
             throw new InvalidOperationException(

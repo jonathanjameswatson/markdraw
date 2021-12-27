@@ -1,4 +1,7 @@
-﻿namespace Markdraw.Tree.TreeNodes.Containers.BlockContainers;
+﻿using Markdraw.Delta.Indents;
+using Markdraw.Delta.Operations.Inserts;
+
+namespace Markdraw.Tree.TreeNodes.Containers.BlockContainers;
 
 public abstract class ListContainer : BlockContainer
 {
@@ -16,5 +19,13 @@ public abstract class ListContainer : BlockContainer
   public bool Loose { get; set; }
   protected override bool LooseInlines => Loose;
 
-  protected sealed override bool WrapAllInside => true;
+  protected override Indent NextBranchMarker(Indent indent)
+  {
+    return Indent.Continue;
+  }
+
+  protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<Insert> document, int depth, int i)
+  {
+    return ListItemContainer.CreateInstance(depth, document, ParentTree, i, Loose);
+  }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Markdraw.Delta.Indents;
 
-public record BulletIndent(bool Start = false, bool Loose = false) : ListIndent(Loose)
+public record BulletIndent(bool Start = false, bool Loose = true) : ListIndent(Loose)
 {
   public override BulletIndent NextIndent => this with {
     Start = false

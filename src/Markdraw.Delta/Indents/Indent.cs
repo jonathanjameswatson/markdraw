@@ -5,8 +5,8 @@ public abstract record Indent
   public static readonly QuoteIndent Quote = new(true);
   public static readonly CodeIndent Code = new();
   public static readonly ContinueIndent Continue = new();
-  public static readonly BulletIndent LooseBullet = new(true, true);
-  public static readonly NumberIndent LooseNumber = new(1, true);
+  public static readonly BulletIndent LooseBullet = new(true);
+  public static readonly NumberIndent LooseNumber = new(1);
 
   public static NumberIndent Number(int start = 1, bool loose = true)
   {

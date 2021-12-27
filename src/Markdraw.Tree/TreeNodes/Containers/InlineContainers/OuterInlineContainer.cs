@@ -27,7 +27,7 @@ public class OuterInlineContainer : InlineBranchingContainer
   protected override string EndingTag => ShowTags ? $"</{Tag}>" : "";
 
   public static OuterInlineContainer CreateInstance(int depth, IEnumerable<InlineInsert> document,
-    DeltaTree? deltaTree = null, int i = 0, int header = 0, bool loose = false)
+    DeltaTree? deltaTree = null, int i = 0, int header = 0, bool loose = true)
   {
     var container = new OuterInlineContainer(deltaTree, i, header, loose);
     container.Initialise(depth, document, i);

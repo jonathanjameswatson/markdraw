@@ -15,7 +15,6 @@ public abstract class Container : TreeNode, IEnumerable<TreeNode>
   protected virtual string Tag => "div";
   protected virtual string StartingTag => $"<{Tag}>";
   protected virtual string EndingTag => $"</{Tag}>";
-  protected virtual bool WrapAllInside => false;
 
   public List<TreeNode> ElementsInside { get; } = new();
 
@@ -37,17 +36,7 @@ public abstract class Container : TreeNode, IEnumerable<TreeNode>
 
     foreach (var child in ElementsInside)
     {
-      if (WrapAllInside)
-      {
-        stringBuilder.Append(@"<li>");
-      }
-
       stringBuilder.Append(child);
-
-      if (WrapAllInside)
-      {
-        stringBuilder.Append(@"</li>");
-      }
     }
 
     stringBuilder.Append(EndingTag);

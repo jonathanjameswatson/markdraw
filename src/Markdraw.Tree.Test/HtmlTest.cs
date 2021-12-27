@@ -59,8 +59,10 @@ public class HtmlTest
   {
     new BlockContainer(new List<TreeNode> {
       new BulletsContainer(new List<TreeNode> {
-        new OuterInlineContainer(new List<TreeNode> {
-          new InlineLeaf(new TextInsert("A"))
+        new ListItemContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(new TextInsert("A"))
+          })
         })
       })
     }).ToString().Is(@"<div><ul><li><p>A</p></li></ul></div>");
@@ -71,8 +73,10 @@ public class HtmlTest
   {
     new BlockContainer(new List<TreeNode> {
       new NumbersContainer(new List<TreeNode> {
-        new OuterInlineContainer(new List<TreeNode> {
-          new InlineLeaf(new TextInsert("A"))
+        new ListItemContainer(new List<TreeNode> {
+          new OuterInlineContainer(new List<TreeNode> {
+            new InlineLeaf(new TextInsert("A"))
+          })
         })
       })
     }).ToString().Is(@"<div><ol><li><p>A</p></li></ol></div>");
@@ -83,13 +87,17 @@ public class HtmlTest
   {
     new BlockContainer(new List<TreeNode> {
         new NumbersContainer(new List<TreeNode> {
-          new OuterInlineContainer(new List<TreeNode> {
-            new InlineLeaf(new TextInsert("A"))
+          new ListItemContainer(new List<TreeNode> {
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(new TextInsert("A"))
+            })
           })
         }),
         new BulletsContainer(new List<TreeNode> {
-          new OuterInlineContainer(new List<TreeNode> {
-            new InlineLeaf(new TextInsert("B"))
+          new ListItemContainer(new List<TreeNode> {
+            new OuterInlineContainer(new List<TreeNode> {
+              new InlineLeaf(new TextInsert("B"))
+            })
           })
         }),
         new OuterInlineContainer(new List<TreeNode> {
@@ -105,10 +113,14 @@ public class HtmlTest
   {
     new BlockContainer(new List<TreeNode> {
       new NumbersContainer(new List<TreeNode> {
-        new BulletsContainer(new List<TreeNode> {
-          new QuoteContainer(new List<TreeNode> {
-            new OuterInlineContainer(new List<TreeNode> {
-              new InlineLeaf(new TextInsert("A"))
+        new ListItemContainer(new List<TreeNode> {
+          new BulletsContainer(new List<TreeNode> {
+            new ListItemContainer(new List<TreeNode> {
+              new QuoteContainer(new List<TreeNode> {
+                new OuterInlineContainer(new List<TreeNode> {
+                  new InlineLeaf(new TextInsert("A"))
+                })
+              })
             })
           })
         })
