@@ -42,7 +42,7 @@ public static class MarkdownToDeltaConverter
             {
               var newIndent = Indent.Number(int.Parse(orderedStart ?? "1"), loose);
               newListSequence = SequenceHelpers.RepeatAfterFirst<ListIndent>(newIndent, newIndent with {
-                Start = 0
+                Start = -1
               });
             }
             else

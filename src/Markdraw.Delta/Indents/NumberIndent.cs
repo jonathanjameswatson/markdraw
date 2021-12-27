@@ -4,7 +4,7 @@ public record NumberIndent : ListIndent
 {
   private readonly int _start;
 
-  public NumberIndent(int start = 0, bool loose = true) : base(loose)
+  public NumberIndent(int start = -1, bool loose = true) : base(loose)
   {
     Start = start;
   }
@@ -13,18 +13,14 @@ public record NumberIndent : ListIndent
     get => _start;
     init
     {
-      if (value < 0)
+      if (value < -1)
       {
-        throw new ArgumentOutOfRangeException(nameof(value), "Start must be at least zero.");
+        throw new ArgumentOutOfRangeException(nameof(value), "Start must be at least -1.");
       }
 
       _start = value;
     }
   }
-
-  public override NumberIndent NextIndent => this with {
-    Start = 0
-  };
 
   public void Deconstruct(out int start, out bool loose)
   {
@@ -34,6 +30,6 @@ public record NumberIndent : ListIndent
 
   public override string ToString()
   {
-    return $"{(Start <= 1 ? 1 : Start)}.";
+    return $"{(Start == -1 ? 1 : Start)}.";
   }
 }

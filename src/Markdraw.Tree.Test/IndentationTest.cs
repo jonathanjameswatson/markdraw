@@ -121,11 +121,11 @@ public class IndentationTest
   {
     DeltaTree.Parse(new Document().Insert("A").Insert(new LineInsert(LineFormat.NumberPreset)).Insert("B").Insert(
       new LineInsert(new LineFormat {
-        Indents = ImmutableList.Create<Indent>(Indent.Number(0), Indent.LooseBullet)
+        Indents = ImmutableList.Create<Indent>(Indent.Number(-1), Indent.LooseBullet)
       })).Insert("C").Insert(new LineInsert(new LineFormat {
-      Indents = ImmutableList.Create<Indent>(Indent.Number(0), Indent.Bullet(false), Indent.Quote)
+      Indents = ImmutableList.Create<Indent>(Indent.Number(-1), Indent.Bullet(false), Indent.Quote)
     })).Insert("D").Insert(new LineInsert(new LineFormat {
-      Indents = ImmutableList.Create<Indent>(Indent.Number(0), Indent.Bullet(false))
+      Indents = ImmutableList.Create<Indent>(Indent.Number(-1), Indent.Bullet(false))
     }))).Is(new BlockContainer(new List<TreeNode> {
       new NumbersContainer(new List<TreeNode> {
         new ListItemContainer(new List<TreeNode> {
@@ -193,8 +193,8 @@ public class IndentationTest
   {
     DeltaTree.Parse(new Document().Insert("A")
       .Insert(new LineInsert(
-        new LineFormat(ImmutableList.Create<Indent>(Indent.Number(2), Indent.LooseBullet, Indent.Quote)))).Insert("B")
-      .Insert(new LineInsert(new LineFormat(ImmutableList.Create<Indent>(Indent.Number(0)))))).Is(new BlockContainer(
+        new LineFormat(ImmutableList.Create<Indent>(Indent.Number(1), Indent.LooseBullet, Indent.Quote)))).Insert("B")
+      .Insert(new LineInsert(new LineFormat(ImmutableList.Create<Indent>(Indent.Number(-1)))))).Is(new BlockContainer(
       new List<TreeNode> {
         new NumbersContainer(new List<TreeNode> {
           new ListItemContainer(new List<TreeNode> {

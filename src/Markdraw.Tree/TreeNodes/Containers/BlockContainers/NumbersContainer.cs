@@ -4,13 +4,13 @@ namespace Markdraw.Tree.TreeNodes.Containers.BlockContainers;
 
 public class NumbersContainer : ListContainer
 {
-  private NumbersContainer(DeltaTree? deltaTree = null, int i = 0, int start = 0, bool loose = true) : base(deltaTree,
+  private NumbersContainer(DeltaTree? deltaTree = null, int i = 0, int start = 1, bool loose = true) : base(deltaTree,
     i, loose)
   {
     Start = start;
   }
 
-  public NumbersContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0, int start = 0,
+  public NumbersContainer(List<TreeNode> elementsInside, DeltaTree? deltaTree = null, int i = 0, int start = 1,
     bool loose = true) : base(elementsInside, deltaTree, i, loose)
   {
     Start = start;
@@ -18,10 +18,10 @@ public class NumbersContainer : ListContainer
 
   public int Start { get; set; }
   protected override string Tag => "ol";
-  protected override string StartingTag => Start > 1 ? $@"<ol start=""{Start}"">" : "<ol>";
+  protected override string StartingTag => Start != 1 ? $@"<ol start=""{Start}"">" : "<ol>";
 
   public static NumbersContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree? deltaTree = null,
-    int i = 0, int start = 0, bool loose = true)
+    int i = 0, int start = 1, bool loose = true)
   {
     var container = new NumbersContainer(deltaTree, i, start, loose);
     container.Initialise(depth, document, i);

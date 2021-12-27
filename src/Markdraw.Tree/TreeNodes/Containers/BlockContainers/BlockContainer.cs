@@ -37,8 +37,8 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
       BulletIndent { Start: true } bulletIndent => bulletIndent with {
         Start = false
       },
-      NumberIndent { Start: > 0 } numberIndent => numberIndent with {
-        Start = 0
+      NumberIndent { Start: > -1 } numberIndent => numberIndent with {
+        Start = -1
       },
       QuoteIndent { Start: true } quoteIndent => quoteIndent with {
         Start = false
