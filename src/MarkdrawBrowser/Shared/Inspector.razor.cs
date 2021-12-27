@@ -21,8 +21,8 @@ internal record ObjectInformation(object? Object, string ObjectType, bool IsBasi
 
   private static bool IsObjectBasic(object? obj)
   {
-    return obj is null || IsTypeOfType(obj.GetType()) || obj is int or string or bool or null or char or long or double or
-    IList;
+    return obj is null or int or string or bool or char or long or double or IList or CouldNotEvaluateResponse
+      || IsTypeOfType(obj.GetType());
   }
 
   private static string GetFriendlyTypeName(Type? type)
@@ -45,6 +45,14 @@ internal record ObjectInformation(object? Object, string ObjectType, bool IsBasi
     builder.AppendJoin(',', type.GetGenericArguments().Select(GetFriendlyTypeName));
     builder.Append('>');
     return builder.ToString();
+  }
+}
+
+internal class CouldNotEvaluateResponse
+{
+  public override string ToString()
+  {
+    return "[COULD NOT EVALUATE]";
   }
 }
 
@@ -83,7 +91,7 @@ public partial class Inspector : ComponentBase
           }
           catch
           {
-            return (property.Name, new ObjectInformation("[COULD NOT EVALUATE]", property.PropertyType));
+            return (property.Name, new ObjectInformation(new CouldNotEvaluateResponse(), property.PropertyType));
           }
         })
         .ToList();
@@ -108,10 +116,14 @@ public partial class Inspector : ComponentBase
 
   private static string LinkString(object? obj)
   {
-    return obj?.ToString() switch {
-      "" => @"""""",
+    return obj switch {
+      string s => @$"""{s}""",
       null => "null",
-      var x => x
+      _ => obj.ToString() switch {
+        "" => @"""""",
+        null => "null",
+        var x => x
+      }
     };
   }
 }

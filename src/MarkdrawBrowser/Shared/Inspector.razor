@@ -16,36 +16,47 @@
       </tr>
       </thead>
       <tbody>
-      @foreach (var (propertyName, (propertyObject, propertyType, isPropertyBasic)) in _properties)
+      @if (_properties.Count == 0)
       {
         <tr>
-          <td>
-            <code>
-              @propertyName
-            </code>
-          </td>
-          <td>
-            <code>
-              @propertyType
-            </code>
-          </td>
-          <td>
-            <code>
-              @if (!isPropertyBasic)
-              {
-                <a @onclick="@(() => Object = propertyObject ?? Object)">
-                  @LinkString(propertyObject)
-                </a>
-              }
-              else
-              {
-                <span>
-                  @LinkString(propertyObject)
-                </span>
-              }
-            </code>
+          <td colspan="3">
+            No properties
           </td>
         </tr>
+      }
+      else
+      {
+        @foreach (var (propertyName, (propertyObject, propertyType, isPropertyBasic)) in _properties)
+        {
+          <tr>
+            <td>
+              <code>
+                @propertyName
+              </code>
+            </td>
+            <td>
+              <code>
+                @propertyType
+              </code>
+            </td>
+            <td>
+              <code>
+                @if (!isPropertyBasic)
+                {
+                  <a @onclick="@(() => Object = propertyObject ?? Object)">
+                    @LinkString(propertyObject)
+                  </a>
+                }
+                else
+                {
+                  <span>
+                    @LinkString(propertyObject)
+                  </span>
+                }
+              </code>
+            </td>
+          </tr>
+        }
       }
       </tbody>
     </table>
