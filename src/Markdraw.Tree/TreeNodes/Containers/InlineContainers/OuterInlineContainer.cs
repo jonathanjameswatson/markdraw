@@ -22,7 +22,7 @@ public class OuterInlineContainer : InlineBranchingContainer
   public bool Loose { get; set; }
 
   protected override string Tag => Header == 0 ? "p" : $"h{Header}";
-  private bool ShowTags => Loose && !(Header == 0 && ElementsInside.Count == 0);
+  private bool ShowTags => Header != 0 || (Loose && ElementsInside.Count != 0);
   protected override string StartingTag => ShowTags ? $"<{Tag}>" : "";
   protected override string EndingTag => ShowTags ? $"</{Tag}>" : "";
 
