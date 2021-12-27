@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Immutable;
 using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Components;
 
 namespace MarkdrawBrowser.Shared;
 
 internal record ObjectInformation(object? Object, string ObjectType, bool IsBasic)
 {
-  public ObjectInformation(object? obj) : this(obj, obj?.GetType().Name ?? "null", IsObjectBasic(obj)) {}
+  public ObjectInformation(object? obj) : this(obj, GetFriendlyTypeName(obj?.GetType()),
+  IsObjectBasic(obj)) {}
+
+  public ObjectInformation(object? obj, Type? type) : this(obj, GetFriendlyTypeName(type),
+    IsObjectBasic(obj)) {}
 
   private static bool IsTypeOfType(Type type)
   {
@@ -18,6 +23,28 @@ internal record ObjectInformation(object? Object, string ObjectType, bool IsBasi
   {
     return obj is null || IsTypeOfType(obj.GetType()) || obj is int or string or bool or null or char or long or double or
     IList;
+  }
+
+  private static string GetFriendlyTypeName(Type? type)
+  {
+    if (type is null)
+    {
+      return "null";
+    }
+
+    if (type.IsGenericParameter || !type.IsGenericType)
+    {
+      return type.Name;
+    }
+
+    var builder = new StringBuilder();
+    var name = type.Name;
+    var index = name.IndexOf("`", StringComparison.Ordinal);
+    builder.Append(name[..index]);
+    builder.Append('<');
+    builder.AppendJoin(',', type.GetGenericArguments().Select(GetFriendlyTypeName));
+    builder.Append('>');
+    return builder.ToString();
   }
 }
 
@@ -52,13 +79,12 @@ public partial class Inspector : ComponentBase
         .Select(property => {
           try
           {
-            return (property.Name, new ObjectInformation(property.GetValue(value)));
+            return (property.Name, new ObjectInformation(property.GetValue(value), property.PropertyType));
           }
           catch
           {
-            return (property.Name, new ObjectInformation("[COULD NOT EVALUATE]", property.GetType().ToString(), true));
+            return (property.Name, new ObjectInformation("[COULD NOT EVALUATE]", property.PropertyType));
           }
-
         })
         .ToList();
       _contents = value switch {
