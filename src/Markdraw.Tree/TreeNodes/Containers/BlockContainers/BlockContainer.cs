@@ -68,7 +68,7 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
     var enumerable = document as Insert[] ?? document.ToArray();
     if (!enumerable.Any())
     {
-      ElementsInside.Add(OuterInlineContainer.CreateInstance(0, inlineBuffer, ParentTree, newI));
+      ElementsInside.Add(OuterInlineContainer.CreateInstance(0, inlineBuffer, ParentTree, newI, header, LooseInlines));
       return i;
     }
 
