@@ -14,6 +14,19 @@ module.exports = {
             presets: ["@babel/preset-env"],
             cacheCompression: false,
             cacheDirectory: true,
+            plugins: [
+              [
+                "prismjs",
+                {
+                  "languages": ["html"],
+                  "plugins": [
+                    "autoloader",
+                    "custom-class",
+                  ],
+                  theme: false,
+                }
+              ]
+            ]
           },
         },
       },

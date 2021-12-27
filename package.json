@@ -9,6 +9,7 @@
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "babel-loader": "^8.2.3",
+    "babel-plugin-prismjs": "^2.1.0",
     "core-js": "^3.20.0",
     "cross-env": "^7.0.3",
     "gulp": "^4.0.2",
