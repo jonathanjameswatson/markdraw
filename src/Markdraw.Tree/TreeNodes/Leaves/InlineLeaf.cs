@@ -18,16 +18,6 @@ public class InlineLeaf : Leaf
     protected set => throw new InvalidOperationException("Change the corresponding insert instead.");
   }
 
-  private static string GetContents(InlineInsert inlineInsert)
-  {
-    return inlineInsert switch {
-      ImageInsert imageInsert => ImageTag(imageInsert),
-      InlineHtmlInsert { Content: var content } => content,
-      TextInsert { Text: var text } => EscapeHelpers.Escape(text),
-      _ => throw new ArgumentOutOfRangeException(nameof(inlineInsert))
-    };
-  }
-
   private static string ImageTag(ImageInsert imageInsert)
   {
     var (url, alt, title, _) = imageInsert;
@@ -37,6 +27,11 @@ public class InlineLeaf : Leaf
 
   public override string ToString()
   {
-    return GetContents(CorrespondingInsert);
+    return CorrespondingInsert switch {
+      ImageInsert imageInsert => ImageTag(imageInsert),
+      InlineHtmlInsert { Content: var content } => content,
+      TextInsert { Text: var text } => EscapeHelpers.Escape(text),
+      _ => throw new InvalidOperationException("Unsupported inline leaf insert given.")
+    };
   }
 }
