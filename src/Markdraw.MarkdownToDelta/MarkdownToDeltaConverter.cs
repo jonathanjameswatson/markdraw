@@ -109,7 +109,7 @@ public static class MarkdownToDeltaConverter
             document.Insert(new LineInsert(new LineFormat(indents, level)));
             break;
           case HtmlBlock { Lines: var lines }:
-            document.Insert(new BlockHtmlInsert(lines.ToString()));
+            document.Insert(new BlockHtmlInsert($"{lines.ToString()}\n"));
             break;
           case LinkReferenceDefinition:
             return;
@@ -134,7 +134,8 @@ public static class MarkdownToDeltaConverter
     }
   }
 
-  private static void InsertInline(Document document, Inline inline, InlineFormat? format = null)
+  private static bool InsertInline(Document document, Inline inline, InlineFormat? format = null, bool
+    previousLineBreak = false)
   {
     var newFormat = format ?? new InlineFormat();
 
@@ -160,7 +161,7 @@ public static class MarkdownToDeltaConverter
           case LinkInline { IsImage: true, Url: var url, Title: var title } linkInline:
             var altText = GetText(linkInline);
             document.Insert(new ImageInsert(url ?? "", altText, title ?? "", newFormat));
-            return;
+            return false;
           case LinkInline { Url: var url, Title: var title }:
             newFormat = newFormat with {
               Styles = newFormat.Styles.Add(Style.Link(url ?? "", title ?? ""))
@@ -168,23 +169,25 @@ public static class MarkdownToDeltaConverter
             break;
         }
 
-        foreach (var child in containerInline)
-        {
-          InsertInline(document, child, newFormat);
-        }
-
-        break;
+        return containerInline.Aggregate(previousLineBreak,
+          (newPreviousLineBreak, child) =>
+            InsertInline(document, child, newFormat, newPreviousLineBreak));
       case LeafInline leafInline:
         InlineInsert newInsert = leafInline switch {
           AutolinkInline { Url: var url } => new TextInsert(url),
           CodeInline { Content: var content } => new TextInsert(content),
           HtmlEntityInline { Original: var original } => new InlineHtmlInsert(original.ToString()),
-          HtmlInline { Tag: var tag } => new InlineHtmlInsert(tag),
+          HtmlInline { Tag: var tag } => new InlineHtmlInsert(previousLineBreak ? $"\n{tag}" : tag),
           LineBreakInline { IsHard: true } => new InlineHtmlInsert("<br />"),
           LineBreakInline => new TextInsert(" "),
           LiteralInline { Content: var content } => new TextInsert(content.ToString()),
           _ => throw new ArgumentOutOfRangeException(nameof(inline))
         };
+
+        if (previousLineBreak && leafInline is HtmlInline)
+        {
+          document.Transform(new Transformation().Retain(document.Characters - 1).Delete(1));
+        }
 
         newFormat = leafInline switch {
           AutolinkInline { Url: var url } => newFormat with {
@@ -200,7 +203,7 @@ public static class MarkdownToDeltaConverter
           Format = newFormat
         });
 
-        break;
+        return leafInline is LineBreakInline { IsHard: false };
       default:
         throw new ArgumentOutOfRangeException(nameof(inline));
     }
@@ -209,7 +212,7 @@ public static class MarkdownToDeltaConverter
   private static string GetText(Inline inline)
   {
     return inline switch {
-      ContainerInline containerInline => string.Join("", containerInline.Select(GetText)),
+      ContainerInline containerInline => string.Concat(containerInline.Select(GetText)),
       LeafInline leafInline => leafInline switch {
         LiteralInline literalInline => literalInline.Content.ToString(),
         _ => ""
