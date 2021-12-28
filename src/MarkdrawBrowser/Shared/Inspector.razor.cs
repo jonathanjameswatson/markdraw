@@ -21,7 +21,7 @@ internal record ObjectInformation(object? Object, string ObjectType, bool IsBasi
 
   private static bool IsObjectBasic(object? obj)
   {
-    return obj is null or int or string or bool or char or long or double or IList or CouldNotEvaluateResponse
+    return obj is null or int or string or bool or char or long or double or CouldNotEvaluateResponse
       || IsTypeOfType(obj.GetType());
   }
 
@@ -32,14 +32,21 @@ internal record ObjectInformation(object? Object, string ObjectType, bool IsBasi
       return "null";
     }
 
+    var name = type.Name;
+
     if (type.IsGenericParameter || !type.IsGenericType)
     {
       return type.Name;
     }
 
-    var builder = new StringBuilder();
-    var name = type.Name;
     var index = name.IndexOf("`", StringComparison.Ordinal);
+
+    if (index == -1)
+    {
+      return type.Name;
+    }
+
+    var builder = new StringBuilder();
     builder.Append(name[..index]);
     builder.Append('<');
     builder.AppendJoin(',', type.GetGenericArguments().Select(GetFriendlyTypeName));
