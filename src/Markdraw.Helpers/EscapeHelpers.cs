@@ -7,7 +7,7 @@ public static class EscapeHelpers
 {
   public static string EscapeUrl(string url)
   {
-    return string.Join("", url.SelectMany(c => {
+    return string.Concat(url.SelectMany(c => {
       if (c < 128)
       {
         return new[] {

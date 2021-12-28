@@ -45,7 +45,7 @@ public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format
 
   public override string ToString()
   {
-    var indentString = string.Join("", Indents);
+    var indentString = string.Concat(Indents);
     if (indentString != "")
     {
       indentString += " ";

@@ -8,7 +8,7 @@ public static class Parser
 {
   public static string Parse(string markdown)
   {
-    var html = string.Join(' ', DeltaTree.Parse(markdown).Select(child => child.ToString()));
+    var html = string.Concat(DeltaTree.Parse(markdown).Select(child => child.ToString()));
     return Prettify(html);
   }
 
