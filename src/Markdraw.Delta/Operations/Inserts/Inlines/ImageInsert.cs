@@ -1,3 +1,4 @@
+using System.Text;
 using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines;
@@ -8,6 +9,12 @@ public record ImageInsert(string Url, string Alt, string Title, InlineFormat For
 
   public override string ToString()
   {
-    return Format.Wrap($"![{Alt}]({Url})");
+    var stringBuilder = new StringBuilder($"![{Alt}]({Url}");
+    if (Title != "")
+    {
+      stringBuilder.Append($@" ""{Title}""");
+    }
+    stringBuilder.Append(')');
+    return stringBuilder.ToString();
   }
 }
