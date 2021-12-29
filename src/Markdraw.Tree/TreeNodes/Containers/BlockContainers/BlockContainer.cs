@@ -54,7 +54,6 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
       BulletIndent { Loose: var loose } => BulletsContainer.CreateInstance(depth - 1, document, ParentTree, i, loose),
       NumberIndent { Loose: var loose, Start: var start } => NumbersContainer.CreateInstance(depth - 1, document,
         ParentTree, i, start, loose),
-      CodeIndent => QuoteContainer.CreateInstance(depth, document, ParentTree, i),
       _ => CreateInstance(depth, document, ParentTree, i)
     };
   }

@@ -3,7 +3,6 @@ namespace Markdraw.Delta.Indents;
 public abstract record Indent
 {
   public static readonly QuoteIndent Quote = new(true);
-  public static readonly CodeIndent Code = new();
   public static readonly ContinueIndent Continue = new();
   public static readonly BulletIndent LooseBullet = new(true);
   public static readonly NumberIndent LooseNumber = new(1);
