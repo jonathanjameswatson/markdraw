@@ -15,6 +15,6 @@ public record ImageInsert(string Url, string Alt, string Title, InlineFormat For
       stringBuilder.Append($@" ""{Title}""");
     }
     stringBuilder.Append(')');
-    return stringBuilder.ToString();
+    return Format.Wrap(stringBuilder.ToString());
   }
 }
