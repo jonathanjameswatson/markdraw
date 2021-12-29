@@ -1,4 +1,6 @@
-﻿namespace Markdraw.Delta.Indents;
+﻿using System.Text;
+
+namespace Markdraw.Delta.Indents;
 
 public record NumberIndent : ListIndent
 {
@@ -30,6 +32,6 @@ public record NumberIndent : ListIndent
 
   public override string ToString()
   {
-    return $"{(Start == -1 ? 1 : Start)}.";
+    return $"||{(Start == -1 ? "?" : Start.ToString())}. {(Loose ? "LOOSE" : "TIGHT")}||";
   }
 }
