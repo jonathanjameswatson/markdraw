@@ -2,7 +2,7 @@
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines;
 
-public record InlineHtmlInsert(string Content, InlineFormat Format) : InlineInsert(Format), IHtmlInsert
+public record InlineHtmlInsert(string Content, InlineFormat Format) : InlineInsert(Format), IHtmlContent
 {
   public InlineHtmlInsert(string content = "") : this(content, new InlineFormat()) {}
 

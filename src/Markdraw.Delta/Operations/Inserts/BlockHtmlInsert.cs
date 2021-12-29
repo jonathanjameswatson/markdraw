@@ -1,6 +1,6 @@
 ﻿namespace Markdraw.Delta.Operations.Inserts;
 
-public record BlockHtmlInsert(string Content = "") : Insert, IHtmlInsert
+public record BlockHtmlInsert(string Content = "") : Insert, IHtmlContent
 {
   public override string ToString()
   {
