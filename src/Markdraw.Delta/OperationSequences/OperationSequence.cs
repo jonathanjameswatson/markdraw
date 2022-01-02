@@ -108,8 +108,8 @@ public abstract class OperationSequence<T, TSelf> : IEnumerable<T>
   /// </returns>
   protected int? MergeBack(int index)
   {
-    if (index < 1 || index >= Length || Get(index) is not TextInsert after
-        || Get(index - 1) is not TextInsert before) return null;
+    if (index < 1 || index >= Length || Get(index) is not ISplittableInsert after
+        || Get(index - 1) is not ISplittableInsert before) return null;
     var beforeLength = before.Length;
     var merged = after.Merge(before);
     if (merged is null) return null;
