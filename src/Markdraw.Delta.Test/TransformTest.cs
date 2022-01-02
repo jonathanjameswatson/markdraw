@@ -103,6 +103,13 @@ public class TransformTest
   }
 
   [Fact]
+  public void Insert_InsertsInCode()
+  {
+    new Document().Insert(new CodeInsert("AA")).Transform(new Transformation().Retain(1).Insert(new CodeInsert("A")))
+      .Is(new Document().Insert(new CodeInsert("AAA")));
+  }
+
+  [Fact]
   public void Retain_FormatsTextWithNewLine()
   {
     var turnBold = new InlineFormatModifier(styles => styles.Add(Style.Bold));

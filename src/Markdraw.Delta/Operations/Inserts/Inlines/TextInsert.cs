@@ -16,7 +16,6 @@ public record TextInsert : InlineInsert, ISplittableInsert
     Text = text;
   }
 
-  public override int Length => Text.Length;
   public string Text
   {
     get => _text;
@@ -30,13 +29,7 @@ public record TextInsert : InlineInsert, ISplittableInsert
     }
   }
 
-  public TextInsert? Merge(TextInsert before)
-  {
-    if (!Format.Equals(before.Format)) return null;
-    return before with {
-      Text = before.Text + Text
-    };
-  }
+  public override int Length => Text.Length;
 
   ISplittableInsert? ISplittableInsert.Merge(ISplittableInsert before)
   {
@@ -46,19 +39,46 @@ public record TextInsert : InlineInsert, ISplittableInsert
     };
   }
 
-  public TextInsert? Merge(TextInsert middle, TextInsert before)
-  {
-    if (!Format.Equals(middle.Format)) return null;
-    return before with {
-      Text = before.Text + middle.Text + Text
-    };
-  }
-
   ISplittableInsert? ISplittableInsert.Merge(ISplittableInsert middle, ISplittableInsert before)
   {
     return (middle, before) switch {
       (TextInsert middleTextInsert, TextInsert beforeTextInsert) => Merge(middleTextInsert, beforeTextInsert),
       _ => null
+    };
+  }
+
+  ISplittableInsert? ISplittableInsert.DeleteUpTo(int position)
+  {
+    return DeleteUpTo(position);
+  }
+
+  (ISplittableInsert, ISplittableInsert)? ISplittableInsert.SplitAt(int position)
+  {
+    return SplitAt(position);
+  }
+
+  public void Deconstruct(out string text, out InlineFormat format)
+  {
+    text = _text;
+    format = Format;
+  }
+
+  public ISplittableInsert? Merge(TextInsert before)
+  {
+    var (beforeText, beforeFormat) = before;
+    if (!Format.Equals(beforeFormat)) return null;
+    return before with {
+      Text = beforeText + Text
+    };
+  }
+
+  public TextInsert? Merge(TextInsert middle, TextInsert before)
+  {
+    var (middleText, middleFormat) = middle;
+    var (beforeText, beforeFormat) = before;
+    if (!Format.Equals(middleFormat) || !Format.Equals(beforeFormat)) return null;
+    return before with {
+      Text = beforeText + middleText + Text
     };
   }
 
@@ -71,8 +91,6 @@ public record TextInsert : InlineInsert, ISplittableInsert
     };
   }
 
-  ISplittableInsert? ISplittableInsert.DeleteUpTo(int position) => DeleteUpTo(position);
-
   public (TextInsert, TextInsert)? SplitAt(int position)
   {
     if (position == 0 || position >= Length) return null;
@@ -82,8 +100,6 @@ public record TextInsert : InlineInsert, ISplittableInsert
       Text = startText
     }, new TextInsert(endText, Format));
   }
-
-  (ISplittableInsert, ISplittableInsert)? ISplittableInsert.SplitAt(int position) => SplitAt(position);
 
   public override string ToString()
   {

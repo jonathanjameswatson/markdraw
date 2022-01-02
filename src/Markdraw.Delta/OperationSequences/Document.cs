@@ -23,7 +23,7 @@ internal record SplitResult(SplittableTransformState CurrentState, ISplittableIn
 public class Document : OperationSequence<IInsert, Document>
 {
   /// <summary>The number of characters in the document.</summary>
-  /// <remarks>Certain inserts result in one character, such as dividers and code blocks.</remarks>
+  /// <remarks>Inserts that cannot be split result in one character.</remarks>
   public int Characters => this.Sum(insert => insert.Length);
 
   /// <summary>Transforms this document with a transformation.</summary>
