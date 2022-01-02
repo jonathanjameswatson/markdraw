@@ -374,6 +374,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("\tfoo\tbaz\t\tbim").Is(Parser.Prettify("<pre><code>foo\tbaz\t\tbim\n</code></pre>"));
+
+      Parser.DoubleParse("\tfoo\tbaz\t\tbim").Is(Parser.Prettify("<pre><code>foo\tbaz\t\tbim\n</code></pre>"));
     }
 
     [Fact]
@@ -390,6 +392,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("  \tfoo\tbaz\t\tbim").Is(Parser.Prettify("<pre><code>foo\tbaz\t\tbim\n</code></pre>"));
+
+      Parser.DoubleParse("  \tfoo\tbaz\t\tbim").Is(Parser.Prettify("<pre><code>foo\tbaz\t\tbim\n</code></pre>"));
     }
 
     [Fact]
@@ -408,6 +412,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    a\ta\n    ὐ\ta").Is(Parser.Prettify("<pre><code>a\ta\nὐ\ta\n</code></pre>"));
+
+      Parser.DoubleParse("    a\ta\n    ὐ\ta").Is(Parser.Prettify("<pre><code>a\ta\nὐ\ta\n</code></pre>"));
     }
 
     // In the following example, a continuation paragraph of a list
@@ -433,6 +439,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("  - foo\n\n\tbar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("  - foo\n\n\tbar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -456,6 +464,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n\n\t\tbar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n\n\t\tbar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<pre><code>  bar\n</code></pre>\n</li>\n</ul>"));
     }
 
     // Normally the `>` that begins a block quote may be followed
@@ -482,6 +492,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse(">\t\tfoo").Is(Parser.Prettify("<blockquote>\n<pre><code>  foo\n</code></pre>\n</blockquote>"));
+
+      Parser.DoubleParse(">\t\tfoo").Is(Parser.Prettify("<blockquote>\n<pre><code>  foo\n</code></pre>\n</blockquote>"));
     }
 
     [Fact]
@@ -502,6 +514,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("-\t\tfoo").Is(Parser.Prettify("<ul>\n<li>\n<pre><code>  foo\n</code></pre>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("-\t\tfoo").Is(Parser.Prettify("<ul>\n<li>\n<pre><code>  foo\n</code></pre>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -520,6 +534,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    foo\n\tbar").Is(Parser.Prettify("<pre><code>foo\nbar\n</code></pre>"));
+
+      Parser.DoubleParse("    foo\n\tbar").Is(Parser.Prettify("<pre><code>foo\nbar\n</code></pre>"));
     }
 
     [Fact]
@@ -547,6 +563,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse(" - foo\n   - bar\n\t - baz").Is(Parser.Prettify("<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>"));
+
+      Parser.DoubleParse(" - foo\n   - bar\n\t - baz").Is(Parser.Prettify("<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -562,6 +580,8 @@ namespace Markdraw.Parser.Test
       //   <h1>Foo</h1>
 
       Parser.Parse("#\tFoo").Is(Parser.Prettify("<h1>Foo</h1>"));
+
+      Parser.DoubleParse("#\tFoo").Is(Parser.Prettify("<h1>Foo</h1>"));
     }
 
     [Fact]
@@ -577,6 +597,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("*\t*\t*\t").Is(Parser.Prettify("<hr />"));
+
+      Parser.DoubleParse("*\t*\t*\t").Is(Parser.Prettify("<hr />"));
     }
   }
 
@@ -618,6 +640,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- `one\n- two`").Is(Parser.Prettify("<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>"));
+
+      Parser.DoubleParse("- `one\n- two`").Is(Parser.Prettify("<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>"));
     }
   }
 
@@ -667,6 +691,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("***\n---\n___").Is(Parser.Prettify("<hr />\n<hr />\n<hr />"));
+
+      Parser.DoubleParse("***\n---\n___").Is(Parser.Prettify("<hr />\n<hr />\n<hr />"));
     }
 
     // Wrong characters:
@@ -683,6 +709,8 @@ namespace Markdraw.Parser.Test
       //   <p>+++</p>
 
       Parser.Parse("+++").Is(Parser.Prettify("<p>+++</p>"));
+
+      Parser.DoubleParse("+++").Is(Parser.Prettify("<p>+++</p>"));
     }
 
     [Fact]
@@ -698,6 +726,8 @@ namespace Markdraw.Parser.Test
       //   <p>===</p>
 
       Parser.Parse("===").Is(Parser.Prettify("<p>===</p>"));
+
+      Parser.DoubleParse("===").Is(Parser.Prettify("<p>===</p>"));
     }
 
     // Not enough characters:
@@ -718,6 +748,8 @@ namespace Markdraw.Parser.Test
       //   __</p>
 
       Parser.Parse("--\n**\n__").Is(Parser.Prettify("<p>--\n**\n__</p>"));
+
+      Parser.DoubleParse("--\n**\n__").Is(Parser.Prettify("<p>--\n**\n__</p>"));
     }
 
     // One to three spaces indent are allowed:
@@ -738,6 +770,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse(" ***\n  ***\n   ***").Is(Parser.Prettify("<hr />\n<hr />\n<hr />"));
+
+      Parser.DoubleParse(" ***\n  ***\n   ***").Is(Parser.Prettify("<hr />\n<hr />\n<hr />"));
     }
 
     // Four spaces is too many:
@@ -755,6 +789,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    ***").Is(Parser.Prettify("<pre><code>***\n</code></pre>"));
+
+      Parser.DoubleParse("    ***").Is(Parser.Prettify("<pre><code>***\n</code></pre>"));
     }
 
     [Fact]
@@ -772,6 +808,8 @@ namespace Markdraw.Parser.Test
       //   ***</p>
 
       Parser.Parse("Foo\n    ***").Is(Parser.Prettify("<p>Foo\n***</p>"));
+
+      Parser.DoubleParse("Foo\n    ***").Is(Parser.Prettify("<p>Foo\n***</p>"));
     }
 
     // More than three characters may be used:
@@ -788,6 +826,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("_____________________________________").Is(Parser.Prettify("<hr />"));
+
+      Parser.DoubleParse("_____________________________________").Is(Parser.Prettify("<hr />"));
     }
 
     // Spaces are allowed between the characters:
@@ -804,6 +844,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse(" - - -").Is(Parser.Prettify("<hr />"));
+
+      Parser.DoubleParse(" - - -").Is(Parser.Prettify("<hr />"));
     }
 
     [Fact]
@@ -819,6 +861,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse(" **  * ** * ** * **").Is(Parser.Prettify("<hr />"));
+
+      Parser.DoubleParse(" **  * ** * ** * **").Is(Parser.Prettify("<hr />"));
     }
 
     [Fact]
@@ -834,6 +878,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("-     -      -      -").Is(Parser.Prettify("<hr />"));
+
+      Parser.DoubleParse("-     -      -      -").Is(Parser.Prettify("<hr />"));
     }
 
     // Spaces are allowed at the end:
@@ -850,6 +896,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("- - - -    ").Is(Parser.Prettify("<hr />"));
+
+      Parser.DoubleParse("- - - -    ").Is(Parser.Prettify("<hr />"));
     }
 
     // However, no other characters may occur in the line:
@@ -872,6 +920,8 @@ namespace Markdraw.Parser.Test
       //   <p>---a---</p>
 
       Parser.Parse("_ _ _ _ a\n\na------\n\n---a---").Is(Parser.Prettify("<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>"));
+
+      Parser.DoubleParse("_ _ _ _ a\n\na------\n\n---a---").Is(Parser.Prettify("<p>_ _ _ _ a</p>\n<p>a------</p>\n<p>---a---</p>"));
     }
 
     // It is required that all of the [non-whitespace characters] be the same.
@@ -889,6 +939,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>-</em></p>
 
       Parser.Parse(" *-*").Is(Parser.Prettify("<p><em>-</em></p>"));
+
+      Parser.DoubleParse(" *-*").Is(Parser.Prettify("<p><em>-</em></p>"));
     }
 
     // Thematic breaks do not need blank lines before or after:
@@ -913,6 +965,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n***\n- bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n***\n- bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>\n<hr />\n<ul>\n<li>bar</li>\n</ul>"));
     }
 
     // Thematic breaks can interrupt a paragraph:
@@ -933,6 +987,8 @@ namespace Markdraw.Parser.Test
       //   <p>bar</p>
 
       Parser.Parse("Foo\n***\nbar").Is(Parser.Prettify("<p>Foo</p>\n<hr />\n<p>bar</p>"));
+
+      Parser.DoubleParse("Foo\n***\nbar").Is(Parser.Prettify("<p>Foo</p>\n<hr />\n<p>bar</p>"));
     }
 
     // If a line of dashes that meets the above conditions for being a
@@ -956,6 +1012,8 @@ namespace Markdraw.Parser.Test
       //   <p>bar</p>
 
       Parser.Parse("Foo\n---\nbar").Is(Parser.Prettify("<h2>Foo</h2>\n<p>bar</p>"));
+
+      Parser.DoubleParse("Foo\n---\nbar").Is(Parser.Prettify("<h2>Foo</h2>\n<p>bar</p>"));
     }
 
     // When both a thematic break and a list item are possible
@@ -981,6 +1039,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("* Foo\n* * *\n* Bar").Is(Parser.Prettify("<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>"));
+
+      Parser.DoubleParse("* Foo\n* * *\n* Bar").Is(Parser.Prettify("<ul>\n<li>Foo</li>\n</ul>\n<hr />\n<ul>\n<li>Bar</li>\n</ul>"));
     }
 
     // If you want a thematic break in a list item, use a different bullet:
@@ -1003,6 +1063,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- Foo\n- * * *").Is(Parser.Prettify("<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- Foo\n- * * *").Is(Parser.Prettify("<ul>\n<li>Foo</li>\n<li>\n<hr />\n</li>\n</ul>"));
     }
   }
 
@@ -1046,6 +1108,8 @@ namespace Markdraw.Parser.Test
       //   <h6>foo</h6>
 
       Parser.Parse("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo").Is(Parser.Prettify("<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>"));
+
+      Parser.DoubleParse("# foo\n## foo\n### foo\n#### foo\n##### foo\n###### foo").Is(Parser.Prettify("<h1>foo</h1>\n<h2>foo</h2>\n<h3>foo</h3>\n<h4>foo</h4>\n<h5>foo</h5>\n<h6>foo</h6>"));
     }
 
     // More than six `#` characters is not a heading:
@@ -1062,6 +1126,8 @@ namespace Markdraw.Parser.Test
       //   <p>####### foo</p>
 
       Parser.Parse("####### foo").Is(Parser.Prettify("<p>####### foo</p>"));
+
+      Parser.DoubleParse("####### foo").Is(Parser.Prettify("<p>####### foo</p>"));
     }
 
     // At least one space is required between the `#` characters and the
@@ -1087,6 +1153,8 @@ namespace Markdraw.Parser.Test
       //   <p>#hashtag</p>
 
       Parser.Parse("#5 bolt\n\n#hashtag").Is(Parser.Prettify("<p>#5 bolt</p>\n<p>#hashtag</p>"));
+
+      Parser.DoubleParse("#5 bolt\n\n#hashtag").Is(Parser.Prettify("<p>#5 bolt</p>\n<p>#hashtag</p>"));
     }
 
     // This is not a heading, because the first `#` is escaped:
@@ -1103,9 +1171,11 @@ namespace Markdraw.Parser.Test
       //   <p>## foo</p>
 
       Parser.Parse("\\## foo").Is(Parser.Prettify("<p>## foo</p>"));
+
+      Parser.DoubleParse("\\## foo").Is(Parser.Prettify("<p>## foo</p>"));
     }
 
-    // _ops are parsed as inlines:
+    // Contents are parsed as inlines:
     [Fact]
     public void LeafBlocksATXHeadings_Example036()
     {
@@ -1119,6 +1189,8 @@ namespace Markdraw.Parser.Test
       //   <h1>foo <em>bar</em> *baz*</h1>
 
       Parser.Parse("# foo *bar* \\*baz\\*").Is(Parser.Prettify("<h1>foo <em>bar</em> *baz*</h1>"));
+
+      Parser.DoubleParse("# foo *bar* \\*baz\\*").Is(Parser.Prettify("<h1>foo <em>bar</em> *baz*</h1>"));
     }
 
     // Leading and trailing [whitespace] is ignored in parsing inline content:
@@ -1135,6 +1207,8 @@ namespace Markdraw.Parser.Test
       //   <h1>foo</h1>
 
       Parser.Parse("#                  foo                     ").Is(Parser.Prettify("<h1>foo</h1>"));
+
+      Parser.DoubleParse("#                  foo                     ").Is(Parser.Prettify("<h1>foo</h1>"));
     }
 
     // One to three spaces indentation are allowed:
@@ -1155,6 +1229,8 @@ namespace Markdraw.Parser.Test
       //   <h1>foo</h1>
 
       Parser.Parse(" ### foo\n  ## foo\n   # foo").Is(Parser.Prettify("<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>"));
+
+      Parser.DoubleParse(" ### foo\n  ## foo\n   # foo").Is(Parser.Prettify("<h3>foo</h3>\n<h2>foo</h2>\n<h1>foo</h1>"));
     }
 
     // Four spaces are too much:
@@ -1172,6 +1248,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    # foo").Is(Parser.Prettify("<pre><code># foo\n</code></pre>"));
+
+      Parser.DoubleParse("    # foo").Is(Parser.Prettify("<pre><code># foo\n</code></pre>"));
     }
 
     [Fact]
@@ -1189,6 +1267,8 @@ namespace Markdraw.Parser.Test
       //   # bar</p>
 
       Parser.Parse("foo\n    # bar").Is(Parser.Prettify("<p>foo\n# bar</p>"));
+
+      Parser.DoubleParse("foo\n    # bar").Is(Parser.Prettify("<p>foo\n# bar</p>"));
     }
 
     // A closing sequence of `#` characters is optional:
@@ -1207,6 +1287,8 @@ namespace Markdraw.Parser.Test
       //   <h3>bar</h3>
 
       Parser.Parse("## foo ##\n  ###   bar    ###").Is(Parser.Prettify("<h2>foo</h2>\n<h3>bar</h3>"));
+
+      Parser.DoubleParse("## foo ##\n  ###   bar    ###").Is(Parser.Prettify("<h2>foo</h2>\n<h3>bar</h3>"));
     }
 
     // It need not be the same length as the opening sequence:
@@ -1225,6 +1307,8 @@ namespace Markdraw.Parser.Test
       //   <h5>foo</h5>
 
       Parser.Parse("# foo ##################################\n##### foo ##").Is(Parser.Prettify("<h1>foo</h1>\n<h5>foo</h5>"));
+
+      Parser.DoubleParse("# foo ##################################\n##### foo ##").Is(Parser.Prettify("<h1>foo</h1>\n<h5>foo</h5>"));
     }
 
     // Spaces are allowed after the closing sequence:
@@ -1241,6 +1325,8 @@ namespace Markdraw.Parser.Test
       //   <h3>foo</h3>
 
       Parser.Parse("### foo ###     ").Is(Parser.Prettify("<h3>foo</h3>"));
+
+      Parser.DoubleParse("### foo ###     ").Is(Parser.Prettify("<h3>foo</h3>"));
     }
 
     // A sequence of `#` characters with anything but [spaces] following it
@@ -1259,6 +1345,8 @@ namespace Markdraw.Parser.Test
       //   <h3>foo ### b</h3>
 
       Parser.Parse("### foo ### b").Is(Parser.Prettify("<h3>foo ### b</h3>"));
+
+      Parser.DoubleParse("### foo ### b").Is(Parser.Prettify("<h3>foo ### b</h3>"));
     }
 
     // The closing sequence must be preceded by a space:
@@ -1275,6 +1363,8 @@ namespace Markdraw.Parser.Test
       //   <h1>foo#</h1>
 
       Parser.Parse("# foo#").Is(Parser.Prettify("<h1>foo#</h1>"));
+
+      Parser.DoubleParse("# foo#").Is(Parser.Prettify("<h1>foo#</h1>"));
     }
 
     // Backslash-escaped `#` characters do not count as part
@@ -1296,6 +1386,8 @@ namespace Markdraw.Parser.Test
       //   <h1>foo #</h1>
 
       Parser.Parse("### foo \\###\n## foo #\\##\n# foo \\#").Is(Parser.Prettify("<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>"));
+
+      Parser.DoubleParse("### foo \\###\n## foo #\\##\n# foo \\#").Is(Parser.Prettify("<h3>foo ###</h3>\n<h2>foo ###</h2>\n<h1>foo #</h1>"));
     }
 
     // ATX headings need not be separated from surrounding content by blank
@@ -1317,6 +1409,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("****\n## foo\n****").Is(Parser.Prettify("<hr />\n<h2>foo</h2>\n<hr />"));
+
+      Parser.DoubleParse("****\n## foo\n****").Is(Parser.Prettify("<hr />\n<h2>foo</h2>\n<hr />"));
     }
 
     [Fact]
@@ -1336,6 +1430,8 @@ namespace Markdraw.Parser.Test
       //   <p>Bar foo</p>
 
       Parser.Parse("Foo bar\n# baz\nBar foo").Is(Parser.Prettify("<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>"));
+
+      Parser.DoubleParse("Foo bar\n# baz\nBar foo").Is(Parser.Prettify("<p>Foo bar</p>\n<h1>baz</h1>\n<p>Bar foo</p>"));
     }
 
     // ATX headings can be empty:
@@ -1356,6 +1452,8 @@ namespace Markdraw.Parser.Test
       //   <h3></h3>
 
       Parser.Parse("## \n#\n### ###").Is(Parser.Prettify("<h2></h2>\n<h1></h1>\n<h3></h3>"));
+
+      Parser.DoubleParse("## \n#\n### ###").Is(Parser.Prettify("<h2></h2>\n<h1></h1>\n<h3></h3>"));
     }
   }
 
@@ -1410,6 +1508,8 @@ namespace Markdraw.Parser.Test
       //   <h2>Foo <em>bar</em></h2>
 
       Parser.Parse("Foo *bar*\n=========\n\nFoo *bar*\n---------").Is(Parser.Prettify("<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>"));
+
+      Parser.DoubleParse("Foo *bar*\n=========\n\nFoo *bar*\n---------").Is(Parser.Prettify("<h1>Foo <em>bar</em></h1>\n<h2>Foo <em>bar</em></h2>"));
     }
 
     // The content of the header may span more than one line:
@@ -1429,6 +1529,8 @@ namespace Markdraw.Parser.Test
       //   baz</em></h1>
 
       Parser.Parse("Foo *bar\nbaz*\n====").Is(Parser.Prettify("<h1>Foo <em>bar\nbaz</em></h1>"));
+
+      Parser.DoubleParse("Foo *bar\nbaz*\n====").Is(Parser.Prettify("<h1>Foo <em>bar\nbaz</em></h1>"));
     }
 
     // The contents are the result of parsing the headings's raw
@@ -1451,6 +1553,8 @@ namespace Markdraw.Parser.Test
       //   baz</em></h1>
 
       Parser.Parse("  Foo *bar\nbaz*\t\n====").Is(Parser.Prettify("<h1>Foo <em>bar\nbaz</em></h1>"));
+
+      Parser.DoubleParse("  Foo *bar\nbaz*\t\n====").Is(Parser.Prettify("<h1>Foo <em>bar\nbaz</em></h1>"));
     }
 
     // The underlining can be any length:
@@ -1472,6 +1576,8 @@ namespace Markdraw.Parser.Test
       //   <h1>Foo</h1>
 
       Parser.Parse("Foo\n-------------------------\n\nFoo\n=").Is(Parser.Prettify("<h2>Foo</h2>\n<h1>Foo</h1>"));
+
+      Parser.DoubleParse("Foo\n-------------------------\n\nFoo\n=").Is(Parser.Prettify("<h2>Foo</h2>\n<h1>Foo</h1>"));
     }
 
     // The heading content can be indented up to three spaces, and need
@@ -1498,6 +1604,8 @@ namespace Markdraw.Parser.Test
       //   <h1>Foo</h1>
 
       Parser.Parse("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===").Is(Parser.Prettify("<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>"));
+
+      Parser.DoubleParse("   Foo\n---\n\n  Foo\n-----\n\n  Foo\n  ===").Is(Parser.Prettify("<h2>Foo</h2>\n<h2>Foo</h2>\n<h1>Foo</h1>"));
     }
 
     // Four spaces indent is too much:
@@ -1523,6 +1631,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("    Foo\n    ---\n\n    Foo\n---").Is(Parser.Prettify("<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />"));
+
+      Parser.DoubleParse("    Foo\n    ---\n\n    Foo\n---").Is(Parser.Prettify("<pre><code>Foo\n---\n\nFoo\n</code></pre>\n<hr />"));
     }
 
     // The setext heading underline can be indented up to three spaces, and
@@ -1541,6 +1651,8 @@ namespace Markdraw.Parser.Test
       //   <h2>Foo</h2>
 
       Parser.Parse("Foo\n   ----      ").Is(Parser.Prettify("<h2>Foo</h2>"));
+
+      Parser.DoubleParse("Foo\n   ----      ").Is(Parser.Prettify("<h2>Foo</h2>"));
     }
 
     // Four spaces is too much:
@@ -1559,6 +1671,8 @@ namespace Markdraw.Parser.Test
       //   ---</p>
 
       Parser.Parse("Foo\n    ---").Is(Parser.Prettify("<p>Foo\n---</p>"));
+
+      Parser.DoubleParse("Foo\n    ---").Is(Parser.Prettify("<p>Foo\n---</p>"));
     }
 
     // The setext heading underline cannot contain internal spaces:
@@ -1582,6 +1696,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("Foo\n= =\n\nFoo\n--- -").Is(Parser.Prettify("<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />"));
+
+      Parser.DoubleParse("Foo\n= =\n\nFoo\n--- -").Is(Parser.Prettify("<p>Foo\n= =</p>\n<p>Foo</p>\n<hr />"));
     }
 
     // Trailing spaces in the content line do not cause a line break:
@@ -1599,6 +1715,8 @@ namespace Markdraw.Parser.Test
       //   <h2>Foo</h2>
 
       Parser.Parse("Foo  \n-----").Is(Parser.Prettify("<h2>Foo</h2>"));
+
+      Parser.DoubleParse("Foo  \n-----").Is(Parser.Prettify("<h2>Foo</h2>"));
     }
 
     // Nor does a backslash at the end:
@@ -1616,6 +1734,8 @@ namespace Markdraw.Parser.Test
       //   <h2>Foo\</h2>
 
       Parser.Parse("Foo\\\n----").Is(Parser.Prettify("<h2>Foo\\</h2>"));
+
+      Parser.DoubleParse("Foo\\\n----").Is(Parser.Prettify("<h2>Foo\\</h2>"));
     }
 
     // Since indicators of block structure take precedence over
@@ -1642,6 +1762,8 @@ namespace Markdraw.Parser.Test
       //   <p>of dashes&quot;/&gt;</p>
 
       Parser.Parse("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>").Is(Parser.Prettify("<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>"));
+
+      Parser.DoubleParse("`Foo\n----\n`\n\n<a title=\"a lot\n---\nof dashes\"/>").Is(Parser.Prettify("<h2>`Foo</h2>\n<p>`</p>\n<h2>&lt;a title=&quot;a lot</h2>\n<p>of dashes&quot;/&gt;</p>"));
     }
 
     // The setext heading underline cannot be a [lazy continuation
@@ -1663,6 +1785,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("> Foo\n---").Is(Parser.Prettify("<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />"));
+
+      Parser.DoubleParse("> Foo\n---").Is(Parser.Prettify("<blockquote>\n<p>Foo</p>\n</blockquote>\n<hr />"));
     }
 
     [Fact]
@@ -1684,6 +1808,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> foo\nbar\n===").Is(Parser.Prettify("<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> foo\nbar\n===").Is(Parser.Prettify("<blockquote>\n<p>foo\nbar\n===</p>\n</blockquote>"));
     }
 
     [Fact]
@@ -1703,6 +1829,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("- Foo\n---").Is(Parser.Prettify("<ul>\n<li>Foo</li>\n</ul>\n<hr />"));
+
+      Parser.DoubleParse("- Foo\n---").Is(Parser.Prettify("<ul>\n<li>Foo</li>\n</ul>\n<hr />"));
     }
 
     // A blank line is needed between a paragraph and a following
@@ -1724,6 +1852,8 @@ namespace Markdraw.Parser.Test
       //   Bar</h2>
 
       Parser.Parse("Foo\nBar\n---").Is(Parser.Prettify("<h2>Foo\nBar</h2>"));
+
+      Parser.DoubleParse("Foo\nBar\n---").Is(Parser.Prettify("<h2>Foo\nBar</h2>"));
     }
 
     // But in general a blank line is not required before or after
@@ -1749,6 +1879,8 @@ namespace Markdraw.Parser.Test
       //   <p>Baz</p>
 
       Parser.Parse("---\nFoo\n---\nBar\n---\nBaz").Is(Parser.Prettify("<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>"));
+
+      Parser.DoubleParse("---\nFoo\n---\nBar\n---\nBaz").Is(Parser.Prettify("<hr />\n<h2>Foo</h2>\n<h2>Bar</h2>\n<p>Baz</p>"));
     }
 
     // Setext headings cannot be empty:
@@ -1766,6 +1898,8 @@ namespace Markdraw.Parser.Test
       //   <p>====</p>
 
       Parser.Parse("\n====").Is(Parser.Prettify("<p>====</p>"));
+
+      Parser.DoubleParse("\n====").Is(Parser.Prettify("<p>====</p>"));
     }
 
     // Setext heading text lines must not be interpretable as block
@@ -1786,6 +1920,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("---\n---").Is(Parser.Prettify("<hr />\n<hr />"));
+
+      Parser.DoubleParse("---\n---").Is(Parser.Prettify("<hr />\n<hr />"));
     }
 
     [Fact]
@@ -1805,6 +1941,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("- foo\n-----").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>\n<hr />"));
+
+      Parser.DoubleParse("- foo\n-----").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>\n<hr />"));
     }
 
     [Fact]
@@ -1823,6 +1961,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("    foo\n---").Is(Parser.Prettify("<pre><code>foo\n</code></pre>\n<hr />"));
+
+      Parser.DoubleParse("    foo\n---").Is(Parser.Prettify("<pre><code>foo\n</code></pre>\n<hr />"));
     }
 
     [Fact]
@@ -1842,6 +1982,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("> foo\n-----").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />"));
+
+      Parser.DoubleParse("> foo\n-----").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />"));
     }
 
     // If you want a heading with `> foo` as its literal text, you can
@@ -1860,6 +2002,8 @@ namespace Markdraw.Parser.Test
       //   <h2>&gt; foo</h2>
 
       Parser.Parse("\\> foo\n------").Is(Parser.Prettify("<h2>&gt; foo</h2>"));
+
+      Parser.DoubleParse("\\> foo\n------").Is(Parser.Prettify("<h2>&gt; foo</h2>"));
     }
 
     // **Compatibility note:**  Most existing Markdown implementations
@@ -1903,6 +2047,8 @@ namespace Markdraw.Parser.Test
       //   <p>baz</p>
 
       Parser.Parse("Foo\n\nbar\n---\nbaz").Is(Parser.Prettify("<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>"));
+
+      Parser.DoubleParse("Foo\n\nbar\n---\nbaz").Is(Parser.Prettify("<p>Foo</p>\n<h2>bar</h2>\n<p>baz</p>"));
     }
 
     // Authors who want interpretation 2 can put blank lines around
@@ -1928,6 +2074,8 @@ namespace Markdraw.Parser.Test
       //   <p>baz</p>
 
       Parser.Parse("Foo\nbar\n\n---\n\nbaz").Is(Parser.Prettify("<p>Foo\nbar</p>\n<hr />\n<p>baz</p>"));
+
+      Parser.DoubleParse("Foo\nbar\n\n---\n\nbaz").Is(Parser.Prettify("<p>Foo\nbar</p>\n<hr />\n<p>baz</p>"));
     }
 
     // or use a thematic break that cannot count as a [setext heading
@@ -1951,6 +2099,8 @@ namespace Markdraw.Parser.Test
       //   <p>baz</p>
 
       Parser.Parse("Foo\nbar\n* * *\nbaz").Is(Parser.Prettify("<p>Foo\nbar</p>\n<hr />\n<p>baz</p>"));
+
+      Parser.DoubleParse("Foo\nbar\n* * *\nbaz").Is(Parser.Prettify("<p>Foo\nbar</p>\n<hr />\n<p>baz</p>"));
     }
 
     // Authors who want interpretation 3 can use backslash escapes:
@@ -1973,6 +2123,8 @@ namespace Markdraw.Parser.Test
       //   baz</p>
 
       Parser.Parse("Foo\nbar\n\\---\nbaz").Is(Parser.Prettify("<p>Foo\nbar\n---\nbaz</p>"));
+
+      Parser.DoubleParse("Foo\nbar\n\\---\nbaz").Is(Parser.Prettify("<p>Foo\nbar\n---\nbaz</p>"));
     }
   }
 
@@ -2008,6 +2160,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    a simple\n      indented code block").Is(Parser.Prettify("<pre><code>a simple\n  indented code block\n</code></pre>"));
+
+      Parser.DoubleParse("    a simple\n      indented code block").Is(Parser.Prettify("<pre><code>a simple\n  indented code block\n</code></pre>"));
     }
 
     // If there is any ambiguity between an interpretation of indentation
@@ -2033,6 +2187,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("  - foo\n\n    bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("  - foo\n\n    bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -2057,6 +2213,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1.  foo\n\n    - bar").Is(Parser.Prettify("<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1.  foo\n\n    - bar").Is(Parser.Prettify("<ol>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>"));
     }
 
     // The contents of a code block are literal text, and do not get parsed
@@ -2081,6 +2239,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    <a/>\n    *hi*\n\n    - one").Is(Parser.Prettify("<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>"));
+
+      Parser.DoubleParse("    <a/>\n    *hi*\n\n    - one").Is(Parser.Prettify("<pre><code>&lt;a/&gt;\n*hi*\n\n- one\n</code></pre>"));
     }
 
     // Here we have three chunks separated by blank lines:
@@ -2110,6 +2270,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    chunk1\n\n    chunk2\n  \n \n \n    chunk3").Is(Parser.Prettify("<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>"));
+
+      Parser.DoubleParse("    chunk1\n\n    chunk2\n  \n \n \n    chunk3").Is(Parser.Prettify("<pre><code>chunk1\n\nchunk2\n\n\n\nchunk3\n</code></pre>"));
     }
 
     // Any initial spaces beyond four will be included in the content, even
@@ -2132,6 +2294,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    chunk1\n      \n      chunk2").Is(Parser.Prettify("<pre><code>chunk1\n  \n  chunk2\n</code></pre>"));
+
+      Parser.DoubleParse("    chunk1\n      \n      chunk2").Is(Parser.Prettify("<pre><code>chunk1\n  \n  chunk2\n</code></pre>"));
     }
 
     // An indented code block cannot interrupt a paragraph.  (This
@@ -2152,6 +2316,8 @@ namespace Markdraw.Parser.Test
       //   bar</p>
 
       Parser.Parse("Foo\n    bar\n").Is(Parser.Prettify("<p>Foo\nbar</p>"));
+
+      Parser.DoubleParse("Foo\n    bar\n").Is(Parser.Prettify("<p>Foo\nbar</p>"));
     }
 
     // However, any non-blank line with fewer than four leading spaces ends
@@ -2173,6 +2339,8 @@ namespace Markdraw.Parser.Test
       //   <p>bar</p>
 
       Parser.Parse("    foo\nbar").Is(Parser.Prettify("<pre><code>foo\n</code></pre>\n<p>bar</p>"));
+
+      Parser.DoubleParse("    foo\nbar").Is(Parser.Prettify("<pre><code>foo\n</code></pre>\n<p>bar</p>"));
     }
 
     // And indented code can occur immediately before and after other kinds of
@@ -2201,6 +2369,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("# Heading\n    foo\nHeading\n------\n    foo\n----").Is(Parser.Prettify("<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />"));
+
+      Parser.DoubleParse("# Heading\n    foo\nHeading\n------\n    foo\n----").Is(Parser.Prettify("<h1>Heading</h1>\n<pre><code>foo\n</code></pre>\n<h2>Heading</h2>\n<pre><code>foo\n</code></pre>\n<hr />"));
     }
 
     // The first line can be indented more than four spaces:
@@ -2220,6 +2390,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("        foo\n    bar").Is(Parser.Prettify("<pre><code>    foo\nbar\n</code></pre>"));
+
+      Parser.DoubleParse("        foo\n    bar").Is(Parser.Prettify("<pre><code>    foo\nbar\n</code></pre>"));
     }
 
     // Blank lines preceding or following an indented code block
@@ -2242,6 +2414,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("\n    \n    foo\n    \n").Is(Parser.Prettify("<pre><code>foo\n</code></pre>"));
+
+      Parser.DoubleParse("\n    \n    foo\n    \n").Is(Parser.Prettify("<pre><code>foo\n</code></pre>"));
     }
 
     // Trailing spaces are included in the code block's content:
@@ -2259,6 +2433,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    foo  ").Is(Parser.Prettify("<pre><code>foo  \n</code></pre>"));
+
+      Parser.DoubleParse("    foo  ").Is(Parser.Prettify("<pre><code>foo  \n</code></pre>"));
     }
   }
 
@@ -2327,6 +2503,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("```\n<\n >\n```").Is(Parser.Prettify("<pre><code>&lt;\n &gt;\n</code></pre>"));
+
+      Parser.DoubleParse("```\n<\n >\n```").Is(Parser.Prettify("<pre><code>&lt;\n &gt;\n</code></pre>"));
     }
 
     // With tildes:
@@ -2348,6 +2526,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("~~~\n<\n >\n~~~").Is(Parser.Prettify("<pre><code>&lt;\n &gt;\n</code></pre>"));
+
+      Parser.DoubleParse("~~~\n<\n >\n~~~").Is(Parser.Prettify("<pre><code>&lt;\n &gt;\n</code></pre>"));
     }
 
     // Fewer than three backticks is not enough:
@@ -2366,6 +2546,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo</code></p>
 
       Parser.Parse("``\nfoo\n``").Is(Parser.Prettify("<p><code>foo</code></p>"));
+
+      Parser.DoubleParse("``\nfoo\n``").Is(Parser.Prettify("<p><code>foo</code></p>"));
     }
 
     // The closing code fence must use the same character as the opening
@@ -2388,6 +2570,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("```\naaa\n~~~\n```").Is(Parser.Prettify("<pre><code>aaa\n~~~\n</code></pre>"));
+
+      Parser.DoubleParse("```\naaa\n~~~\n```").Is(Parser.Prettify("<pre><code>aaa\n~~~\n</code></pre>"));
     }
 
     [Fact]
@@ -2408,6 +2592,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("~~~\naaa\n```\n~~~").Is(Parser.Prettify("<pre><code>aaa\n```\n</code></pre>"));
+
+      Parser.DoubleParse("~~~\naaa\n```\n~~~").Is(Parser.Prettify("<pre><code>aaa\n```\n</code></pre>"));
     }
 
     // The closing code fence must be at least as long as the opening fence:
@@ -2429,6 +2615,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("````\naaa\n```\n``````").Is(Parser.Prettify("<pre><code>aaa\n```\n</code></pre>"));
+
+      Parser.DoubleParse("````\naaa\n```\n``````").Is(Parser.Prettify("<pre><code>aaa\n```\n</code></pre>"));
     }
 
     [Fact]
@@ -2449,6 +2637,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("~~~~\naaa\n~~~\n~~~~").Is(Parser.Prettify("<pre><code>aaa\n~~~\n</code></pre>"));
+
+      Parser.DoubleParse("~~~~\naaa\n~~~\n~~~~").Is(Parser.Prettify("<pre><code>aaa\n~~~\n</code></pre>"));
     }
 
     // Unclosed code blocks are closed by the end of the document
@@ -2466,6 +2656,8 @@ namespace Markdraw.Parser.Test
       //   <pre><code></code></pre>
 
       Parser.Parse("```").Is(Parser.Prettify("<pre><code></code></pre>"));
+
+      Parser.DoubleParse("```").Is(Parser.Prettify("<pre><code></code></pre>"));
     }
 
     [Fact]
@@ -2487,6 +2679,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("`````\n\n```\naaa").Is(Parser.Prettify("<pre><code>\n```\naaa\n</code></pre>"));
+
+      Parser.DoubleParse("`````\n\n```\naaa").Is(Parser.Prettify("<pre><code>\n```\naaa\n</code></pre>"));
     }
 
     [Fact]
@@ -2509,6 +2703,8 @@ namespace Markdraw.Parser.Test
       //   <p>bbb</p>
 
       Parser.Parse("> ```\n> aaa\n\nbbb").Is(Parser.Prettify("<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>"));
+
+      Parser.DoubleParse("> ```\n> aaa\n\nbbb").Is(Parser.Prettify("<blockquote>\n<pre><code>aaa\n</code></pre>\n</blockquote>\n<p>bbb</p>"));
     }
 
     // A code block can have all empty lines as its content:
@@ -2530,6 +2726,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("```\n\n  \n```").Is(Parser.Prettify("<pre><code>\n  \n</code></pre>"));
+
+      Parser.DoubleParse("```\n\n  \n```").Is(Parser.Prettify("<pre><code>\n  \n</code></pre>"));
     }
 
     // A code block can be empty:
@@ -2547,6 +2745,8 @@ namespace Markdraw.Parser.Test
       //   <pre><code></code></pre>
 
       Parser.Parse("```\n```").Is(Parser.Prettify("<pre><code></code></pre>"));
+
+      Parser.DoubleParse("```\n```").Is(Parser.Prettify("<pre><code></code></pre>"));
     }
 
     // Fences can be indented.  If the opening fence is indented,
@@ -2570,6 +2770,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse(" ```\n aaa\naaa\n```").Is(Parser.Prettify("<pre><code>aaa\naaa\n</code></pre>"));
+
+      Parser.DoubleParse(" ```\n aaa\naaa\n```").Is(Parser.Prettify("<pre><code>aaa\naaa\n</code></pre>"));
     }
 
     [Fact]
@@ -2592,6 +2794,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("  ```\naaa\n  aaa\naaa\n  ```").Is(Parser.Prettify("<pre><code>aaa\naaa\naaa\n</code></pre>"));
+
+      Parser.DoubleParse("  ```\naaa\n  aaa\naaa\n  ```").Is(Parser.Prettify("<pre><code>aaa\naaa\naaa\n</code></pre>"));
     }
 
     [Fact]
@@ -2614,6 +2818,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("   ```\n   aaa\n    aaa\n  aaa\n   ```").Is(Parser.Prettify("<pre><code>aaa\n aaa\naaa\n</code></pre>"));
+
+      Parser.DoubleParse("   ```\n   aaa\n    aaa\n  aaa\n   ```").Is(Parser.Prettify("<pre><code>aaa\n aaa\naaa\n</code></pre>"));
     }
 
     // Four spaces indentation produces an indented code block:
@@ -2635,6 +2841,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    ```\n    aaa\n    ```").Is(Parser.Prettify("<pre><code>```\naaa\n```\n</code></pre>"));
+
+      Parser.DoubleParse("    ```\n    aaa\n    ```").Is(Parser.Prettify("<pre><code>```\naaa\n```\n</code></pre>"));
     }
 
     // Closing fences may be indented by 0-3 spaces, and their indentation
@@ -2655,6 +2863,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("```\naaa\n  ```").Is(Parser.Prettify("<pre><code>aaa\n</code></pre>"));
+
+      Parser.DoubleParse("```\naaa\n  ```").Is(Parser.Prettify("<pre><code>aaa\n</code></pre>"));
     }
 
     [Fact]
@@ -2673,6 +2883,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("   ```\naaa\n  ```").Is(Parser.Prettify("<pre><code>aaa\n</code></pre>"));
+
+      Parser.DoubleParse("   ```\naaa\n  ```").Is(Parser.Prettify("<pre><code>aaa\n</code></pre>"));
     }
 
     // This is not a closing fence, because it is indented 4 spaces:
@@ -2693,6 +2905,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("```\naaa\n    ```").Is(Parser.Prettify("<pre><code>aaa\n    ```\n</code></pre>"));
+
+      Parser.DoubleParse("```\naaa\n    ```").Is(Parser.Prettify("<pre><code>aaa\n    ```\n</code></pre>"));
     }
 
     // Code fences (opening and closing) cannot contain internal spaces:
@@ -2711,6 +2925,8 @@ namespace Markdraw.Parser.Test
       //   aaa</p>
 
       Parser.Parse("``` ```\naaa").Is(Parser.Prettify("<p><code> </code>\naaa</p>"));
+
+      Parser.DoubleParse("``` ```\naaa").Is(Parser.Prettify("<p><code> </code>\naaa</p>"));
     }
 
     [Fact]
@@ -2730,6 +2946,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("~~~~~~\naaa\n~~~ ~~").Is(Parser.Prettify("<pre><code>aaa\n~~~ ~~\n</code></pre>"));
+
+      Parser.DoubleParse("~~~~~~\naaa\n~~~ ~~").Is(Parser.Prettify("<pre><code>aaa\n~~~ ~~\n</code></pre>"));
     }
 
     // Fenced code blocks can interrupt paragraphs, and can be followed
@@ -2754,6 +2972,8 @@ namespace Markdraw.Parser.Test
       //   <p>baz</p>
 
       Parser.Parse("foo\n```\nbar\n```\nbaz").Is(Parser.Prettify("<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>"));
+
+      Parser.DoubleParse("foo\n```\nbar\n```\nbaz").Is(Parser.Prettify("<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>"));
     }
 
     // Other blocks can also occur before and after fenced code blocks
@@ -2779,6 +2999,8 @@ namespace Markdraw.Parser.Test
       //   <h1>baz</h1>
 
       Parser.Parse("foo\n---\n~~~\nbar\n~~~\n# baz").Is(Parser.Prettify("<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>"));
+
+      Parser.DoubleParse("foo\n---\n~~~\nbar\n~~~\n# baz").Is(Parser.Prettify("<h2>foo</h2>\n<pre><code>bar\n</code></pre>\n<h1>baz</h1>"));
     }
 
     // An [info string] can be provided after the opening code fence.
@@ -2807,6 +3029,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("```ruby\ndef foo(x)\n  return 3\nend\n```").Is(Parser.Prettify("<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>"));
+
+      Parser.DoubleParse("```ruby\ndef foo(x)\n  return 3\nend\n```").Is(Parser.Prettify("<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>"));
     }
 
     [Fact]
@@ -2829,6 +3053,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~").Is(Parser.Prettify("<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>"));
+
+      Parser.DoubleParse("~~~~    ruby startline=3 $%@#$\ndef foo(x)\n  return 3\nend\n~~~~~~~").Is(Parser.Prettify("<pre><code class=\"language-ruby\">def foo(x)\n  return 3\nend\n</code></pre>"));
     }
 
     [Fact]
@@ -2845,6 +3071,8 @@ namespace Markdraw.Parser.Test
       //   <pre><code class="language-;"></code></pre>
 
       Parser.Parse("````;\n````").Is(Parser.Prettify("<pre><code class=\"language-;\"></code></pre>"));
+
+      Parser.DoubleParse("````;\n````").Is(Parser.Prettify("<pre><code class=\"language-;\"></code></pre>"));
     }
 
     // [Info strings] for backtick code blocks cannot contain backticks:
@@ -2863,6 +3091,8 @@ namespace Markdraw.Parser.Test
       //   foo</p>
 
       Parser.Parse("``` aa ```\nfoo").Is(Parser.Prettify("<p><code>aa</code>\nfoo</p>"));
+
+      Parser.DoubleParse("``` aa ```\nfoo").Is(Parser.Prettify("<p><code>aa</code>\nfoo</p>"));
     }
 
     // [Info strings] for tilde code blocks can contain backticks and tildes:
@@ -2882,6 +3112,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("~~~ aa ``` ~~~\nfoo\n~~~").Is(Parser.Prettify("<pre><code class=\"language-aa\">foo\n</code></pre>"));
+
+      Parser.DoubleParse("~~~ aa ``` ~~~\nfoo\n~~~").Is(Parser.Prettify("<pre><code class=\"language-aa\">foo\n</code></pre>"));
     }
 
     // Closing code fences cannot have [info strings]:
@@ -2901,6 +3133,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("```\n``` aaa\n```").Is(Parser.Prettify("<pre><code>``` aaa\n</code></pre>"));
+
+      Parser.DoubleParse("```\n``` aaa\n```").Is(Parser.Prettify("<pre><code>``` aaa\n</code></pre>"));
     }
   }
 
@@ -2997,6 +3231,8 @@ namespace Markdraw.Parser.Test
       //   </td></tr></table>
 
       Parser.Parse("<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>").Is(Parser.Prettify("<table><tr><td>\n<pre>\n**Hello**,\n<p><em>world</em>.\n</pre></p>\n</td></tr></table>"));
+
+      Parser.DoubleParse("<table><tr><td>\n<pre>\n**Hello**,\n\n_world_.\n</pre>\n</td></tr></table>").Is(Parser.Prettify("<table><tr><td>\n<pre>\n**Hello**,\n<p><em>world</em>.\n</pre></p>\n</td></tr></table>"));
     }
 
     // In this case, the HTML block is terminated by the newline — the `**Hello**`
@@ -3038,6 +3274,8 @@ namespace Markdraw.Parser.Test
       //   <p>okay.</p>
 
       Parser.Parse("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.").Is(Parser.Prettify("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>"));
+
+      Parser.DoubleParse("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n\nokay.").Is(Parser.Prettify("<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>\n<p>okay.</p>"));
     }
 
     [Fact]
@@ -3057,6 +3295,8 @@ namespace Markdraw.Parser.Test
       //            <foo><a>
 
       Parser.Parse(" <div>\n  *hello*\n         <foo><a>").Is(Parser.Prettify(" <div>\n  *hello*\n         <foo><a>"));
+
+      Parser.DoubleParse(" <div>\n  *hello*\n         <foo><a>").Is(Parser.Prettify(" <div>\n  *hello*\n         <foo><a>"));
     }
 
     // A block can also start with a closing tag:
@@ -3075,6 +3315,8 @@ namespace Markdraw.Parser.Test
       //   *foo*
 
       Parser.Parse("</div>\n*foo*").Is(Parser.Prettify("</div>\n*foo*"));
+
+      Parser.DoubleParse("</div>\n*foo*").Is(Parser.Prettify("</div>\n*foo*"));
     }
 
     // Here we have two HTML blocks with a Markdown paragraph between them:
@@ -3097,6 +3339,8 @@ namespace Markdraw.Parser.Test
       //   </DIV>
 
       Parser.Parse("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>").Is(Parser.Prettify("<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>"));
+
+      Parser.DoubleParse("<DIV CLASS=\"foo\">\n\n*Markdown*\n\n</DIV>").Is(Parser.Prettify("<DIV CLASS=\"foo\">\n<p><em>Markdown</em></p>\n</DIV>"));
     }
 
     // The tag on the first line can be partial, as long
@@ -3118,6 +3362,8 @@ namespace Markdraw.Parser.Test
       //   </div>
 
       Parser.Parse("<div id=\"foo\"\n  class=\"bar\">\n</div>").Is(Parser.Prettify("<div id=\"foo\"\n  class=\"bar\">\n</div>"));
+
+      Parser.DoubleParse("<div id=\"foo\"\n  class=\"bar\">\n</div>").Is(Parser.Prettify("<div id=\"foo\"\n  class=\"bar\">\n</div>"));
     }
 
     [Fact]
@@ -3137,6 +3383,8 @@ namespace Markdraw.Parser.Test
       //   </div>
 
       Parser.Parse("<div id=\"foo\" class=\"bar\n  baz\">\n</div>").Is(Parser.Prettify("<div id=\"foo\" class=\"bar\n  baz\">\n</div>"));
+
+      Parser.DoubleParse("<div id=\"foo\" class=\"bar\n  baz\">\n</div>").Is(Parser.Prettify("<div id=\"foo\" class=\"bar\n  baz\">\n</div>"));
     }
 
     // An open tag need not be closed:
@@ -3158,6 +3406,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>bar</em></p>
 
       Parser.Parse("<div>\n*foo*\n\n*bar*").Is(Parser.Prettify("<div>\n*foo*\n<p><em>bar</em></p>"));
+
+      Parser.DoubleParse("<div>\n*foo*\n\n*bar*").Is(Parser.Prettify("<div>\n*foo*\n<p><em>bar</em></p>"));
     }
 
     // A partial tag need not even be completed (garbage
@@ -3177,6 +3427,8 @@ namespace Markdraw.Parser.Test
       //   *hi*
 
       Parser.Parse("<div id=\"foo\"\n*hi*").Is(Parser.Prettify("<div id=\"foo\"\n*hi*"));
+
+      Parser.DoubleParse("<div id=\"foo\"\n*hi*").Is(Parser.Prettify("<div id=\"foo\"\n*hi*"));
     }
 
     [Fact]
@@ -3194,6 +3446,8 @@ namespace Markdraw.Parser.Test
       //   foo
 
       Parser.Parse("<div class\nfoo").Is(Parser.Prettify("<div class\nfoo"));
+
+      Parser.DoubleParse("<div class\nfoo").Is(Parser.Prettify("<div class\nfoo"));
     }
 
     // The initial tag doesn't even need to be a valid
@@ -3213,6 +3467,8 @@ namespace Markdraw.Parser.Test
       //   *foo*
 
       Parser.Parse("<div *???-&&&-<---\n*foo*").Is(Parser.Prettify("<div *???-&&&-<---\n*foo*"));
+
+      Parser.DoubleParse("<div *???-&&&-<---\n*foo*").Is(Parser.Prettify("<div *???-&&&-<---\n*foo*"));
     }
 
     // In type 6 blocks, the initial tag need not be on a line by
@@ -3230,6 +3486,8 @@ namespace Markdraw.Parser.Test
       //   <div><a href="bar">*foo*</a></div>
 
       Parser.Parse("<div><a href=\"bar\">*foo*</a></div>").Is(Parser.Prettify("<div><a href=\"bar\">*foo*</a></div>"));
+
+      Parser.DoubleParse("<div><a href=\"bar\">*foo*</a></div>").Is(Parser.Prettify("<div><a href=\"bar\">*foo*</a></div>"));
     }
 
     [Fact]
@@ -3249,6 +3507,8 @@ namespace Markdraw.Parser.Test
       //   </td></tr></table>
 
       Parser.Parse("<table><tr><td>\nfoo\n</td></tr></table>").Is(Parser.Prettify("<table><tr><td>\nfoo\n</td></tr></table>"));
+
+      Parser.DoubleParse("<table><tr><td>\nfoo\n</td></tr></table>").Is(Parser.Prettify("<table><tr><td>\nfoo\n</td></tr></table>"));
     }
 
     // Everything until the next blank line or end of document
@@ -3275,6 +3535,8 @@ namespace Markdraw.Parser.Test
       //   ```
 
       Parser.Parse("<div></div>\n``` c\nint x = 33;\n```").Is(Parser.Prettify("<div></div>\n``` c\nint x = 33;\n```"));
+
+      Parser.DoubleParse("<div></div>\n``` c\nint x = 33;\n```").Is(Parser.Prettify("<div></div>\n``` c\nint x = 33;\n```"));
     }
 
     // To start an [HTML block] with a tag that is *not* in the
@@ -3297,6 +3559,8 @@ namespace Markdraw.Parser.Test
       //   </a>
 
       Parser.Parse("<a href=\"foo\">\n*bar*\n</a>").Is(Parser.Prettify("<a href=\"foo\">\n*bar*\n</a>"));
+
+      Parser.DoubleParse("<a href=\"foo\">\n*bar*\n</a>").Is(Parser.Prettify("<a href=\"foo\">\n*bar*\n</a>"));
     }
 
     // In type 7 blocks, the [tag name] can be anything:
@@ -3317,6 +3581,8 @@ namespace Markdraw.Parser.Test
       //   </Warning>
 
       Parser.Parse("<Warning>\n*bar*\n</Warning>").Is(Parser.Prettify("<Warning>\n*bar*\n</Warning>"));
+
+      Parser.DoubleParse("<Warning>\n*bar*\n</Warning>").Is(Parser.Prettify("<Warning>\n*bar*\n</Warning>"));
     }
 
     [Fact]
@@ -3336,6 +3602,8 @@ namespace Markdraw.Parser.Test
       //   </i>
 
       Parser.Parse("<i class=\"foo\">\n*bar*\n</i>").Is(Parser.Prettify("<i class=\"foo\">\n*bar*\n</i>"));
+
+      Parser.DoubleParse("<i class=\"foo\">\n*bar*\n</i>").Is(Parser.Prettify("<i class=\"foo\">\n*bar*\n</i>"));
     }
 
     [Fact]
@@ -3353,6 +3621,8 @@ namespace Markdraw.Parser.Test
       //   *bar*
 
       Parser.Parse("</ins>\n*bar*").Is(Parser.Prettify("</ins>\n*bar*"));
+
+      Parser.DoubleParse("</ins>\n*bar*").Is(Parser.Prettify("</ins>\n*bar*"));
     }
 
     // These rules are designed to allow us to work with tags that
@@ -3377,6 +3647,8 @@ namespace Markdraw.Parser.Test
       //   </del>
 
       Parser.Parse("<del>\n*foo*\n</del>").Is(Parser.Prettify("<del>\n*foo*\n</del>"));
+
+      Parser.DoubleParse("<del>\n*foo*\n</del>").Is(Parser.Prettify("<del>\n*foo*\n</del>"));
     }
 
     // In this case, we get a raw HTML block that just includes
@@ -3401,6 +3673,8 @@ namespace Markdraw.Parser.Test
       //   </del>
 
       Parser.Parse("<del>\n\n*foo*\n\n</del>").Is(Parser.Prettify("<del>\n<p><em>foo</em></p>\n</del>"));
+
+      Parser.DoubleParse("<del>\n\n*foo*\n\n</del>").Is(Parser.Prettify("<del>\n<p><em>foo</em></p>\n</del>"));
     }
 
     // Finally, in this case, the `<del>` tags are interpreted
@@ -3420,6 +3694,8 @@ namespace Markdraw.Parser.Test
       //   <p><del><em>foo</em></del></p>
 
       Parser.Parse("<del>*foo*</del>").Is(Parser.Prettify("<p><del><em>foo</em></del></p>"));
+
+      Parser.DoubleParse("<del>*foo*</del>").Is(Parser.Prettify("<p><del><em>foo</em></del></p>"));
     }
 
     // HTML tags designed to contain literal content
@@ -3455,6 +3731,8 @@ namespace Markdraw.Parser.Test
       //   <p>okay</p>
 
       Parser.Parse("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay").Is(Parser.Prettify("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>"));
+
+      Parser.DoubleParse("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\nokay").Is(Parser.Prettify("<pre language=\"haskell\"><code>\nimport Text.HTML.TagSoup\n\nmain :: IO ()\nmain = print $ parseTags tags\n</code></pre>\n<p>okay</p>"));
     }
 
     // A script tag (type 1):
@@ -3481,6 +3759,8 @@ namespace Markdraw.Parser.Test
       //   <p>okay</p>
 
       Parser.Parse("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay").Is(Parser.Prettify("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>"));
+
+      Parser.DoubleParse("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\nokay").Is(Parser.Prettify("<script type=\"text/javascript\">\n// JavaScript example\n\ndocument.getElementById(\"demo\").innerHTML = \"Hello JavaScript!\";\n</script>\n<p>okay</p>"));
     }
 
     // A style tag (type 1):
@@ -3509,6 +3789,8 @@ namespace Markdraw.Parser.Test
       //   <p>okay</p>
 
       Parser.Parse("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay").Is(Parser.Prettify("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>"));
+
+      Parser.DoubleParse("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\nokay").Is(Parser.Prettify("<style\n  type=\"text/css\">\nh1 {color:red;}\n\np {color:blue;}\n</style>\n<p>okay</p>"));
     }
 
     // If there is no matching end tag, the block will end at the
@@ -3533,6 +3815,8 @@ namespace Markdraw.Parser.Test
       //   foo
 
       Parser.Parse("<style\n  type=\"text/css\">\n\nfoo").Is(Parser.Prettify("<style\n  type=\"text/css\">\n\nfoo"));
+
+      Parser.DoubleParse("<style\n  type=\"text/css\">\n\nfoo").Is(Parser.Prettify("<style\n  type=\"text/css\">\n\nfoo"));
     }
 
     [Fact]
@@ -3555,6 +3839,8 @@ namespace Markdraw.Parser.Test
       //   <p>bar</p>
 
       Parser.Parse("> <div>\n> foo\n\nbar").Is(Parser.Prettify("<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>"));
+
+      Parser.DoubleParse("> <div>\n> foo\n\nbar").Is(Parser.Prettify("<blockquote>\n<div>\nfoo\n</blockquote>\n<p>bar</p>"));
     }
 
     [Fact]
@@ -3576,6 +3862,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- <div>\n- foo").Is(Parser.Prettify("<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>"));
+
+      Parser.DoubleParse("- <div>\n- foo").Is(Parser.Prettify("<ul>\n<li>\n<div>\n</li>\n<li>foo</li>\n</ul>"));
     }
 
     // The end tag can occur on the same line as the start tag:
@@ -3594,6 +3882,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo</em></p>
 
       Parser.Parse("<style>p{color:red;}</style>\n*foo*").Is(Parser.Prettify("<style>p{color:red;}</style>\n<p><em>foo</em></p>"));
+
+      Parser.DoubleParse("<style>p{color:red;}</style>\n*foo*").Is(Parser.Prettify("<style>p{color:red;}</style>\n<p><em>foo</em></p>"));
     }
 
     [Fact]
@@ -3611,6 +3901,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>baz</em></p>
 
       Parser.Parse("<!-- foo -->*bar*\n*baz*").Is(Parser.Prettify("<!-- foo -->*bar*\n<p><em>baz</em></p>"));
+
+      Parser.DoubleParse("<!-- foo -->*bar*\n*baz*").Is(Parser.Prettify("<!-- foo -->*bar*\n<p><em>baz</em></p>"));
     }
 
     // Note that anything on the last line after the
@@ -3632,6 +3924,8 @@ namespace Markdraw.Parser.Test
       //   </script>1. *bar*
 
       Parser.Parse("<script>\nfoo\n</script>1. *bar*").Is(Parser.Prettify("<script>\nfoo\n</script>1. *bar*"));
+
+      Parser.DoubleParse("<script>\nfoo\n</script>1. *bar*").Is(Parser.Prettify("<script>\nfoo\n</script>1. *bar*"));
     }
 
     // A comment (type 2):
@@ -3656,6 +3950,8 @@ namespace Markdraw.Parser.Test
       //   <p>okay</p>
 
       Parser.Parse("<!-- Foo\n\nbar\n   baz -->\nokay").Is(Parser.Prettify("<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>"));
+
+      Parser.DoubleParse("<!-- Foo\n\nbar\n   baz -->\nokay").Is(Parser.Prettify("<!-- Foo\n\nbar\n   baz -->\n<p>okay</p>"));
     }
 
     // A processing instruction (type 3):
@@ -3682,6 +3978,8 @@ namespace Markdraw.Parser.Test
       //   <p>okay</p>
 
       Parser.Parse("<?php\n\n  echo '>';\n\n?>\nokay").Is(Parser.Prettify("<?php\n\n  echo '>';\n\n?>\n<p>okay</p>"));
+
+      Parser.DoubleParse("<?php\n\n  echo '>';\n\n?>\nokay").Is(Parser.Prettify("<?php\n\n  echo '>';\n\n?>\n<p>okay</p>"));
     }
 
     // A declaration (type 4):
@@ -3698,6 +3996,8 @@ namespace Markdraw.Parser.Test
       //   <!DOCTYPE html>
 
       Parser.Parse("<!DOCTYPE html>").Is(Parser.Prettify("<!DOCTYPE html>"));
+
+      Parser.DoubleParse("<!DOCTYPE html>").Is(Parser.Prettify("<!DOCTYPE html>"));
     }
 
     // CDATA (type 5):
@@ -3738,6 +4038,8 @@ namespace Markdraw.Parser.Test
       //   <p>okay</p>
 
       Parser.Parse("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay").Is(Parser.Prettify("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>"));
+
+      Parser.DoubleParse("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\nokay").Is(Parser.Prettify("<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;\n\n  } else {\n\n    return 0;\n  }\n}\n]]>\n<p>okay</p>"));
     }
 
     // The opening tag can be indented 1-3 spaces, but not 4:
@@ -3758,6 +4060,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("  <!-- foo -->\n\n    <!-- foo -->").Is(Parser.Prettify("  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>"));
+
+      Parser.DoubleParse("  <!-- foo -->\n\n    <!-- foo -->").Is(Parser.Prettify("  <!-- foo -->\n<pre><code>&lt;!-- foo --&gt;\n</code></pre>"));
     }
 
     [Fact]
@@ -3777,6 +4081,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("  <div>\n\n    <div>").Is(Parser.Prettify("  <div>\n<pre><code>&lt;div&gt;\n</code></pre>"));
+
+      Parser.DoubleParse("  <div>\n\n    <div>").Is(Parser.Prettify("  <div>\n<pre><code>&lt;div&gt;\n</code></pre>"));
     }
 
     // An HTML block of types 1--6 can interrupt a paragraph, and need not be
@@ -3800,6 +4106,8 @@ namespace Markdraw.Parser.Test
       //   </div>
 
       Parser.Parse("Foo\n<div>\nbar\n</div>").Is(Parser.Prettify("<p>Foo</p>\n<div>\nbar\n</div>"));
+
+      Parser.DoubleParse("Foo\n<div>\nbar\n</div>").Is(Parser.Prettify("<p>Foo</p>\n<div>\nbar\n</div>"));
     }
 
     // However, a following blank line is needed, except at the end of
@@ -3824,6 +4132,8 @@ namespace Markdraw.Parser.Test
       //   *foo*
 
       Parser.Parse("<div>\nbar\n</div>\n*foo*").Is(Parser.Prettify("<div>\nbar\n</div>\n*foo*"));
+
+      Parser.DoubleParse("<div>\nbar\n</div>\n*foo*").Is(Parser.Prettify("<div>\nbar\n</div>\n*foo*"));
     }
 
     // HTML blocks of type 7 cannot interrupt a paragraph:
@@ -3844,6 +4154,8 @@ namespace Markdraw.Parser.Test
       //   baz</p>
 
       Parser.Parse("Foo\n<a href=\"bar\">\nbaz").Is(Parser.Prettify("<p>Foo\n<a href=\"bar\">\nbaz</p>"));
+
+      Parser.DoubleParse("Foo\n<a href=\"bar\">\nbaz").Is(Parser.Prettify("<p>Foo\n<a href=\"bar\">\nbaz</p>"));
     }
 
     // This rule differs from John Gruber's original Markdown syntax
@@ -3894,6 +4206,8 @@ namespace Markdraw.Parser.Test
       //   </div>
 
       Parser.Parse("<div>\n\n*Emphasized* text.\n\n</div>").Is(Parser.Prettify("<div>\n<p><em>Emphasized</em> text.</p>\n</div>"));
+
+      Parser.DoubleParse("<div>\n\n*Emphasized* text.\n\n</div>").Is(Parser.Prettify("<div>\n<p><em>Emphasized</em> text.</p>\n</div>"));
     }
 
     [Fact]
@@ -3913,6 +4227,8 @@ namespace Markdraw.Parser.Test
       //   </div>
 
       Parser.Parse("<div>\n*Emphasized* text.\n</div>").Is(Parser.Prettify("<div>\n*Emphasized* text.\n</div>"));
+
+      Parser.DoubleParse("<div>\n*Emphasized* text.\n</div>").Is(Parser.Prettify("<div>\n*Emphasized* text.\n</div>"));
     }
 
     // Some Markdown implementations have adopted a convention of
@@ -3954,6 +4270,8 @@ namespace Markdraw.Parser.Test
       //   </table>
 
       Parser.Parse("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>").Is(Parser.Prettify("<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>"));
+
+      Parser.DoubleParse("<table>\n\n<tr>\n\n<td>\nHi\n</td>\n\n</tr>\n\n</table>").Is(Parser.Prettify("<table>\n<tr>\n<td>\nHi\n</td>\n</tr>\n</table>"));
     }
 
     // There are problems, however, if the inner tags are indented
@@ -3989,6 +4307,8 @@ namespace Markdraw.Parser.Test
       //   </table>
 
       Parser.Parse("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>").Is(Parser.Prettify("<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>"));
+
+      Parser.DoubleParse("<table>\n\n  <tr>\n\n    <td>\n      Hi\n    </td>\n\n  </tr>\n\n</table>").Is(Parser.Prettify("<table>\n  <tr>\n<pre><code>&lt;td&gt;\n  Hi\n&lt;/td&gt;\n</code></pre>\n  </tr>\n</table>"));
     }
   }
 
@@ -4032,6 +4352,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title">foo</a></p>
 
       Parser.Parse("[foo]: /url \"title\"\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]: /url \"title\"\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
     }
 
     [Fact]
@@ -4051,6 +4373,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="the title">foo</a></p>
 
       Parser.Parse("   [foo]: \n      /url  \n           'the title'  \n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\" title=\"the title\">foo</a></p>"));
+
+      Parser.DoubleParse("   [foo]: \n      /url  \n           'the title'  \n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\" title=\"the title\">foo</a></p>"));
     }
 
     [Fact]
@@ -4068,6 +4392,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="my_(url)" title="title (with parens)">Foo*bar]</a></p>
 
       Parser.Parse("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]").Is(Parser.Prettify("<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>"));
+
+      Parser.DoubleParse("[Foo*bar\\]]:my_(url) 'title (with parens)'\n\n[Foo*bar\\]]").Is(Parser.Prettify("<p><a href=\"my_(url)\" title=\"title (with parens)\">Foo*bar]</a></p>"));
     }
 
     [Fact]
@@ -4087,6 +4413,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="my%20url" title="title">Foo bar</a></p>
 
       Parser.Parse("[Foo bar]:\n<my url>\n'title'\n\n[Foo bar]").Is(Parser.Prettify("<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>"));
+
+      Parser.DoubleParse("[Foo bar]:\n<my url>\n'title'\n\n[Foo bar]").Is(Parser.Prettify("<p><a href=\"my%20url\" title=\"title\">Foo bar</a></p>"));
     }
 
     // The title may extend over multiple lines:
@@ -4113,6 +4441,8 @@ namespace Markdraw.Parser.Test
       //   ">foo</a></p>
 
       Parser.Parse("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]: /url '\ntitle\nline1\nline2\n'\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\" title=\"\ntitle\nline1\nline2\n\">foo</a></p>"));
     }
 
     // However, it may not contain a [blank line]:
@@ -4135,6 +4465,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]</p>
 
       Parser.Parse("[foo]: /url 'title\n\nwith blank line'\n\n[foo]").Is(Parser.Prettify("<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>"));
+
+      Parser.DoubleParse("[foo]: /url 'title\n\nwith blank line'\n\n[foo]").Is(Parser.Prettify("<p>[foo]: /url 'title</p>\n<p>with blank line'</p>\n<p>[foo]</p>"));
     }
 
     // The title may be omitted:
@@ -4154,6 +4486,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url">foo</a></p>
 
       Parser.Parse("[foo]:\n/url\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]:\n/url\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url\">foo</a></p>"));
     }
 
     // The link destination may not be omitted:
@@ -4173,6 +4507,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]</p>
 
       Parser.Parse("[foo]:\n\n[foo]").Is(Parser.Prettify("<p>[foo]:</p>\n<p>[foo]</p>"));
+
+      Parser.DoubleParse("[foo]:\n\n[foo]").Is(Parser.Prettify("<p>[foo]:</p>\n<p>[foo]</p>"));
     }
 
     //  However, an empty link destination may be specified using
@@ -4192,6 +4528,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="">foo</a></p>
 
       Parser.Parse("[foo]: <>\n\n[foo]").Is(Parser.Prettify("<p><a href=\"\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]: <>\n\n[foo]").Is(Parser.Prettify("<p><a href=\"\">foo</a></p>"));
     }
 
     // The title must be separated from the link destination by
@@ -4212,6 +4550,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]</p>
 
       Parser.Parse("[foo]: <bar>(baz)\n\n[foo]").Is(Parser.Prettify("<p>[foo]: <bar>(baz)</p>\n<p>[foo]</p>"));
+
+      Parser.DoubleParse("[foo]: <bar>(baz)\n\n[foo]").Is(Parser.Prettify("<p>[foo]: <bar>(baz)</p>\n<p>[foo]</p>"));
     }
 
     // Both title and destination can contain backslash escapes
@@ -4231,6 +4571,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url%5Cbar*baz" title="foo&quot;bar\baz">foo</a></p>
 
       Parser.Parse("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]: /url\\bar\\*baz \"foo\\\"bar\\baz\"\n\n[foo]").Is(Parser.Prettify("<p><a href=\"/url%5Cbar*baz\" title=\"foo&quot;bar\\baz\">foo</a></p>"));
     }
 
     // A link can come before its corresponding definition:
@@ -4249,6 +4591,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="url">foo</a></p>
 
       Parser.Parse("[foo]\n\n[foo]: url").Is(Parser.Prettify("<p><a href=\"url\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]\n\n[foo]: url").Is(Parser.Prettify("<p><a href=\"url\">foo</a></p>"));
     }
 
     // If there are several matching definitions, the first one takes
@@ -4269,6 +4613,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="first">foo</a></p>
 
       Parser.Parse("[foo]\n\n[foo]: first\n[foo]: second").Is(Parser.Prettify("<p><a href=\"first\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]\n\n[foo]: first\n[foo]: second").Is(Parser.Prettify("<p><a href=\"first\">foo</a></p>"));
     }
 
     // As noted in the section on [Links], matching of labels is
@@ -4288,6 +4634,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url">Foo</a></p>
 
       Parser.Parse("[FOO]: /url\n\n[Foo]").Is(Parser.Prettify("<p><a href=\"/url\">Foo</a></p>"));
+
+      Parser.DoubleParse("[FOO]: /url\n\n[Foo]").Is(Parser.Prettify("<p><a href=\"/url\">Foo</a></p>"));
     }
 
     [Fact]
@@ -4305,6 +4653,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/%CF%86%CE%BF%CF%85">αγω</a></p>
 
       Parser.Parse("[ΑΓΩ]: /φου\n\n[αγω]").Is(Parser.Prettify("<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>"));
+
+      Parser.DoubleParse("[ΑΓΩ]: /φου\n\n[αγω]").Is(Parser.Prettify("<p><a href=\"/%CF%86%CE%BF%CF%85\">αγω</a></p>"));
     }
 
     // Here is a link reference definition with no corresponding link.
@@ -4321,6 +4671,8 @@ namespace Markdraw.Parser.Test
       // Should be rendered as:
       //
       Parser.Parse("[foo]: /url").Is(Parser.Prettify(""));
+
+      Parser.DoubleParse("[foo]: /url").Is(Parser.Prettify(""));
     }
 
     // Here is another one:
@@ -4340,6 +4692,8 @@ namespace Markdraw.Parser.Test
       //   <p>bar</p>
 
       Parser.Parse("[\nfoo\n]: /url\nbar").Is(Parser.Prettify("<p>bar</p>"));
+
+      Parser.DoubleParse("[\nfoo\n]: /url\nbar").Is(Parser.Prettify("<p>bar</p>"));
     }
 
     // This is not a link reference definition, because there are
@@ -4357,6 +4711,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]: /url &quot;title&quot; ok</p>
 
       Parser.Parse("[foo]: /url \"title\" ok").Is(Parser.Prettify("<p>[foo]: /url &quot;title&quot; ok</p>"));
+
+      Parser.DoubleParse("[foo]: /url \"title\" ok").Is(Parser.Prettify("<p>[foo]: /url &quot;title&quot; ok</p>"));
     }
 
     // This is a link reference definition, but it has no title:
@@ -4374,6 +4730,8 @@ namespace Markdraw.Parser.Test
       //   <p>&quot;title&quot; ok</p>
 
       Parser.Parse("[foo]: /url\n\"title\" ok").Is(Parser.Prettify("<p>&quot;title&quot; ok</p>"));
+
+      Parser.DoubleParse("[foo]: /url\n\"title\" ok").Is(Parser.Prettify("<p>&quot;title&quot; ok</p>"));
     }
 
     // This is not a link reference definition, because it is indented
@@ -4395,6 +4753,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]</p>
 
       Parser.Parse("    [foo]: /url \"title\"\n\n[foo]").Is(Parser.Prettify("<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>"));
+
+      Parser.DoubleParse("    [foo]: /url \"title\"\n\n[foo]").Is(Parser.Prettify("<pre><code>[foo]: /url &quot;title&quot;\n</code></pre>\n<p>[foo]</p>"));
     }
 
     // This is not a link reference definition, because it occurs inside
@@ -4418,6 +4778,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]</p>
 
       Parser.Parse("```\n[foo]: /url\n```\n\n[foo]").Is(Parser.Prettify("<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>"));
+
+      Parser.DoubleParse("```\n[foo]: /url\n```\n\n[foo]").Is(Parser.Prettify("<pre><code>[foo]: /url\n</code></pre>\n<p>[foo]</p>"));
     }
 
     // A [link reference definition] cannot interrupt a paragraph.
@@ -4439,6 +4801,8 @@ namespace Markdraw.Parser.Test
       //   <p>[bar]</p>
 
       Parser.Parse("Foo\n[bar]: /baz\n\n[bar]").Is(Parser.Prettify("<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>"));
+
+      Parser.DoubleParse("Foo\n[bar]: /baz\n\n[bar]").Is(Parser.Prettify("<p>Foo\n[bar]: /baz</p>\n<p>[bar]</p>"));
     }
 
     // However, it can directly follow other block elements, such as headings
@@ -4461,6 +4825,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("# [Foo]\n[foo]: /url\n> bar").Is(Parser.Prettify("<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>"));
+
+      Parser.DoubleParse("# [Foo]\n[foo]: /url\n> bar").Is(Parser.Prettify("<h1><a href=\"/url\">Foo</a></h1>\n<blockquote>\n<p>bar</p>\n</blockquote>"));
     }
 
     [Fact]
@@ -4480,6 +4846,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url">foo</a></p>
 
       Parser.Parse("[foo]: /url\nbar\n===\n[foo]").Is(Parser.Prettify("<h1>bar</h1>\n<p><a href=\"/url\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]: /url\nbar\n===\n[foo]").Is(Parser.Prettify("<h1>bar</h1>\n<p><a href=\"/url\">foo</a></p>"));
     }
 
     [Fact]
@@ -4498,6 +4866,8 @@ namespace Markdraw.Parser.Test
       //   <a href="/url">foo</a></p>
 
       Parser.Parse("[foo]: /url\n===\n[foo]").Is(Parser.Prettify("<p>===\n<a href=\"/url\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]: /url\n===\n[foo]").Is(Parser.Prettify("<p>===\n<a href=\"/url\">foo</a></p>"));
     }
 
     // Several [link reference definitions]
@@ -4524,6 +4894,8 @@ namespace Markdraw.Parser.Test
       //   <a href="/baz-url">baz</a></p>
 
       Parser.Parse("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]").Is(Parser.Prettify("<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>"));
+
+      Parser.DoubleParse("[foo]: /foo-url \"foo\"\n[bar]: /bar-url\n  \"bar\"\n[baz]: /baz-url\n\n[foo],\n[bar],\n[baz]").Is(Parser.Prettify("<p><a href=\"/foo-url\" title=\"foo\">foo</a>,\n<a href=\"/bar-url\" title=\"bar\">bar</a>,\n<a href=\"/baz-url\">baz</a></p>"));
     }
 
     // [Link reference definitions] can occur
@@ -4547,6 +4919,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("[foo]\n\n> [foo]: /url").Is(Parser.Prettify("<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>"));
+
+      Parser.DoubleParse("[foo]\n\n> [foo]: /url").Is(Parser.Prettify("<p><a href=\"/url\">foo</a></p>\n<blockquote>\n</blockquote>"));
     }
 
     // Whether something is a [link reference definition] is
@@ -4566,6 +4940,8 @@ namespace Markdraw.Parser.Test
       // Should be rendered as:
       //
       Parser.Parse("[foo]: /url").Is(Parser.Prettify(""));
+
+      Parser.DoubleParse("[foo]: /url").Is(Parser.Prettify(""));
     }
   }
 
@@ -4597,6 +4973,8 @@ namespace Markdraw.Parser.Test
       //   <p>bbb</p>
 
       Parser.Parse("aaa\n\nbbb").Is(Parser.Prettify("<p>aaa</p>\n<p>bbb</p>"));
+
+      Parser.DoubleParse("aaa\n\nbbb").Is(Parser.Prettify("<p>aaa</p>\n<p>bbb</p>"));
     }
 
     // Paragraphs can contain multiple lines, but no blank lines:
@@ -4620,6 +4998,8 @@ namespace Markdraw.Parser.Test
       //   ddd</p>
 
       Parser.Parse("aaa\nbbb\n\nccc\nddd").Is(Parser.Prettify("<p>aaa\nbbb</p>\n<p>ccc\nddd</p>"));
+
+      Parser.DoubleParse("aaa\nbbb\n\nccc\nddd").Is(Parser.Prettify("<p>aaa\nbbb</p>\n<p>ccc\nddd</p>"));
     }
 
     // Multiple blank lines between paragraph have no effect:
@@ -4640,6 +5020,8 @@ namespace Markdraw.Parser.Test
       //   <p>bbb</p>
 
       Parser.Parse("aaa\n\n\nbbb").Is(Parser.Prettify("<p>aaa</p>\n<p>bbb</p>"));
+
+      Parser.DoubleParse("aaa\n\n\nbbb").Is(Parser.Prettify("<p>aaa</p>\n<p>bbb</p>"));
     }
 
     // Leading spaces are skipped:
@@ -4658,6 +5040,8 @@ namespace Markdraw.Parser.Test
       //   bbb</p>
 
       Parser.Parse("  aaa\n bbb").Is(Parser.Prettify("<p>aaa\nbbb</p>"));
+
+      Parser.DoubleParse("  aaa\n bbb").Is(Parser.Prettify("<p>aaa\nbbb</p>"));
     }
 
     // Lines after the first may be indented any amount, since indented
@@ -4679,6 +5063,8 @@ namespace Markdraw.Parser.Test
       //   ccc</p>
 
       Parser.Parse("aaa\n             bbb\n                                       ccc").Is(Parser.Prettify("<p>aaa\nbbb\nccc</p>"));
+
+      Parser.DoubleParse("aaa\n             bbb\n                                       ccc").Is(Parser.Prettify("<p>aaa\nbbb\nccc</p>"));
     }
 
     // However, the first line may be indented at most three spaces,
@@ -4698,6 +5084,8 @@ namespace Markdraw.Parser.Test
       //   bbb</p>
 
       Parser.Parse("   aaa\nbbb").Is(Parser.Prettify("<p>aaa\nbbb</p>"));
+
+      Parser.DoubleParse("   aaa\nbbb").Is(Parser.Prettify("<p>aaa\nbbb</p>"));
     }
 
     [Fact]
@@ -4716,6 +5104,8 @@ namespace Markdraw.Parser.Test
       //   <p>bbb</p>
 
       Parser.Parse("    aaa\nbbb").Is(Parser.Prettify("<pre><code>aaa\n</code></pre>\n<p>bbb</p>"));
+
+      Parser.DoubleParse("    aaa\nbbb").Is(Parser.Prettify("<pre><code>aaa\n</code></pre>\n<p>bbb</p>"));
     }
 
     // Final spaces are stripped before inline parsing, so a paragraph
@@ -4736,6 +5126,8 @@ namespace Markdraw.Parser.Test
       //   bbb</p>
 
       Parser.Parse("aaa     \nbbb     ").Is(Parser.Prettify("<p>aaa<br />\nbbb</p>"));
+
+      Parser.DoubleParse("aaa     \nbbb     ").Is(Parser.Prettify("<p>aaa<br />\nbbb</p>"));
     }
   }
 
@@ -4769,6 +5161,8 @@ namespace Markdraw.Parser.Test
       //   <h1>aaa</h1>
 
       Parser.Parse("  \n\naaa\n  \n\n# aaa\n\n  ").Is(Parser.Prettify("<p>aaa</p>\n<h1>aaa</h1>"));
+
+      Parser.DoubleParse("  \n\naaa\n  \n\n# aaa\n\n  ").Is(Parser.Prettify("<p>aaa</p>\n<h1>aaa</h1>"));
     }
   }
 
@@ -4842,6 +5236,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> # Foo\n> bar\n> baz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> # Foo\n> bar\n> baz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
     }
 
     // The spaces after the `>` characters can be omitted:
@@ -4864,6 +5260,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("># Foo\n>bar\n> baz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
+
+      Parser.DoubleParse("># Foo\n>bar\n> baz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
     }
 
     // The `>` characters can be indented 1-3 spaces:
@@ -4886,6 +5284,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("   > # Foo\n   > bar\n > baz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
+
+      Parser.DoubleParse("   > # Foo\n   > bar\n > baz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
     }
 
     // Four spaces gives us a code block:
@@ -4907,6 +5307,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    > # Foo\n    > bar\n    > baz").Is(Parser.Prettify("<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>"));
+
+      Parser.DoubleParse("    > # Foo\n    > bar\n    > baz").Is(Parser.Prettify("<pre><code>&gt; # Foo\n&gt; bar\n&gt; baz\n</code></pre>"));
     }
 
     // The Laziness clause allows us to omit the `>` before
@@ -4930,6 +5332,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> # Foo\n> bar\nbaz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> # Foo\n> bar\nbaz").Is(Parser.Prettify("<blockquote>\n<h1>Foo</h1>\n<p>bar\nbaz</p>\n</blockquote>"));
     }
 
     // A block quote can contain some lazy and some non-lazy
@@ -4953,6 +5357,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> bar\nbaz\n> foo").Is(Parser.Prettify("<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> bar\nbaz\n> foo").Is(Parser.Prettify("<blockquote>\n<p>bar\nbaz\nfoo</p>\n</blockquote>"));
     }
 
     // Laziness only applies to lines that would have been continuations of
@@ -4982,6 +5388,8 @@ namespace Markdraw.Parser.Test
       //   <hr />
 
       Parser.Parse("> foo\n---").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />"));
+
+      Parser.DoubleParse("> foo\n---").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />"));
     }
 
     // Similarly, if we omit the `> ` in the second line of
@@ -5013,6 +5421,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("> - foo\n- bar").Is(Parser.Prettify("<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>"));
+
+      Parser.DoubleParse("> - foo\n- bar").Is(Parser.Prettify("<blockquote>\n<ul>\n<li>foo</li>\n</ul>\n</blockquote>\n<ul>\n<li>bar</li>\n</ul>"));
     }
 
     // For the same reason, we can't omit the `> ` in front of
@@ -5036,6 +5446,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse(">     foo\n    bar").Is(Parser.Prettify("<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>"));
+
+      Parser.DoubleParse(">     foo\n    bar").Is(Parser.Prettify("<blockquote>\n<pre><code>foo\n</code></pre>\n</blockquote>\n<pre><code>bar\n</code></pre>"));
     }
 
     [Fact]
@@ -5057,6 +5469,8 @@ namespace Markdraw.Parser.Test
       //   <pre><code></code></pre>
 
       Parser.Parse("> ```\nfoo\n```").Is(Parser.Prettify("<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>"));
+
+      Parser.DoubleParse("> ```\nfoo\n```").Is(Parser.Prettify("<blockquote>\n<pre><code></code></pre>\n</blockquote>\n<p>foo</p>\n<pre><code></code></pre>"));
     }
 
     // Note that in the following case, we have a [lazy
@@ -5078,6 +5492,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> foo\n    - bar").Is(Parser.Prettify("<blockquote>\n<p>foo\n- bar</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> foo\n    - bar").Is(Parser.Prettify("<blockquote>\n<p>foo\n- bar</p>\n</blockquote>"));
     }
 
     // To see why, note that in
@@ -5106,6 +5522,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse(">").Is(Parser.Prettify("<blockquote>\n</blockquote>"));
+
+      Parser.DoubleParse(">").Is(Parser.Prettify("<blockquote>\n</blockquote>"));
     }
 
     [Fact]
@@ -5124,6 +5542,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse(">\n>  \n> ").Is(Parser.Prettify("<blockquote>\n</blockquote>"));
+
+      Parser.DoubleParse(">\n>  \n> ").Is(Parser.Prettify("<blockquote>\n</blockquote>"));
     }
 
     // A block quote can have initial or final blank lines:
@@ -5144,6 +5564,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse(">\n> foo\n>  ").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>"));
+
+      Parser.DoubleParse(">\n> foo\n>  ").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>"));
     }
 
     // A blank line always separates block quotes:
@@ -5167,6 +5589,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> foo\n\n> bar").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> foo\n\n> bar").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n</blockquote>\n<blockquote>\n<p>bar</p>\n</blockquote>"));
     }
 
     // (Most current Markdown implementations, including John Gruber's
@@ -5193,6 +5617,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> foo\n> bar").Is(Parser.Prettify("<blockquote>\n<p>foo\nbar</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> foo\n> bar").Is(Parser.Prettify("<blockquote>\n<p>foo\nbar</p>\n</blockquote>"));
     }
 
     // To get a block quote with two paragraphs, use:
@@ -5214,6 +5640,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> foo\n>\n> bar").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> foo\n>\n> bar").Is(Parser.Prettify("<blockquote>\n<p>foo</p>\n<p>bar</p>\n</blockquote>"));
     }
 
     // Block quotes can interrupt paragraphs:
@@ -5234,6 +5662,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("foo\n> bar").Is(Parser.Prettify("<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>"));
+
+      Parser.DoubleParse("foo\n> bar").Is(Parser.Prettify("<p>foo</p>\n<blockquote>\n<p>bar</p>\n</blockquote>"));
     }
 
     // In general, blank lines are not needed before or after block
@@ -5259,6 +5689,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> aaa\n***\n> bbb").Is(Parser.Prettify("<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> aaa\n***\n> bbb").Is(Parser.Prettify("<blockquote>\n<p>aaa</p>\n</blockquote>\n<hr />\n<blockquote>\n<p>bbb</p>\n</blockquote>"));
     }
 
     // However, because of laziness, a blank line is needed between
@@ -5280,6 +5712,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> bar\nbaz").Is(Parser.Prettify("<blockquote>\n<p>bar\nbaz</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> bar\nbaz").Is(Parser.Prettify("<blockquote>\n<p>bar\nbaz</p>\n</blockquote>"));
     }
 
     [Fact]
@@ -5300,6 +5734,8 @@ namespace Markdraw.Parser.Test
       //   <p>baz</p>
 
       Parser.Parse("> bar\n\nbaz").Is(Parser.Prettify("<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>"));
+
+      Parser.DoubleParse("> bar\n\nbaz").Is(Parser.Prettify("<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>"));
     }
 
     [Fact]
@@ -5320,6 +5756,8 @@ namespace Markdraw.Parser.Test
       //   <p>baz</p>
 
       Parser.Parse("> bar\n>\nbaz").Is(Parser.Prettify("<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>"));
+
+      Parser.DoubleParse("> bar\n>\nbaz").Is(Parser.Prettify("<blockquote>\n<p>bar</p>\n</blockquote>\n<p>baz</p>"));
     }
 
     // It is a consequence of the Laziness rule that any number
@@ -5346,6 +5784,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> > > foo\nbar").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>"));
+
+      Parser.DoubleParse("> > > foo\nbar").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n</blockquote>\n</blockquote>"));
     }
 
     [Fact]
@@ -5371,6 +5811,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse(">>> foo\n> bar\n>>baz").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>"));
+
+      Parser.DoubleParse(">>> foo\n> bar\n>>baz").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<blockquote>\n<p>foo\nbar\nbaz</p>\n</blockquote>\n</blockquote>\n</blockquote>"));
     }
 
     // When including an indented code block in a block quote,
@@ -5398,6 +5840,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse(">     code\n\n>    not code").Is(Parser.Prettify("<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>"));
+
+      Parser.DoubleParse(">     code\n\n>    not code").Is(Parser.Prettify("<blockquote>\n<pre><code>code\n</code></pre>\n</blockquote>\n<blockquote>\n<p>not code</p>\n</blockquote>"));
     }
   }
 
@@ -5464,6 +5908,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.").Is(Parser.Prettify("<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>"));
+
+      Parser.DoubleParse("A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.").Is(Parser.Prettify("<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>"));
     }
 
     // And let *M* be the marker `1.`, and *N* = 2.  Then rule #1 says
@@ -5497,6 +5943,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
     }
 
     // The most important thing to notice is that the position of
@@ -5527,6 +5975,8 @@ namespace Markdraw.Parser.Test
       //   <p>two</p>
 
       Parser.Parse("- one\n\n two").Is(Parser.Prettify("<ul>\n<li>one</li>\n</ul>\n<p>two</p>"));
+
+      Parser.DoubleParse("- one\n\n two").Is(Parser.Prettify("<ul>\n<li>one</li>\n</ul>\n<p>two</p>"));
     }
 
     [Fact]
@@ -5549,6 +5999,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- one\n\n  two").Is(Parser.Prettify("<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- one\n\n  two").Is(Parser.Prettify("<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -5570,6 +6022,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse(" -    one\n\n     two").Is(Parser.Prettify("<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>"));
+
+      Parser.DoubleParse(" -    one\n\n     two").Is(Parser.Prettify("<ul>\n<li>one</li>\n</ul>\n<pre><code> two\n</code></pre>"));
     }
 
     [Fact]
@@ -5592,6 +6046,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse(" -    one\n\n      two").Is(Parser.Prettify("<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse(" -    one\n\n      two").Is(Parser.Prettify("<ul>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ul>"));
     }
 
     // It is tempting to think of this in terms of columns:  the continuation
@@ -5625,6 +6081,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("   > > 1.  one\n>>\n>>     two").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>"));
+
+      Parser.DoubleParse("   > > 1.  one\n>>\n>>     two").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<ol>\n<li>\n<p>one</p>\n<p>two</p>\n</li>\n</ol>\n</blockquote>\n</blockquote>"));
     }
 
     // Here `two` occurs in the same column as the list marker `1.`,
@@ -5657,6 +6115,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse(">>- one\n>>\n  >  > two").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>"));
+
+      Parser.DoubleParse(">>- one\n>>\n  >  > two").Is(Parser.Prettify("<blockquote>\n<blockquote>\n<ul>\n<li>one</li>\n</ul>\n<p>two</p>\n</blockquote>\n</blockquote>"));
     }
 
     // Note that at least one space is needed between the list marker and
@@ -5677,6 +6137,8 @@ namespace Markdraw.Parser.Test
       //   <p>2.two</p>
 
       Parser.Parse("-one\n\n2.two").Is(Parser.Prettify("<p>-one</p>\n<p>2.two</p>"));
+
+      Parser.DoubleParse("-one\n\n2.two").Is(Parser.Prettify("<p>-one</p>\n<p>2.two</p>"));
     }
 
     // A list item may contain blocks that are separated by more than
@@ -5702,6 +6164,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n\n\n  bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n\n\n  bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
     }
 
     // A list item may contain any kind of block:
@@ -5736,6 +6200,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam").Is(Parser.Prettify("<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1.  foo\n\n    ```\n    bar\n    ```\n\n    baz\n\n    > bam").Is(Parser.Prettify("<ol>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n<p>baz</p>\n<blockquote>\n<p>bam</p>\n</blockquote>\n</li>\n</ol>"));
     }
 
     // A list item that contains an indented code block will preserve
@@ -5767,6 +6233,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- Foo\n\n      bar\n\n\n      baz").Is(Parser.Prettify("<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- Foo\n\n      bar\n\n\n      baz").Is(Parser.Prettify("<ul>\n<li>\n<p>Foo</p>\n<pre><code>bar\n\n\nbaz\n</code></pre>\n</li>\n</ul>"));
     }
 
     // Note that ordered list start numbers must be nine digits or less:
@@ -5785,6 +6253,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("123456789. ok").Is(Parser.Prettify("<ol start=\"123456789\">\n<li>ok</li>\n</ol>"));
+
+      Parser.DoubleParse("123456789. ok").Is(Parser.Prettify("<ol start=\"123456789\">\n<li>ok</li>\n</ol>"));
     }
 
     [Fact]
@@ -5800,6 +6270,8 @@ namespace Markdraw.Parser.Test
       //   <p>1234567890. not ok</p>
 
       Parser.Parse("1234567890. not ok").Is(Parser.Prettify("<p>1234567890. not ok</p>"));
+
+      Parser.DoubleParse("1234567890. not ok").Is(Parser.Prettify("<p>1234567890. not ok</p>"));
     }
 
     // A start number may begin with 0s:
@@ -5818,6 +6290,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("0. ok").Is(Parser.Prettify("<ol start=\"0\">\n<li>ok</li>\n</ol>"));
+
+      Parser.DoubleParse("0. ok").Is(Parser.Prettify("<ol start=\"0\">\n<li>ok</li>\n</ol>"));
     }
 
     [Fact]
@@ -5835,6 +6309,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("003. ok").Is(Parser.Prettify("<ol start=\"3\">\n<li>ok</li>\n</ol>"));
+
+      Parser.DoubleParse("003. ok").Is(Parser.Prettify("<ol start=\"3\">\n<li>ok</li>\n</ol>"));
     }
 
     // A start number may not be negative:
@@ -5851,6 +6327,8 @@ namespace Markdraw.Parser.Test
       //   <p>-1. not ok</p>
 
       Parser.Parse("-1. not ok").Is(Parser.Prettify("<p>-1. not ok</p>"));
+
+      Parser.DoubleParse("-1. not ok").Is(Parser.Prettify("<p>-1. not ok</p>"));
     }
 
     // 2.  **Item starting with indented code.**  If a sequence of lines *Ls*
@@ -5888,6 +6366,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n\n      bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n\n      bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ul>"));
     }
 
     // And in this case it is 11 spaces:
@@ -5912,6 +6392,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("  10.  foo\n\n           bar").Is(Parser.Prettify("<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("  10.  foo\n\n           bar").Is(Parser.Prettify("<ol start=\"10\">\n<li>\n<p>foo</p>\n<pre><code>bar\n</code></pre>\n</li>\n</ol>"));
     }
 
     // If the *first* block in the list item is an indented code block,
@@ -5938,6 +6420,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    indented code\n\nparagraph\n\n    more code").Is(Parser.Prettify("<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>"));
+
+      Parser.DoubleParse("    indented code\n\nparagraph\n\n    more code").Is(Parser.Prettify("<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>"));
     }
 
     [Fact]
@@ -5965,6 +6449,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1.     indented code\n\n   paragraph\n\n       more code").Is(Parser.Prettify("<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1.     indented code\n\n   paragraph\n\n       more code").Is(Parser.Prettify("<ol>\n<li>\n<pre><code>indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>"));
     }
 
     // Note that an additional space indent is interpreted as space
@@ -5994,6 +6480,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1.      indented code\n\n   paragraph\n\n       more code").Is(Parser.Prettify("<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1.      indented code\n\n   paragraph\n\n       more code").Is(Parser.Prettify("<ol>\n<li>\n<pre><code> indented code\n</code></pre>\n<p>paragraph</p>\n<pre><code>more code\n</code></pre>\n</li>\n</ol>"));
     }
 
     // Note that rules #1 and #2 only apply to two cases:  (a) cases
@@ -6019,6 +6507,8 @@ namespace Markdraw.Parser.Test
       //   <p>bar</p>
 
       Parser.Parse("   foo\n\nbar").Is(Parser.Prettify("<p>foo</p>\n<p>bar</p>"));
+
+      Parser.DoubleParse("   foo\n\nbar").Is(Parser.Prettify("<p>foo</p>\n<p>bar</p>"));
     }
 
     [Fact]
@@ -6039,6 +6529,8 @@ namespace Markdraw.Parser.Test
       //   <p>bar</p>
 
       Parser.Parse("-    foo\n\n  bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>"));
+
+      Parser.DoubleParse("-    foo\n\n  bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>\n<p>bar</p>"));
     }
 
     // This is not a significant restriction, because when a block begins
@@ -6065,6 +6557,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("-  foo\n\n   bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("-  foo\n\n   bar").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>bar</p>\n</li>\n</ul>"));
     }
 
     // 3.  **Item starting with a blank line.**  If a sequence of lines *Ls*
@@ -6110,6 +6604,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("-\n  foo\n-\n  ```\n  bar\n  ```\n-\n      baz").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>\n<pre><code>bar\n</code></pre>\n</li>\n<li>\n<pre><code>baz\n</code></pre>\n</li>\n</ul>"));
     }
 
     // When the list item starts with a blank line, the number of spaces
@@ -6130,6 +6626,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("-   \n  foo").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>"));
+
+      Parser.DoubleParse("-   \n  foo").Is(Parser.Prettify("<ul>\n<li>foo</li>\n</ul>"));
     }
 
     // A list item can begin with at most one blank line.
@@ -6153,6 +6651,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo</p>
 
       Parser.Parse("-\n\n  foo").Is(Parser.Prettify("<ul>\n<li></li>\n</ul>\n<p>foo</p>"));
+
+      Parser.DoubleParse("-\n\n  foo").Is(Parser.Prettify("<ul>\n<li></li>\n</ul>\n<p>foo</p>"));
     }
 
     // Here is an empty bullet list item:
@@ -6175,6 +6675,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n-\n- bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n-\n- bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>"));
     }
 
     // It does not matter whether there are spaces following the [list marker]:
@@ -6197,6 +6699,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n-   \n- bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n-   \n- bar").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ul>"));
     }
 
     // Here is an empty ordered list item:
@@ -6219,6 +6723,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1. foo\n2.\n3. bar").Is(Parser.Prettify("<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>"));
+
+      Parser.DoubleParse("1. foo\n2.\n3. bar").Is(Parser.Prettify("<ol>\n<li>foo</li>\n<li></li>\n<li>bar</li>\n</ol>"));
     }
 
     // A list may start or end with an empty list item:
@@ -6237,6 +6743,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("*").Is(Parser.Prettify("<ul>\n<li></li>\n</ul>"));
+
+      Parser.DoubleParse("*").Is(Parser.Prettify("<ul>\n<li></li>\n</ul>"));
     }
 
     // However, an empty list item cannot interrupt a paragraph:
@@ -6260,6 +6768,8 @@ namespace Markdraw.Parser.Test
       //   1.</p>
 
       Parser.Parse("foo\n*\n\nfoo\n1.").Is(Parser.Prettify("<p>foo\n*</p>\n<p>foo\n1.</p>"));
+
+      Parser.DoubleParse("foo\n*\n\nfoo\n1.").Is(Parser.Prettify("<p>foo\n*</p>\n<p>foo\n1.</p>"));
     }
 
     // 4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
@@ -6297,6 +6807,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
+
+      Parser.DoubleParse(" 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
     }
 
     // Indented two spaces:
@@ -6328,6 +6840,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("  1.  A paragraph\n      with two lines.\n\n          indented code\n\n      > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
     }
 
     // Indented three spaces:
@@ -6359,6 +6873,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("   1.  A paragraph\n       with two lines.\n\n           indented code\n\n       > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
     }
 
     // Four spaces indent gives a code block:
@@ -6386,6 +6902,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.").Is(Parser.Prettify("<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>"));
+
+      Parser.DoubleParse("    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.").Is(Parser.Prettify("<pre><code>1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.\n</code></pre>"));
     }
 
     // 5.  **Laziness.**  If a string of lines *Ls* constitute a [list
@@ -6426,6 +6944,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("  1.  A paragraph\nwith two lines.\n\n          indented code\n\n      > A block quote.").Is(Parser.Prettify("<ol>\n<li>\n<p>A paragraph\nwith two lines.</p>\n<pre><code>indented code\n</code></pre>\n<blockquote>\n<p>A block quote.</p>\n</blockquote>\n</li>\n</ol>"));
     }
 
     // Indentation can be partially deleted:
@@ -6446,6 +6966,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("  1.  A paragraph\n    with two lines.").Is(Parser.Prettify("<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>"));
+
+      Parser.DoubleParse("  1.  A paragraph\n    with two lines.").Is(Parser.Prettify("<ol>\n<li>A paragraph\nwith two lines.</li>\n</ol>"));
     }
 
     // These examples show how laziness can work in nested structures:
@@ -6472,6 +6994,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> 1. > Blockquote\ncontinued here.").Is(Parser.Prettify("<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>"));
+
+      Parser.DoubleParse("> 1. > Blockquote\ncontinued here.").Is(Parser.Prettify("<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>"));
     }
 
     [Fact]
@@ -6497,6 +7021,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> 1. > Blockquote\n> continued here.").Is(Parser.Prettify("<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>"));
+
+      Parser.DoubleParse("> 1. > Blockquote\n> continued here.").Is(Parser.Prettify("<blockquote>\n<ol>\n<li>\n<blockquote>\n<p>Blockquote\ncontinued here.</p>\n</blockquote>\n</li>\n</ol>\n</blockquote>"));
     }
 
     // 6.  **That's all.** Nothing that is not counted as a list item by rules
@@ -6538,6 +7064,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n  - bar\n    - baz\n      - boo").Is(Parser.Prettify("<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n  - bar\n    - baz\n      - boo").Is(Parser.Prettify("<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>baz\n<ul>\n<li>boo</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>"));
     }
 
     // One is not enough:
@@ -6562,6 +7090,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n - bar\n  - baz\n   - boo").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n - bar\n  - baz\n   - boo").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>bar</li>\n<li>baz</li>\n<li>boo</li>\n</ul>"));
     }
 
     // Here we need four, because the list marker is wider:
@@ -6585,6 +7115,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("10) foo\n    - bar").Is(Parser.Prettify("<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("10) foo\n    - bar").Is(Parser.Prettify("<ol start=\"10\">\n<li>foo\n<ul>\n<li>bar</li>\n</ul>\n</li>\n</ol>"));
     }
 
     // Three is not enough:
@@ -6607,6 +7139,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("10) foo\n   - bar").Is(Parser.Prettify("<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>"));
+
+      Parser.DoubleParse("10) foo\n   - bar").Is(Parser.Prettify("<ol start=\"10\">\n<li>foo</li>\n</ol>\n<ul>\n<li>bar</li>\n</ul>"));
     }
 
     // A list may be the first block in a list item:
@@ -6629,6 +7163,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- - foo").Is(Parser.Prettify("<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- - foo").Is(Parser.Prettify("<ul>\n<li>\n<ul>\n<li>foo</li>\n</ul>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -6654,6 +7190,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1. - 2. foo").Is(Parser.Prettify("<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1. - 2. foo").Is(Parser.Prettify("<ol>\n<li>\n<ul>\n<li>\n<ol start=\"2\">\n<li>foo</li>\n</ol>\n</li>\n</ul>\n</li>\n</ol>"));
     }
 
     // A list item can contain a heading:
@@ -6680,6 +7218,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- # Foo\n- Bar\n  ---\n  baz").Is(Parser.Prettify("<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>"));
+
+      Parser.DoubleParse("- # Foo\n- Bar\n  ---\n  baz").Is(Parser.Prettify("<ul>\n<li>\n<h1>Foo</h1>\n</li>\n<li>\n<h2>Bar</h2>\nbaz</li>\n</ul>"));
     }
   }
 
@@ -6924,6 +7464,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n- bar\n+ baz").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n- bar\n+ baz").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<ul>\n<li>baz</li>\n</ul>"));
     }
 
     [Fact]
@@ -6947,6 +7489,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1. foo\n2. bar\n3) baz").Is(Parser.Prettify("<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>"));
+
+      Parser.DoubleParse("1. foo\n2. bar\n3) baz").Is(Parser.Prettify("<ol>\n<li>foo</li>\n<li>bar</li>\n</ol>\n<ol start=\"3\">\n<li>baz</li>\n</ol>"));
     }
 
     // In CommonMark, a list can interrupt a paragraph. That is,
@@ -6971,6 +7515,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("Foo\n- bar\n- baz").Is(Parser.Prettify("<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>"));
+
+      Parser.DoubleParse("Foo\n- bar\n- baz").Is(Parser.Prettify("<p>Foo</p>\n<ul>\n<li>bar</li>\n<li>baz</li>\n</ul>"));
     }
 
     // `Markdown.pl` does not allow this, through fear of triggering a list
@@ -7052,6 +7598,8 @@ namespace Markdraw.Parser.Test
       //   14.  The number of doors is 6.</p>
 
       Parser.Parse("The number of windows in my house is\n14.  The number of doors is 6.").Is(Parser.Prettify("<p>The number of windows in my house is\n14.  The number of doors is 6.</p>"));
+
+      Parser.DoubleParse("The number of windows in my house is\n14.  The number of doors is 6.").Is(Parser.Prettify("<p>The number of windows in my house is\n14.  The number of doors is 6.</p>"));
     }
 
     // We may still get an unintended result in cases like
@@ -7072,6 +7620,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("The number of windows in my house is\n1.  The number of doors is 6.").Is(Parser.Prettify("<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>"));
+
+      Parser.DoubleParse("The number of windows in my house is\n1.  The number of doors is 6.").Is(Parser.Prettify("<p>The number of windows in my house is</p>\n<ol>\n<li>The number of doors is 6.</li>\n</ol>"));
     }
 
     // but this rule should prevent most spurious list captures.
@@ -7105,6 +7655,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n\n- bar\n\n\n- baz").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n\n- bar\n\n\n- baz").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n</li>\n<li>\n<p>bar</p>\n</li>\n<li>\n<p>baz</p>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -7138,6 +7690,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n  - bar\n    - baz\n\n\n      bim").Is(Parser.Prettify("<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n  - bar\n    - baz\n\n\n      bim").Is(Parser.Prettify("<ul>\n<li>foo\n<ul>\n<li>bar\n<ul>\n<li>\n<p>baz</p>\n<p>bim</p>\n</li>\n</ul>\n</li>\n</ul>\n</li>\n</ul>"));
     }
 
     // To separate consecutive lists of the same type, or to separate a
@@ -7171,6 +7725,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>"));
+
+      Parser.DoubleParse("- foo\n- bar\n\n<!-- -->\n\n- baz\n- bim").Is(Parser.Prettify("<ul>\n<li>foo</li>\n<li>bar</li>\n</ul>\n<!-- -->\n<ul>\n<li>baz</li>\n<li>bim</li>\n</ul>"));
     }
 
     [Fact]
@@ -7205,6 +7761,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>"));
+
+      Parser.DoubleParse("-   foo\n\n    notcode\n\n-   foo\n\n<!-- -->\n\n    code").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<p>notcode</p>\n</li>\n<li>\n<p>foo</p>\n</li>\n</ul>\n<!-- -->\n<pre><code>code\n</code></pre>"));
     }
 
     // List items need not be indented to the same level.  The following
@@ -7238,6 +7796,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n - b\n  - c\n   - d\n  - e\n - f\n- g").Is(Parser.Prettify("<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n - b\n  - c\n   - d\n  - e\n - f\n- g").Is(Parser.Prettify("<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d</li>\n<li>e</li>\n<li>f</li>\n<li>g</li>\n</ul>"));
     }
 
     [Fact]
@@ -7267,6 +7827,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1. a\n\n  2. b\n\n   3. c").Is(Parser.Prettify("<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1. a\n\n  2. b\n\n   3. c").Is(Parser.Prettify("<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ol>"));
     }
 
     // Note, however, that list items may not be indented more than
@@ -7295,6 +7857,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n - b\n  - c\n   - d\n    - e").Is(Parser.Prettify("<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d\n- e</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n - b\n  - c\n   - d\n    - e").Is(Parser.Prettify("<ul>\n<li>a</li>\n<li>b</li>\n<li>c</li>\n<li>d\n- e</li>\n</ul>"));
     }
 
     // And here, `3. c` is treated as in indented code block,
@@ -7326,6 +7890,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("1. a\n\n  2. b\n\n    3. c").Is(Parser.Prettify("<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ol>\n<pre><code>3. c\n</code></pre>"));
+
+      Parser.DoubleParse("1. a\n\n  2. b\n\n    3. c").Is(Parser.Prettify("<ol>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n</ol>\n<pre><code>3. c\n</code></pre>"));
     }
 
     // This is a loose list, because there is a blank line between
@@ -7356,6 +7922,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n- b\n\n- c").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n- b\n\n- c").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>c</p>\n</li>\n</ul>"));
     }
 
     // So is this, with a empty second item:
@@ -7383,6 +7951,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("* a\n*\n\n* c").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("* a\n*\n\n* c").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li></li>\n<li>\n<p>c</p>\n</li>\n</ul>"));
     }
 
     // These are loose lists, even though there is no space between the items,
@@ -7416,6 +7986,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n- b\n\n  c\n- d").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n- b\n\n  c\n- d").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -7445,6 +8017,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n- b\n\n  [ref]: /url\n- d").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n- b\n\n  [ref]: /url\n- d").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n</li>\n<li>\n<p>b</p>\n</li>\n<li>\n<p>d</p>\n</li>\n</ul>"));
     }
 
     // This is a tight list, because the blank lines are in a code block:
@@ -7476,6 +8050,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n- ```\n  b\n\n\n  ```\n- c").Is(Parser.Prettify("<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n- ```\n  b\n\n\n  ```\n- c").Is(Parser.Prettify("<ul>\n<li>a</li>\n<li>\n<pre><code>b\n\n\n</code></pre>\n</li>\n<li>c</li>\n</ul>"));
     }
 
     // This is a tight list, because the blank line is between two
@@ -7508,6 +8084,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n  - b\n\n    c\n- d").Is(Parser.Prettify("<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n  - b\n\n    c\n- d").Is(Parser.Prettify("<ul>\n<li>a\n<ul>\n<li>\n<p>b</p>\n<p>c</p>\n</li>\n</ul>\n</li>\n<li>d</li>\n</ul>"));
     }
 
     // This is a tight list, because the blank line is inside the
@@ -7535,6 +8113,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("* a\n  > b\n  >\n* c").Is(Parser.Prettify("<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>"));
+
+      Parser.DoubleParse("* a\n  > b\n  >\n* c").Is(Parser.Prettify("<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n</li>\n<li>c</li>\n</ul>"));
     }
 
     // This list is tight, because the consecutive block elements
@@ -7566,6 +8146,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n  > b\n  ```\n  c\n  ```\n- d").Is(Parser.Prettify("<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n  > b\n  ```\n  c\n  ```\n- d").Is(Parser.Prettify("<ul>\n<li>a\n<blockquote>\n<p>b</p>\n</blockquote>\n<pre><code>c\n</code></pre>\n</li>\n<li>d</li>\n</ul>"));
     }
 
     // A single-paragraph list is tight:
@@ -7584,6 +8166,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a").Is(Parser.Prettify("<ul>\n<li>a</li>\n</ul>"));
+
+      Parser.DoubleParse("- a").Is(Parser.Prettify("<ul>\n<li>a</li>\n</ul>"));
     }
 
     [Fact]
@@ -7606,6 +8190,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n  - b").Is(Parser.Prettify("<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n  - b").Is(Parser.Prettify("<ul>\n<li>a\n<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>"));
     }
 
     // This list is loose, because of the blank line between the
@@ -7633,6 +8219,8 @@ namespace Markdraw.Parser.Test
       //   </ol>
 
       Parser.Parse("1. ```\n   foo\n   ```\n\n   bar").Is(Parser.Prettify("<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>"));
+
+      Parser.DoubleParse("1. ```\n   foo\n   ```\n\n   bar").Is(Parser.Prettify("<ol>\n<li>\n<pre><code>foo\n</code></pre>\n<p>bar</p>\n</li>\n</ol>"));
     }
 
     // Here the outer list is loose, the inner list tight:
@@ -7660,6 +8248,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("* foo\n  * bar\n\n  baz").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("* foo\n  * bar\n\n  baz").Is(Parser.Prettify("<ul>\n<li>\n<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n<p>baz</p>\n</li>\n</ul>"));
     }
 
     [Fact]
@@ -7696,6 +8286,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("- a\n  - b\n  - c\n\n- d\n  - e\n  - f").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>"));
+
+      Parser.DoubleParse("- a\n  - b\n  - c\n\n- d\n  - e\n  - f").Is(Parser.Prettify("<ul>\n<li>\n<p>a</p>\n<ul>\n<li>b</li>\n<li>c</li>\n</ul>\n</li>\n<li>\n<p>d</p>\n<ul>\n<li>e</li>\n<li>f</li>\n</ul>\n</li>\n</ul>"));
     }
   }
 
@@ -7719,6 +8311,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>hi</code>lo`</p>
 
       Parser.Parse("`hi`lo`").Is(Parser.Prettify("<p><code>hi</code>lo`</p>"));
+
+      Parser.DoubleParse("`hi`lo`").Is(Parser.Prettify("<p><code>hi</code>lo`</p>"));
     }
   }
 
@@ -7744,6 +8338,8 @@ namespace Markdraw.Parser.Test
       //   <p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
 
       Parser.Parse("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~").Is(Parser.Prettify("<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>"));
+
+      Parser.DoubleParse("\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~").Is(Parser.Prettify("<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>"));
     }
 
     // Backslashes before other characters are treated as literal
@@ -7761,6 +8357,8 @@ namespace Markdraw.Parser.Test
       //   <p>\→\A\a\ \3\φ\«</p>
 
       Parser.Parse("\\\t\\A\\a\\ \\3\\φ\\«").Is(Parser.Prettify("<p>\\\t\\A\\a\\ \\3\\φ\\«</p>"));
+
+      Parser.DoubleParse("\\\t\\A\\a\\ \\3\\φ\\«").Is(Parser.Prettify("<p>\\\t\\A\\a\\ \\3\\φ\\«</p>"));
     }
 
     // Escaped characters are treated as regular characters and do
@@ -7794,6 +8392,8 @@ namespace Markdraw.Parser.Test
       //   &amp;ouml; not a character entity</p>
 
       Parser.Parse("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"\n\\&ouml; not a character entity").Is(Parser.Prettify("<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;\n&amp;ouml; not a character entity</p>"));
+
+      Parser.DoubleParse("\\*not emphasized*\n\\<br/> not a tag\n\\[not a link](/foo)\n\\`not code`\n1\\. not a list\n\\* not a list\n\\# not a heading\n\\[foo]: /url \"not a reference\"\n\\&ouml; not a character entity").Is(Parser.Prettify("<p>*not emphasized*\n&lt;br/&gt; not a tag\n[not a link](/foo)\n`not code`\n1. not a list\n* not a list\n# not a heading\n[foo]: /url &quot;not a reference&quot;\n&amp;ouml; not a character entity</p>"));
     }
 
     // If a backslash is itself escaped, the following character is not:
@@ -7810,6 +8410,8 @@ namespace Markdraw.Parser.Test
       //   <p>\<em>emphasis</em></p>
 
       Parser.Parse("\\\\*emphasis*").Is(Parser.Prettify("<p>\\<em>emphasis</em></p>"));
+
+      Parser.DoubleParse("\\\\*emphasis*").Is(Parser.Prettify("<p>\\<em>emphasis</em></p>"));
     }
 
     // A backslash at the end of the line is a [hard line break]:
@@ -7828,6 +8430,8 @@ namespace Markdraw.Parser.Test
       //   bar</p>
 
       Parser.Parse("foo\\\nbar").Is(Parser.Prettify("<p>foo<br />\nbar</p>"));
+
+      Parser.DoubleParse("foo\\\nbar").Is(Parser.Prettify("<p>foo<br />\nbar</p>"));
     }
 
     // Backslash escapes do not work in code blocks, code spans, autolinks, or
@@ -7845,6 +8449,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>\[\`</code></p>
 
       Parser.Parse("`` \\[\\` ``").Is(Parser.Prettify("<p><code>\\[\\`</code></p>"));
+
+      Parser.DoubleParse("`` \\[\\` ``").Is(Parser.Prettify("<p><code>\\[\\`</code></p>"));
     }
 
     [Fact]
@@ -7861,6 +8467,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    \\[\\]").Is(Parser.Prettify("<pre><code>\\[\\]\n</code></pre>"));
+
+      Parser.DoubleParse("    \\[\\]").Is(Parser.Prettify("<pre><code>\\[\\]\n</code></pre>"));
     }
 
     [Fact]
@@ -7879,6 +8487,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("~~~\n\\[\\]\n~~~").Is(Parser.Prettify("<pre><code>\\[\\]\n</code></pre>"));
+
+      Parser.DoubleParse("~~~\n\\[\\]\n~~~").Is(Parser.Prettify("<pre><code>\\[\\]\n</code></pre>"));
     }
 
     [Fact]
@@ -7894,6 +8504,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
 
       Parser.Parse("<http://example.com?find=\\*>").Is(Parser.Prettify("<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>"));
+
+      Parser.DoubleParse("<http://example.com?find=\\*>").Is(Parser.Prettify("<p><a href=\"http://example.com?find=%5C*\">http://example.com?find=\\*</a></p>"));
     }
 
     [Fact]
@@ -7909,6 +8521,8 @@ namespace Markdraw.Parser.Test
       //   <a href="/bar\/)">
 
       Parser.Parse("<a href=\"/bar\\/)\">").Is(Parser.Prettify("<a href=\"/bar\\/)\">"));
+
+      Parser.DoubleParse("<a href=\"/bar\\/)\">").Is(Parser.Prettify("<a href=\"/bar\\/)\">"));
     }
 
     // But they work in all other contexts, including URLs and link titles,
@@ -7926,6 +8540,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/bar*" title="ti*tle">foo</a></p>
 
       Parser.Parse("[foo](/bar\\* \"ti\\*tle\")").Is(Parser.Prettify("<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo](/bar\\* \"ti\\*tle\")").Is(Parser.Prettify("<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>"));
     }
 
     [Fact]
@@ -7943,6 +8559,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/bar*" title="ti*tle">foo</a></p>
 
       Parser.Parse("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"").Is(Parser.Prettify("<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]\n\n[foo]: /bar\\* \"ti\\*tle\"").Is(Parser.Prettify("<p><a href=\"/bar*\" title=\"ti*tle\">foo</a></p>"));
     }
 
     [Fact]
@@ -7961,6 +8579,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("``` foo\\+bar\nfoo\n```").Is(Parser.Prettify("<pre><code class=\"language-foo+bar\">foo\n</code></pre>"));
+
+      Parser.DoubleParse("``` foo\\+bar\nfoo\n```").Is(Parser.Prettify("<pre><code class=\"language-foo+bar\">foo\n</code></pre>"));
     }
   }
 
@@ -8008,6 +8628,8 @@ namespace Markdraw.Parser.Test
       //   ∲ ≧̸</p>
 
       Parser.Parse("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;").Is(Parser.Prettify("<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>"));
+
+      Parser.DoubleParse("&nbsp; &amp; &copy; &AElig; &Dcaron;\n&frac34; &HilbertSpace; &DifferentialD;\n&ClockwiseContourIntegral; &ngE;").Is(Parser.Prettify("<p>  &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸</p>"));
     }
 
     // [Decimal numeric character
@@ -8030,6 +8652,8 @@ namespace Markdraw.Parser.Test
       //   <p># Ӓ Ϡ �</p>
 
       Parser.Parse("&#35; &#1234; &#992; &#0;").Is(Parser.Prettify("<p># Ӓ Ϡ �</p>"));
+
+      Parser.DoubleParse("&#35; &#1234; &#992; &#0;").Is(Parser.Prettify("<p># Ӓ Ϡ �</p>"));
     }
 
     // [Hexadecimal numeric character
@@ -8050,6 +8674,8 @@ namespace Markdraw.Parser.Test
       //   <p>&quot; ആ ಫ</p>
 
       Parser.Parse("&#X22; &#XD06; &#xcab;").Is(Parser.Prettify("<p>&quot; ആ ಫ</p>"));
+
+      Parser.DoubleParse("&#X22; &#XD06; &#xcab;").Is(Parser.Prettify("<p>&quot; ആ ಫ</p>"));
     }
 
     // Here are some nonentities:
@@ -8072,6 +8698,8 @@ namespace Markdraw.Parser.Test
       //   &amp;ThisIsNotDefined; &amp;hi?;</p>
 
       Parser.Parse("&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;").Is(Parser.Prettify("<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>"));
+
+      Parser.DoubleParse("&nbsp &x; &#; &#x;\n&#87654321;\n&#abcdef0;\n&ThisIsNotDefined; &hi?;").Is(Parser.Prettify("<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;</p>"));
     }
 
     // Although HTML5 does accept some entity references
@@ -8090,6 +8718,8 @@ namespace Markdraw.Parser.Test
       //   <p>&amp;copy</p>
 
       Parser.Parse("&copy").Is(Parser.Prettify("<p>&amp;copy</p>"));
+
+      Parser.DoubleParse("&copy").Is(Parser.Prettify("<p>&amp;copy</p>"));
     }
 
     // Strings that are not on the list of HTML5 named entities are not
@@ -8107,6 +8737,8 @@ namespace Markdraw.Parser.Test
       //   <p>&amp;MadeUpEntity;</p>
 
       Parser.Parse("&MadeUpEntity;").Is(Parser.Prettify("<p>&amp;MadeUpEntity;</p>"));
+
+      Parser.DoubleParse("&MadeUpEntity;").Is(Parser.Prettify("<p>&amp;MadeUpEntity;</p>"));
     }
 
     // Entity and numeric character references are recognized in any
@@ -8125,6 +8757,8 @@ namespace Markdraw.Parser.Test
       //   <a href="&ouml;&ouml;.html">
 
       Parser.Parse("<a href=\"&ouml;&ouml;.html\">").Is(Parser.Prettify("<a href=\"&ouml;&ouml;.html\">"));
+
+      Parser.DoubleParse("<a href=\"&ouml;&ouml;.html\">").Is(Parser.Prettify("<a href=\"&ouml;&ouml;.html\">"));
     }
 
     [Fact]
@@ -8140,6 +8774,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
 
       Parser.Parse("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")").Is(Parser.Prettify("<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo](/f&ouml;&ouml; \"f&ouml;&ouml;\")").Is(Parser.Prettify("<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>"));
     }
 
     [Fact]
@@ -8157,6 +8793,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
 
       Parser.Parse("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"").Is(Parser.Prettify("<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]\n\n[foo]: /f&ouml;&ouml; \"f&ouml;&ouml;\"").Is(Parser.Prettify("<p><a href=\"/f%C3%B6%C3%B6\" title=\"föö\">foo</a></p>"));
     }
 
     [Fact]
@@ -8175,6 +8813,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("``` f&ouml;&ouml;\nfoo\n```").Is(Parser.Prettify("<pre><code class=\"language-föö\">foo\n</code></pre>"));
+
+      Parser.DoubleParse("``` f&ouml;&ouml;\nfoo\n```").Is(Parser.Prettify("<pre><code class=\"language-föö\">foo\n</code></pre>"));
     }
 
     // Entity and numeric character references are treated as literal
@@ -8192,6 +8832,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>f&amp;ouml;&amp;ouml;</code></p>
 
       Parser.Parse("`f&ouml;&ouml;`").Is(Parser.Prettify("<p><code>f&amp;ouml;&amp;ouml;</code></p>"));
+
+      Parser.DoubleParse("`f&ouml;&ouml;`").Is(Parser.Prettify("<p><code>f&amp;ouml;&amp;ouml;</code></p>"));
     }
 
     [Fact]
@@ -8208,6 +8850,8 @@ namespace Markdraw.Parser.Test
       //   </code></pre>
 
       Parser.Parse("    f&ouml;f&ouml;").Is(Parser.Prettify("<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>"));
+
+      Parser.DoubleParse("    f&ouml;f&ouml;").Is(Parser.Prettify("<pre><code>f&amp;ouml;f&amp;ouml;\n</code></pre>"));
     }
 
     // Entity and numeric character references cannot be used
@@ -8228,6 +8872,8 @@ namespace Markdraw.Parser.Test
       //   <em>foo</em></p>
 
       Parser.Parse("&#42;foo&#42;\n*foo*").Is(Parser.Prettify("<p>*foo*\n<em>foo</em></p>"));
+
+      Parser.DoubleParse("&#42;foo&#42;\n*foo*").Is(Parser.Prettify("<p>*foo*\n<em>foo</em></p>"));
     }
 
     [Fact]
@@ -8248,6 +8894,8 @@ namespace Markdraw.Parser.Test
       //   </ul>
 
       Parser.Parse("&#42; foo\n\n* foo").Is(Parser.Prettify("<p>* foo</p>\n<ul>\n<li>foo</li>\n</ul>"));
+
+      Parser.DoubleParse("&#42; foo\n\n* foo").Is(Parser.Prettify("<p>* foo</p>\n<ul>\n<li>foo</li>\n</ul>"));
     }
 
     [Fact]
@@ -8265,6 +8913,8 @@ namespace Markdraw.Parser.Test
       //   bar</p>
 
       Parser.Parse("foo&#10;&#10;bar").Is(Parser.Prettify("<p>foo\n\nbar</p>"));
+
+      Parser.DoubleParse("foo&#10;&#10;bar").Is(Parser.Prettify("<p>foo\n\nbar</p>"));
     }
 
     [Fact]
@@ -8280,6 +8930,8 @@ namespace Markdraw.Parser.Test
       //   <p>→foo</p>
 
       Parser.Parse("&#9;foo").Is(Parser.Prettify("<p>\tfoo</p>"));
+
+      Parser.DoubleParse("&#9;foo").Is(Parser.Prettify("<p>\tfoo</p>"));
     }
 
     [Fact]
@@ -8295,6 +8947,8 @@ namespace Markdraw.Parser.Test
       //   <p>[a](url &quot;tit&quot;)</p>
 
       Parser.Parse("[a](url &quot;tit&quot;)").Is(Parser.Prettify("<p>[a](url &quot;tit&quot;)</p>"));
+
+      Parser.DoubleParse("[a](url &quot;tit&quot;)").Is(Parser.Prettify("<p>[a](url &quot;tit&quot;)</p>"));
     }
   }
 
@@ -8333,6 +8987,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo</code></p>
 
       Parser.Parse("`foo`").Is(Parser.Prettify("<p><code>foo</code></p>"));
+
+      Parser.DoubleParse("`foo`").Is(Parser.Prettify("<p><code>foo</code></p>"));
     }
 
     // Here two backticks are used, because the code contains a backtick.
@@ -8351,6 +9007,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo ` bar</code></p>
 
       Parser.Parse("`` foo ` bar ``").Is(Parser.Prettify("<p><code>foo ` bar</code></p>"));
+
+      Parser.DoubleParse("`` foo ` bar ``").Is(Parser.Prettify("<p><code>foo ` bar</code></p>"));
     }
 
     // This example shows the motivation for stripping leading and trailing
@@ -8368,6 +9026,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>``</code></p>
 
       Parser.Parse("` `` `").Is(Parser.Prettify("<p><code>``</code></p>"));
+
+      Parser.DoubleParse("` `` `").Is(Parser.Prettify("<p><code>``</code></p>"));
     }
 
     // Note that only *one* space is stripped:
@@ -8384,6 +9044,8 @@ namespace Markdraw.Parser.Test
       //   <p><code> `` </code></p>
 
       Parser.Parse("`  ``  `").Is(Parser.Prettify("<p><code> `` </code></p>"));
+
+      Parser.DoubleParse("`  ``  `").Is(Parser.Prettify("<p><code> `` </code></p>"));
     }
 
     // The stripping only happens if the space is on both
@@ -8401,6 +9063,8 @@ namespace Markdraw.Parser.Test
       //   <p><code> a</code></p>
 
       Parser.Parse("` a`").Is(Parser.Prettify("<p><code> a</code></p>"));
+
+      Parser.DoubleParse("` a`").Is(Parser.Prettify("<p><code> a</code></p>"));
     }
 
     // Only [spaces], and not [unicode whitespace] in general, are
@@ -8418,6 +9082,8 @@ namespace Markdraw.Parser.Test
       //   <p><code> b </code></p>
 
       Parser.Parse("` b `").Is(Parser.Prettify("<p><code> b </code></p>"));
+
+      Parser.DoubleParse("` b `").Is(Parser.Prettify("<p><code> b </code></p>"));
     }
 
     // No stripping occurs if the code span contains only spaces:
@@ -8436,6 +9102,8 @@ namespace Markdraw.Parser.Test
       //   <code>  </code></p>
 
       Parser.Parse("` `\n`  `").Is(Parser.Prettify("<p><code> </code>\n<code>  </code></p>"));
+
+      Parser.DoubleParse("` `\n`  `").Is(Parser.Prettify("<p><code> </code>\n<code>  </code></p>"));
     }
 
     // [Line endings] are treated like spaces:
@@ -8456,6 +9124,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo bar   baz</code></p>
 
       Parser.Parse("``\nfoo\nbar  \nbaz\n``").Is(Parser.Prettify("<p><code>foo bar   baz</code></p>"));
+
+      Parser.DoubleParse("``\nfoo\nbar  \nbaz\n``").Is(Parser.Prettify("<p><code>foo bar   baz</code></p>"));
     }
 
     [Fact]
@@ -8473,6 +9143,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo </code></p>
 
       Parser.Parse("``\nfoo \n``").Is(Parser.Prettify("<p><code>foo </code></p>"));
+
+      Parser.DoubleParse("``\nfoo \n``").Is(Parser.Prettify("<p><code>foo </code></p>"));
     }
 
     // Interior spaces are not collapsed:
@@ -8490,6 +9162,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo   bar  baz</code></p>
 
       Parser.Parse("`foo   bar \nbaz`").Is(Parser.Prettify("<p><code>foo   bar  baz</code></p>"));
+
+      Parser.DoubleParse("`foo   bar \nbaz`").Is(Parser.Prettify("<p><code>foo   bar  baz</code></p>"));
     }
 
     // Note that browsers will typically collapse consecutive spaces
@@ -8514,6 +9188,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo\</code>bar`</p>
 
       Parser.Parse("`foo\\`bar`").Is(Parser.Prettify("<p><code>foo\\</code>bar`</p>"));
+
+      Parser.DoubleParse("`foo\\`bar`").Is(Parser.Prettify("<p><code>foo\\</code>bar`</p>"));
     }
 
     // Backslash escapes are never needed, because one can always choose a
@@ -8532,6 +9208,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo`bar</code></p>
 
       Parser.Parse("``foo`bar``").Is(Parser.Prettify("<p><code>foo`bar</code></p>"));
+
+      Parser.DoubleParse("``foo`bar``").Is(Parser.Prettify("<p><code>foo`bar</code></p>"));
     }
 
     [Fact]
@@ -8547,6 +9225,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>foo `` bar</code></p>
 
       Parser.Parse("` foo `` bar `").Is(Parser.Prettify("<p><code>foo `` bar</code></p>"));
+
+      Parser.DoubleParse("` foo `` bar `").Is(Parser.Prettify("<p><code>foo `` bar</code></p>"));
     }
 
     // Code span backticks have higher precedence than any other inline
@@ -8566,6 +9246,8 @@ namespace Markdraw.Parser.Test
       //   <p>*foo<code>*</code></p>
 
       Parser.Parse("*foo`*`").Is(Parser.Prettify("<p>*foo<code>*</code></p>"));
+
+      Parser.DoubleParse("*foo`*`").Is(Parser.Prettify("<p>*foo<code>*</code></p>"));
     }
 
     // And this is not parsed as a link:
@@ -8582,6 +9264,8 @@ namespace Markdraw.Parser.Test
       //   <p>[not a <code>link](/foo</code>)</p>
 
       Parser.Parse("[not a `link](/foo`)").Is(Parser.Prettify("<p>[not a <code>link](/foo</code>)</p>"));
+
+      Parser.DoubleParse("[not a `link](/foo`)").Is(Parser.Prettify("<p>[not a <code>link](/foo</code>)</p>"));
     }
 
     // Code spans, HTML tags, and autolinks have the same precedence.
@@ -8599,6 +9283,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>
 
       Parser.Parse("`<a href=\"`\">`").Is(Parser.Prettify("<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>"));
+
+      Parser.DoubleParse("`<a href=\"`\">`").Is(Parser.Prettify("<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>"));
     }
 
     // But this is an HTML tag:
@@ -8615,6 +9301,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="`">`</p>
 
       Parser.Parse("<a href=\"`\">`").Is(Parser.Prettify("<p><a href=\"`\">`</p>"));
+
+      Parser.DoubleParse("<a href=\"`\">`").Is(Parser.Prettify("<p><a href=\"`\">`</p>"));
     }
 
     // And this is code:
@@ -8631,6 +9319,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
 
       Parser.Parse("`<http://foo.bar.`baz>`").Is(Parser.Prettify("<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>"));
+
+      Parser.DoubleParse("`<http://foo.bar.`baz>`").Is(Parser.Prettify("<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>"));
     }
 
     // But this is an autolink:
@@ -8647,6 +9337,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>
 
       Parser.Parse("<http://foo.bar.`baz>`").Is(Parser.Prettify("<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>"));
+
+      Parser.DoubleParse("<http://foo.bar.`baz>`").Is(Parser.Prettify("<p><a href=\"http://foo.bar.%60baz\">http://foo.bar.`baz</a>`</p>"));
     }
 
     // When a backtick string is not closed by a matching backtick string,
@@ -8664,6 +9356,8 @@ namespace Markdraw.Parser.Test
       //   <p>```foo``</p>
 
       Parser.Parse("```foo``").Is(Parser.Prettify("<p>```foo``</p>"));
+
+      Parser.DoubleParse("```foo``").Is(Parser.Prettify("<p>```foo``</p>"));
     }
 
     [Fact]
@@ -8679,6 +9373,8 @@ namespace Markdraw.Parser.Test
       //   <p>`foo</p>
 
       Parser.Parse("`foo").Is(Parser.Prettify("<p>`foo</p>"));
+
+      Parser.DoubleParse("`foo").Is(Parser.Prettify("<p>`foo</p>"));
     }
 
     // The following case also illustrates the need for opening and
@@ -8696,6 +9392,8 @@ namespace Markdraw.Parser.Test
       //   <p>`foo<code>bar</code></p>
 
       Parser.Parse("`foo``bar``").Is(Parser.Prettify("<p>`foo<code>bar</code></p>"));
+
+      Parser.DoubleParse("`foo``bar``").Is(Parser.Prettify("<p>`foo<code>bar</code></p>"));
     }
   }
 
@@ -8923,6 +9621,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo bar</em></p>
 
       Parser.Parse("*foo bar*").Is(Parser.Prettify("<p><em>foo bar</em></p>"));
+
+      Parser.DoubleParse("*foo bar*").Is(Parser.Prettify("<p><em>foo bar</em></p>"));
     }
 
     // This is not emphasis, because the opening `*` is followed by
@@ -8940,6 +9640,8 @@ namespace Markdraw.Parser.Test
       //   <p>a * foo bar*</p>
 
       Parser.Parse("a * foo bar*").Is(Parser.Prettify("<p>a * foo bar*</p>"));
+
+      Parser.DoubleParse("a * foo bar*").Is(Parser.Prettify("<p>a * foo bar*</p>"));
     }
 
     // This is not emphasis, because the opening `*` is preceded
@@ -8958,6 +9660,8 @@ namespace Markdraw.Parser.Test
       //   <p>a*&quot;foo&quot;*</p>
 
       Parser.Parse("a*\"foo\"*").Is(Parser.Prettify("<p>a*&quot;foo&quot;*</p>"));
+
+      Parser.DoubleParse("a*\"foo\"*").Is(Parser.Prettify("<p>a*&quot;foo&quot;*</p>"));
     }
 
     // Unicode nonbreaking spaces count as whitespace, too:
@@ -8974,6 +9678,8 @@ namespace Markdraw.Parser.Test
       //   <p>* a *</p>
 
       Parser.Parse("* a *").Is(Parser.Prettify("<p>* a *</p>"));
+
+      Parser.DoubleParse("* a *").Is(Parser.Prettify("<p>* a *</p>"));
     }
 
     // Intraword emphasis with `*` is permitted:
@@ -8990,6 +9696,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo<em>bar</em></p>
 
       Parser.Parse("foo*bar*").Is(Parser.Prettify("<p>foo<em>bar</em></p>"));
+
+      Parser.DoubleParse("foo*bar*").Is(Parser.Prettify("<p>foo<em>bar</em></p>"));
     }
 
     [Fact]
@@ -9005,6 +9713,8 @@ namespace Markdraw.Parser.Test
       //   <p>5<em>6</em>78</p>
 
       Parser.Parse("5*6*78").Is(Parser.Prettify("<p>5<em>6</em>78</p>"));
+
+      Parser.DoubleParse("5*6*78").Is(Parser.Prettify("<p>5<em>6</em>78</p>"));
     }
 
     // Rule 2:
@@ -9021,6 +9731,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo bar</em></p>
 
       Parser.Parse("_foo bar_").Is(Parser.Prettify("<p><em>foo bar</em></p>"));
+
+      Parser.DoubleParse("_foo bar_").Is(Parser.Prettify("<p><em>foo bar</em></p>"));
     }
 
     // This is not emphasis, because the opening `_` is followed by
@@ -9038,6 +9750,8 @@ namespace Markdraw.Parser.Test
       //   <p>_ foo bar_</p>
 
       Parser.Parse("_ foo bar_").Is(Parser.Prettify("<p>_ foo bar_</p>"));
+
+      Parser.DoubleParse("_ foo bar_").Is(Parser.Prettify("<p>_ foo bar_</p>"));
     }
 
     // This is not emphasis, because the opening `_` is preceded
@@ -9055,6 +9769,8 @@ namespace Markdraw.Parser.Test
       //   <p>a_&quot;foo&quot;_</p>
 
       Parser.Parse("a_\"foo\"_").Is(Parser.Prettify("<p>a_&quot;foo&quot;_</p>"));
+
+      Parser.DoubleParse("a_\"foo\"_").Is(Parser.Prettify("<p>a_&quot;foo&quot;_</p>"));
     }
 
     // Emphasis with `_` is not allowed inside words:
@@ -9071,6 +9787,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo_bar_</p>
 
       Parser.Parse("foo_bar_").Is(Parser.Prettify("<p>foo_bar_</p>"));
+
+      Parser.DoubleParse("foo_bar_").Is(Parser.Prettify("<p>foo_bar_</p>"));
     }
 
     [Fact]
@@ -9086,6 +9804,8 @@ namespace Markdraw.Parser.Test
       //   <p>5_6_78</p>
 
       Parser.Parse("5_6_78").Is(Parser.Prettify("<p>5_6_78</p>"));
+
+      Parser.DoubleParse("5_6_78").Is(Parser.Prettify("<p>5_6_78</p>"));
     }
 
     [Fact]
@@ -9101,6 +9821,8 @@ namespace Markdraw.Parser.Test
       //   <p>пристаням_стремятся_</p>
 
       Parser.Parse("пристаням_стремятся_").Is(Parser.Prettify("<p>пристаням_стремятся_</p>"));
+
+      Parser.DoubleParse("пристаням_стремятся_").Is(Parser.Prettify("<p>пристаням_стремятся_</p>"));
     }
 
     // Here `_` does not generate emphasis, because the first delimiter run
@@ -9118,6 +9840,8 @@ namespace Markdraw.Parser.Test
       //   <p>aa_&quot;bb&quot;_cc</p>
 
       Parser.Parse("aa_\"bb\"_cc").Is(Parser.Prettify("<p>aa_&quot;bb&quot;_cc</p>"));
+
+      Parser.DoubleParse("aa_\"bb\"_cc").Is(Parser.Prettify("<p>aa_&quot;bb&quot;_cc</p>"));
     }
 
     // This is emphasis, even though the opening delimiter is
@@ -9136,6 +9860,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo-<em>(bar)</em></p>
 
       Parser.Parse("foo-_(bar)_").Is(Parser.Prettify("<p>foo-<em>(bar)</em></p>"));
+
+      Parser.DoubleParse("foo-_(bar)_").Is(Parser.Prettify("<p>foo-<em>(bar)</em></p>"));
     }
 
     // Rule 3:
@@ -9155,6 +9881,8 @@ namespace Markdraw.Parser.Test
       //   <p>_foo*</p>
 
       Parser.Parse("_foo*").Is(Parser.Prettify("<p>_foo*</p>"));
+
+      Parser.DoubleParse("_foo*").Is(Parser.Prettify("<p>_foo*</p>"));
     }
 
     // This is not emphasis, because the closing `*` is preceded by
@@ -9172,6 +9900,8 @@ namespace Markdraw.Parser.Test
       //   <p>*foo bar *</p>
 
       Parser.Parse("*foo bar *").Is(Parser.Prettify("<p>*foo bar *</p>"));
+
+      Parser.DoubleParse("*foo bar *").Is(Parser.Prettify("<p>*foo bar *</p>"));
     }
 
     // A newline also counts as whitespace:
@@ -9190,6 +9920,8 @@ namespace Markdraw.Parser.Test
       //   *</p>
 
       Parser.Parse("*foo bar\n*").Is(Parser.Prettify("<p>*foo bar\n*</p>"));
+
+      Parser.DoubleParse("*foo bar\n*").Is(Parser.Prettify("<p>*foo bar\n*</p>"));
     }
 
     // This is not emphasis, because the second `*` is
@@ -9208,6 +9940,8 @@ namespace Markdraw.Parser.Test
       //   <p>*(*foo)</p>
 
       Parser.Parse("*(*foo)").Is(Parser.Prettify("<p>*(*foo)</p>"));
+
+      Parser.DoubleParse("*(*foo)").Is(Parser.Prettify("<p>*(*foo)</p>"));
     }
 
     // The point of this restriction is more easily appreciated
@@ -9225,6 +9959,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>(<em>foo</em>)</em></p>
 
       Parser.Parse("*(*foo*)*").Is(Parser.Prettify("<p><em>(<em>foo</em>)</em></p>"));
+
+      Parser.DoubleParse("*(*foo*)*").Is(Parser.Prettify("<p><em>(<em>foo</em>)</em></p>"));
     }
 
     // Intraword emphasis with `*` is allowed:
@@ -9241,6 +9977,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo</em>bar</p>
 
       Parser.Parse("*foo*bar").Is(Parser.Prettify("<p><em>foo</em>bar</p>"));
+
+      Parser.DoubleParse("*foo*bar").Is(Parser.Prettify("<p><em>foo</em>bar</p>"));
     }
 
     // Rule 4:
@@ -9260,6 +9998,8 @@ namespace Markdraw.Parser.Test
       //   <p>_foo bar _</p>
 
       Parser.Parse("_foo bar _").Is(Parser.Prettify("<p>_foo bar _</p>"));
+
+      Parser.DoubleParse("_foo bar _").Is(Parser.Prettify("<p>_foo bar _</p>"));
     }
 
     // This is not emphasis, because the second `_` is
@@ -9277,6 +10017,8 @@ namespace Markdraw.Parser.Test
       //   <p>_(_foo)</p>
 
       Parser.Parse("_(_foo)").Is(Parser.Prettify("<p>_(_foo)</p>"));
+
+      Parser.DoubleParse("_(_foo)").Is(Parser.Prettify("<p>_(_foo)</p>"));
     }
 
     // This is emphasis within emphasis:
@@ -9293,6 +10035,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>(<em>foo</em>)</em></p>
 
       Parser.Parse("_(_foo_)_").Is(Parser.Prettify("<p><em>(<em>foo</em>)</em></p>"));
+
+      Parser.DoubleParse("_(_foo_)_").Is(Parser.Prettify("<p><em>(<em>foo</em>)</em></p>"));
     }
 
     // Intraword emphasis is disallowed for `_`:
@@ -9309,6 +10053,8 @@ namespace Markdraw.Parser.Test
       //   <p>_foo_bar</p>
 
       Parser.Parse("_foo_bar").Is(Parser.Prettify("<p>_foo_bar</p>"));
+
+      Parser.DoubleParse("_foo_bar").Is(Parser.Prettify("<p>_foo_bar</p>"));
     }
 
     [Fact]
@@ -9324,6 +10070,8 @@ namespace Markdraw.Parser.Test
       //   <p>_пристаням_стремятся</p>
 
       Parser.Parse("_пристаням_стремятся").Is(Parser.Prettify("<p>_пристаням_стремятся</p>"));
+
+      Parser.DoubleParse("_пристаням_стремятся").Is(Parser.Prettify("<p>_пристаням_стремятся</p>"));
     }
 
     [Fact]
@@ -9339,6 +10087,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo_bar_baz</em></p>
 
       Parser.Parse("_foo_bar_baz_").Is(Parser.Prettify("<p><em>foo_bar_baz</em></p>"));
+
+      Parser.DoubleParse("_foo_bar_baz_").Is(Parser.Prettify("<p><em>foo_bar_baz</em></p>"));
     }
 
     // This is emphasis, even though the closing delimiter is
@@ -9357,6 +10107,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>(bar)</em>.</p>
 
       Parser.Parse("_(bar)_.").Is(Parser.Prettify("<p><em>(bar)</em>.</p>"));
+
+      Parser.DoubleParse("_(bar)_.").Is(Parser.Prettify("<p><em>(bar)</em>.</p>"));
     }
 
     // Rule 5:
@@ -9373,6 +10125,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo bar</strong></p>
 
       Parser.Parse("**foo bar**").Is(Parser.Prettify("<p><strong>foo bar</strong></p>"));
+
+      Parser.DoubleParse("**foo bar**").Is(Parser.Prettify("<p><strong>foo bar</strong></p>"));
     }
 
     // This is not strong emphasis, because the opening delimiter is
@@ -9390,6 +10144,8 @@ namespace Markdraw.Parser.Test
       //   <p>** foo bar**</p>
 
       Parser.Parse("** foo bar**").Is(Parser.Prettify("<p>** foo bar**</p>"));
+
+      Parser.DoubleParse("** foo bar**").Is(Parser.Prettify("<p>** foo bar**</p>"));
     }
 
     // This is not strong emphasis, because the opening `**` is preceded
@@ -9408,6 +10164,8 @@ namespace Markdraw.Parser.Test
       //   <p>a**&quot;foo&quot;**</p>
 
       Parser.Parse("a**\"foo\"**").Is(Parser.Prettify("<p>a**&quot;foo&quot;**</p>"));
+
+      Parser.DoubleParse("a**\"foo\"**").Is(Parser.Prettify("<p>a**&quot;foo&quot;**</p>"));
     }
 
     // Intraword strong emphasis with `**` is permitted:
@@ -9424,6 +10182,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo<strong>bar</strong></p>
 
       Parser.Parse("foo**bar**").Is(Parser.Prettify("<p>foo<strong>bar</strong></p>"));
+
+      Parser.DoubleParse("foo**bar**").Is(Parser.Prettify("<p>foo<strong>bar</strong></p>"));
     }
 
     // Rule 6:
@@ -9440,6 +10200,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo bar</strong></p>
 
       Parser.Parse("__foo bar__").Is(Parser.Prettify("<p><strong>foo bar</strong></p>"));
+
+      Parser.DoubleParse("__foo bar__").Is(Parser.Prettify("<p><strong>foo bar</strong></p>"));
     }
 
     // This is not strong emphasis, because the opening delimiter is
@@ -9457,6 +10219,8 @@ namespace Markdraw.Parser.Test
       //   <p>__ foo bar__</p>
 
       Parser.Parse("__ foo bar__").Is(Parser.Prettify("<p>__ foo bar__</p>"));
+
+      Parser.DoubleParse("__ foo bar__").Is(Parser.Prettify("<p>__ foo bar__</p>"));
     }
 
     // A newline counts as whitespace:
@@ -9475,6 +10239,8 @@ namespace Markdraw.Parser.Test
       //   foo bar__</p>
 
       Parser.Parse("__\nfoo bar__").Is(Parser.Prettify("<p>__\nfoo bar__</p>"));
+
+      Parser.DoubleParse("__\nfoo bar__").Is(Parser.Prettify("<p>__\nfoo bar__</p>"));
     }
 
     // This is not strong emphasis, because the opening `__` is preceded
@@ -9492,6 +10258,8 @@ namespace Markdraw.Parser.Test
       //   <p>a__&quot;foo&quot;__</p>
 
       Parser.Parse("a__\"foo\"__").Is(Parser.Prettify("<p>a__&quot;foo&quot;__</p>"));
+
+      Parser.DoubleParse("a__\"foo\"__").Is(Parser.Prettify("<p>a__&quot;foo&quot;__</p>"));
     }
 
     // Intraword strong emphasis is forbidden with `__`:
@@ -9508,6 +10276,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo__bar__</p>
 
       Parser.Parse("foo__bar__").Is(Parser.Prettify("<p>foo__bar__</p>"));
+
+      Parser.DoubleParse("foo__bar__").Is(Parser.Prettify("<p>foo__bar__</p>"));
     }
 
     [Fact]
@@ -9523,6 +10293,8 @@ namespace Markdraw.Parser.Test
       //   <p>5__6__78</p>
 
       Parser.Parse("5__6__78").Is(Parser.Prettify("<p>5__6__78</p>"));
+
+      Parser.DoubleParse("5__6__78").Is(Parser.Prettify("<p>5__6__78</p>"));
     }
 
     [Fact]
@@ -9538,6 +10310,8 @@ namespace Markdraw.Parser.Test
       //   <p>пристаням__стремятся__</p>
 
       Parser.Parse("пристаням__стремятся__").Is(Parser.Prettify("<p>пристаням__стремятся__</p>"));
+
+      Parser.DoubleParse("пристаням__стремятся__").Is(Parser.Prettify("<p>пристаням__стремятся__</p>"));
     }
 
     [Fact]
@@ -9553,6 +10327,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo, <strong>bar</strong>, baz</strong></p>
 
       Parser.Parse("__foo, __bar__, baz__").Is(Parser.Prettify("<p><strong>foo, <strong>bar</strong>, baz</strong></p>"));
+
+      Parser.DoubleParse("__foo, __bar__, baz__").Is(Parser.Prettify("<p><strong>foo, <strong>bar</strong>, baz</strong></p>"));
     }
 
     // This is strong emphasis, even though the opening delimiter is
@@ -9571,6 +10347,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo-<strong>(bar)</strong></p>
 
       Parser.Parse("foo-__(bar)__").Is(Parser.Prettify("<p>foo-<strong>(bar)</strong></p>"));
+
+      Parser.DoubleParse("foo-__(bar)__").Is(Parser.Prettify("<p>foo-<strong>(bar)</strong></p>"));
     }
 
     // Rule 7:
@@ -9590,6 +10368,8 @@ namespace Markdraw.Parser.Test
       //   <p>**foo bar **</p>
 
       Parser.Parse("**foo bar **").Is(Parser.Prettify("<p>**foo bar **</p>"));
+
+      Parser.DoubleParse("**foo bar **").Is(Parser.Prettify("<p>**foo bar **</p>"));
     }
 
     // (Nor can it be interpreted as an emphasized `*foo bar *`, because of
@@ -9610,6 +10390,8 @@ namespace Markdraw.Parser.Test
       //   <p>**(**foo)</p>
 
       Parser.Parse("**(**foo)").Is(Parser.Prettify("<p>**(**foo)</p>"));
+
+      Parser.DoubleParse("**(**foo)").Is(Parser.Prettify("<p>**(**foo)</p>"));
     }
 
     // The point of this restriction is more easily appreciated
@@ -9627,6 +10409,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>(<strong>foo</strong>)</em></p>
 
       Parser.Parse("*(**foo**)*").Is(Parser.Prettify("<p><em>(<strong>foo</strong>)</em></p>"));
+
+      Parser.DoubleParse("*(**foo**)*").Is(Parser.Prettify("<p><em>(<strong>foo</strong>)</em></p>"));
     }
 
     [Fact]
@@ -9644,6 +10428,8 @@ namespace Markdraw.Parser.Test
       //   <em>Asclepias physocarpa</em>)</strong></p>
 
       Parser.Parse("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**").Is(Parser.Prettify("<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>"));
+
+      Parser.DoubleParse("**Gomphocarpus (*Gomphocarpus physocarpus*, syn.\n*Asclepias physocarpa*)**").Is(Parser.Prettify("<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.\n<em>Asclepias physocarpa</em>)</strong></p>"));
     }
 
     [Fact]
@@ -9659,6 +10445,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>
 
       Parser.Parse("**foo \"*bar*\" foo**").Is(Parser.Prettify("<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>"));
+
+      Parser.DoubleParse("**foo \"*bar*\" foo**").Is(Parser.Prettify("<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>"));
     }
 
     // Intraword emphasis:
@@ -9675,6 +10463,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo</strong>bar</p>
 
       Parser.Parse("**foo**bar").Is(Parser.Prettify("<p><strong>foo</strong>bar</p>"));
+
+      Parser.DoubleParse("**foo**bar").Is(Parser.Prettify("<p><strong>foo</strong>bar</p>"));
     }
 
     // Rule 8:
@@ -9694,6 +10484,8 @@ namespace Markdraw.Parser.Test
       //   <p>__foo bar __</p>
 
       Parser.Parse("__foo bar __").Is(Parser.Prettify("<p>__foo bar __</p>"));
+
+      Parser.DoubleParse("__foo bar __").Is(Parser.Prettify("<p>__foo bar __</p>"));
     }
 
     // This is not strong emphasis, because the second `__` is
@@ -9711,6 +10503,8 @@ namespace Markdraw.Parser.Test
       //   <p>__(__foo)</p>
 
       Parser.Parse("__(__foo)").Is(Parser.Prettify("<p>__(__foo)</p>"));
+
+      Parser.DoubleParse("__(__foo)").Is(Parser.Prettify("<p>__(__foo)</p>"));
     }
 
     // The point of this restriction is more easily appreciated
@@ -9728,6 +10522,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>(<strong>foo</strong>)</em></p>
 
       Parser.Parse("_(__foo__)_").Is(Parser.Prettify("<p><em>(<strong>foo</strong>)</em></p>"));
+
+      Parser.DoubleParse("_(__foo__)_").Is(Parser.Prettify("<p><em>(<strong>foo</strong>)</em></p>"));
     }
 
     // Intraword strong emphasis is forbidden with `__`:
@@ -9744,6 +10540,8 @@ namespace Markdraw.Parser.Test
       //   <p>__foo__bar</p>
 
       Parser.Parse("__foo__bar").Is(Parser.Prettify("<p>__foo__bar</p>"));
+
+      Parser.DoubleParse("__foo__bar").Is(Parser.Prettify("<p>__foo__bar</p>"));
     }
 
     [Fact]
@@ -9759,6 +10557,8 @@ namespace Markdraw.Parser.Test
       //   <p>__пристаням__стремятся</p>
 
       Parser.Parse("__пристаням__стремятся").Is(Parser.Prettify("<p>__пристаням__стремятся</p>"));
+
+      Parser.DoubleParse("__пристаням__стремятся").Is(Parser.Prettify("<p>__пристаням__стремятся</p>"));
     }
 
     [Fact]
@@ -9774,6 +10574,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo__bar__baz</strong></p>
 
       Parser.Parse("__foo__bar__baz__").Is(Parser.Prettify("<p><strong>foo__bar__baz</strong></p>"));
+
+      Parser.DoubleParse("__foo__bar__baz__").Is(Parser.Prettify("<p><strong>foo__bar__baz</strong></p>"));
     }
 
     // This is strong emphasis, even though the closing delimiter is
@@ -9792,6 +10594,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>(bar)</strong>.</p>
 
       Parser.Parse("__(bar)__.").Is(Parser.Prettify("<p><strong>(bar)</strong>.</p>"));
+
+      Parser.DoubleParse("__(bar)__.").Is(Parser.Prettify("<p><strong>(bar)</strong>.</p>"));
     }
 
     // Rule 9:
@@ -9811,6 +10615,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <a href="/url">bar</a></em></p>
 
       Parser.Parse("*foo [bar](/url)*").Is(Parser.Prettify("<p><em>foo <a href=\"/url\">bar</a></em></p>"));
+
+      Parser.DoubleParse("*foo [bar](/url)*").Is(Parser.Prettify("<p><em>foo <a href=\"/url\">bar</a></em></p>"));
     }
 
     [Fact]
@@ -9828,6 +10634,8 @@ namespace Markdraw.Parser.Test
       //   bar</em></p>
 
       Parser.Parse("*foo\nbar*").Is(Parser.Prettify("<p><em>foo\nbar</em></p>"));
+
+      Parser.DoubleParse("*foo\nbar*").Is(Parser.Prettify("<p><em>foo\nbar</em></p>"));
     }
 
     // In particular, emphasis and strong emphasis can be nested
@@ -9845,6 +10653,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <strong>bar</strong> baz</em></p>
 
       Parser.Parse("_foo __bar__ baz_").Is(Parser.Prettify("<p><em>foo <strong>bar</strong> baz</em></p>"));
+
+      Parser.DoubleParse("_foo __bar__ baz_").Is(Parser.Prettify("<p><em>foo <strong>bar</strong> baz</em></p>"));
     }
 
     [Fact]
@@ -9860,6 +10670,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <em>bar</em> baz</em></p>
 
       Parser.Parse("_foo _bar_ baz_").Is(Parser.Prettify("<p><em>foo <em>bar</em> baz</em></p>"));
+
+      Parser.DoubleParse("_foo _bar_ baz_").Is(Parser.Prettify("<p><em>foo <em>bar</em> baz</em></p>"));
     }
 
     [Fact]
@@ -9875,6 +10687,8 @@ namespace Markdraw.Parser.Test
       //   <p><em><em>foo</em> bar</em></p>
 
       Parser.Parse("__foo_ bar_").Is(Parser.Prettify("<p><em><em>foo</em> bar</em></p>"));
+
+      Parser.DoubleParse("__foo_ bar_").Is(Parser.Prettify("<p><em><em>foo</em> bar</em></p>"));
     }
 
     [Fact]
@@ -9890,6 +10704,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <em>bar</em></em></p>
 
       Parser.Parse("*foo *bar**").Is(Parser.Prettify("<p><em>foo <em>bar</em></em></p>"));
+
+      Parser.DoubleParse("*foo *bar**").Is(Parser.Prettify("<p><em>foo <em>bar</em></em></p>"));
     }
 
     [Fact]
@@ -9905,6 +10721,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <strong>bar</strong> baz</em></p>
 
       Parser.Parse("*foo **bar** baz*").Is(Parser.Prettify("<p><em>foo <strong>bar</strong> baz</em></p>"));
+
+      Parser.DoubleParse("*foo **bar** baz*").Is(Parser.Prettify("<p><em>foo <strong>bar</strong> baz</em></p>"));
     }
 
     [Fact]
@@ -9920,6 +10738,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo<strong>bar</strong>baz</em></p>
 
       Parser.Parse("*foo**bar**baz*").Is(Parser.Prettify("<p><em>foo<strong>bar</strong>baz</em></p>"));
+
+      Parser.DoubleParse("*foo**bar**baz*").Is(Parser.Prettify("<p><em>foo<strong>bar</strong>baz</em></p>"));
     }
 
     // Note that in the preceding case, the interpretation
@@ -9952,6 +10772,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo**bar</em></p>
 
       Parser.Parse("*foo**bar*").Is(Parser.Prettify("<p><em>foo**bar</em></p>"));
+
+      Parser.DoubleParse("*foo**bar*").Is(Parser.Prettify("<p><em>foo**bar</em></p>"));
     }
 
     // The same condition ensures that the following
@@ -9971,6 +10793,8 @@ namespace Markdraw.Parser.Test
       //   <p><em><strong>foo</strong> bar</em></p>
 
       Parser.Parse("***foo** bar*").Is(Parser.Prettify("<p><em><strong>foo</strong> bar</em></p>"));
+
+      Parser.DoubleParse("***foo** bar*").Is(Parser.Prettify("<p><em><strong>foo</strong> bar</em></p>"));
     }
 
     [Fact]
@@ -9986,6 +10810,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <strong>bar</strong></em></p>
 
       Parser.Parse("*foo **bar***").Is(Parser.Prettify("<p><em>foo <strong>bar</strong></em></p>"));
+
+      Parser.DoubleParse("*foo **bar***").Is(Parser.Prettify("<p><em>foo <strong>bar</strong></em></p>"));
     }
 
     [Fact]
@@ -10001,6 +10827,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo<strong>bar</strong></em></p>
 
       Parser.Parse("*foo**bar***").Is(Parser.Prettify("<p><em>foo<strong>bar</strong></em></p>"));
+
+      Parser.DoubleParse("*foo**bar***").Is(Parser.Prettify("<p><em>foo<strong>bar</strong></em></p>"));
     }
 
     // When the lengths of the interior closing and opening
@@ -10019,6 +10847,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo<em><strong>bar</strong></em>baz</p>
 
       Parser.Parse("foo***bar***baz").Is(Parser.Prettify("<p>foo<em><strong>bar</strong></em>baz</p>"));
+
+      Parser.DoubleParse("foo***bar***baz").Is(Parser.Prettify("<p>foo<em><strong>bar</strong></em>baz</p>"));
     }
 
     [Fact]
@@ -10034,6 +10864,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
 
       Parser.Parse("foo******bar*********baz").Is(Parser.Prettify("<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>"));
+
+      Parser.DoubleParse("foo******bar*********baz").Is(Parser.Prettify("<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>"));
     }
 
     // Indefinite levels of nesting are possible:
@@ -10050,6 +10882,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>
 
       Parser.Parse("*foo **bar *baz* bim** bop*").Is(Parser.Prettify("<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>"));
+
+      Parser.DoubleParse("*foo **bar *baz* bim** bop*").Is(Parser.Prettify("<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>"));
     }
 
     [Fact]
@@ -10065,6 +10899,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <a href="/url"><em>bar</em></a></em></p>
 
       Parser.Parse("*foo [*bar*](/url)*").Is(Parser.Prettify("<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>"));
+
+      Parser.DoubleParse("*foo [*bar*](/url)*").Is(Parser.Prettify("<p><em>foo <a href=\"/url\"><em>bar</em></a></em></p>"));
     }
 
     // There can be no empty emphasis or strong emphasis:
@@ -10081,6 +10917,8 @@ namespace Markdraw.Parser.Test
       //   <p>** is not an empty emphasis</p>
 
       Parser.Parse("** is not an empty emphasis").Is(Parser.Prettify("<p>** is not an empty emphasis</p>"));
+
+      Parser.DoubleParse("** is not an empty emphasis").Is(Parser.Prettify("<p>** is not an empty emphasis</p>"));
     }
 
     [Fact]
@@ -10096,6 +10934,8 @@ namespace Markdraw.Parser.Test
       //   <p>**** is not an empty strong emphasis</p>
 
       Parser.Parse("**** is not an empty strong emphasis").Is(Parser.Prettify("<p>**** is not an empty strong emphasis</p>"));
+
+      Parser.DoubleParse("**** is not an empty strong emphasis").Is(Parser.Prettify("<p>**** is not an empty strong emphasis</p>"));
     }
 
     // Rule 10:
@@ -10115,6 +10955,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo <a href="/url">bar</a></strong></p>
 
       Parser.Parse("**foo [bar](/url)**").Is(Parser.Prettify("<p><strong>foo <a href=\"/url\">bar</a></strong></p>"));
+
+      Parser.DoubleParse("**foo [bar](/url)**").Is(Parser.Prettify("<p><strong>foo <a href=\"/url\">bar</a></strong></p>"));
     }
 
     [Fact]
@@ -10132,6 +10974,8 @@ namespace Markdraw.Parser.Test
       //   bar</strong></p>
 
       Parser.Parse("**foo\nbar**").Is(Parser.Prettify("<p><strong>foo\nbar</strong></p>"));
+
+      Parser.DoubleParse("**foo\nbar**").Is(Parser.Prettify("<p><strong>foo\nbar</strong></p>"));
     }
 
     // In particular, emphasis and strong emphasis can be nested
@@ -10149,6 +10993,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo <em>bar</em> baz</strong></p>
 
       Parser.Parse("__foo _bar_ baz__").Is(Parser.Prettify("<p><strong>foo <em>bar</em> baz</strong></p>"));
+
+      Parser.DoubleParse("__foo _bar_ baz__").Is(Parser.Prettify("<p><strong>foo <em>bar</em> baz</strong></p>"));
     }
 
     [Fact]
@@ -10164,6 +11010,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo <strong>bar</strong> baz</strong></p>
 
       Parser.Parse("__foo __bar__ baz__").Is(Parser.Prettify("<p><strong>foo <strong>bar</strong> baz</strong></p>"));
+
+      Parser.DoubleParse("__foo __bar__ baz__").Is(Parser.Prettify("<p><strong>foo <strong>bar</strong> baz</strong></p>"));
     }
 
     [Fact]
@@ -10179,6 +11027,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong><strong>foo</strong> bar</strong></p>
 
       Parser.Parse("____foo__ bar__").Is(Parser.Prettify("<p><strong><strong>foo</strong> bar</strong></p>"));
+
+      Parser.DoubleParse("____foo__ bar__").Is(Parser.Prettify("<p><strong><strong>foo</strong> bar</strong></p>"));
     }
 
     [Fact]
@@ -10194,6 +11044,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo <strong>bar</strong></strong></p>
 
       Parser.Parse("**foo **bar****").Is(Parser.Prettify("<p><strong>foo <strong>bar</strong></strong></p>"));
+
+      Parser.DoubleParse("**foo **bar****").Is(Parser.Prettify("<p><strong>foo <strong>bar</strong></strong></p>"));
     }
 
     [Fact]
@@ -10209,6 +11061,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo <em>bar</em> baz</strong></p>
 
       Parser.Parse("**foo *bar* baz**").Is(Parser.Prettify("<p><strong>foo <em>bar</em> baz</strong></p>"));
+
+      Parser.DoubleParse("**foo *bar* baz**").Is(Parser.Prettify("<p><strong>foo <em>bar</em> baz</strong></p>"));
     }
 
     [Fact]
@@ -10224,6 +11078,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo<em>bar</em>baz</strong></p>
 
       Parser.Parse("**foo*bar*baz**").Is(Parser.Prettify("<p><strong>foo<em>bar</em>baz</strong></p>"));
+
+      Parser.DoubleParse("**foo*bar*baz**").Is(Parser.Prettify("<p><strong>foo<em>bar</em>baz</strong></p>"));
     }
 
     [Fact]
@@ -10239,6 +11095,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong><em>foo</em> bar</strong></p>
 
       Parser.Parse("***foo* bar**").Is(Parser.Prettify("<p><strong><em>foo</em> bar</strong></p>"));
+
+      Parser.DoubleParse("***foo* bar**").Is(Parser.Prettify("<p><strong><em>foo</em> bar</strong></p>"));
     }
 
     [Fact]
@@ -10254,6 +11112,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo <em>bar</em></strong></p>
 
       Parser.Parse("**foo *bar***").Is(Parser.Prettify("<p><strong>foo <em>bar</em></strong></p>"));
+
+      Parser.DoubleParse("**foo *bar***").Is(Parser.Prettify("<p><strong>foo <em>bar</em></strong></p>"));
     }
 
     // Indefinite levels of nesting are possible:
@@ -10272,6 +11132,8 @@ namespace Markdraw.Parser.Test
       //   bim</em> bop</strong></p>
 
       Parser.Parse("**foo *bar **baz**\nbim* bop**").Is(Parser.Prettify("<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>"));
+
+      Parser.DoubleParse("**foo *bar **baz**\nbim* bop**").Is(Parser.Prettify("<p><strong>foo <em>bar <strong>baz</strong>\nbim</em> bop</strong></p>"));
     }
 
     [Fact]
@@ -10287,6 +11149,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo <a href="/url"><em>bar</em></a></strong></p>
 
       Parser.Parse("**foo [*bar*](/url)**").Is(Parser.Prettify("<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>"));
+
+      Parser.DoubleParse("**foo [*bar*](/url)**").Is(Parser.Prettify("<p><strong>foo <a href=\"/url\"><em>bar</em></a></strong></p>"));
     }
 
     // There can be no empty emphasis or strong emphasis:
@@ -10303,6 +11167,8 @@ namespace Markdraw.Parser.Test
       //   <p>__ is not an empty emphasis</p>
 
       Parser.Parse("__ is not an empty emphasis").Is(Parser.Prettify("<p>__ is not an empty emphasis</p>"));
+
+      Parser.DoubleParse("__ is not an empty emphasis").Is(Parser.Prettify("<p>__ is not an empty emphasis</p>"));
     }
 
     [Fact]
@@ -10318,6 +11184,8 @@ namespace Markdraw.Parser.Test
       //   <p>____ is not an empty strong emphasis</p>
 
       Parser.Parse("____ is not an empty strong emphasis").Is(Parser.Prettify("<p>____ is not an empty strong emphasis</p>"));
+
+      Parser.DoubleParse("____ is not an empty strong emphasis").Is(Parser.Prettify("<p>____ is not an empty strong emphasis</p>"));
     }
 
     // Rule 11:
@@ -10334,6 +11202,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo ***</p>
 
       Parser.Parse("foo ***").Is(Parser.Prettify("<p>foo ***</p>"));
+
+      Parser.DoubleParse("foo ***").Is(Parser.Prettify("<p>foo ***</p>"));
     }
 
     [Fact]
@@ -10349,6 +11219,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <em>*</em></p>
 
       Parser.Parse("foo *\\**").Is(Parser.Prettify("<p>foo <em>*</em></p>"));
+
+      Parser.DoubleParse("foo *\\**").Is(Parser.Prettify("<p>foo <em>*</em></p>"));
     }
 
     [Fact]
@@ -10364,6 +11236,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <em>_</em></p>
 
       Parser.Parse("foo *_*").Is(Parser.Prettify("<p>foo <em>_</em></p>"));
+
+      Parser.DoubleParse("foo *_*").Is(Parser.Prettify("<p>foo <em>_</em></p>"));
     }
 
     [Fact]
@@ -10379,6 +11253,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo *****</p>
 
       Parser.Parse("foo *****").Is(Parser.Prettify("<p>foo *****</p>"));
+
+      Parser.DoubleParse("foo *****").Is(Parser.Prettify("<p>foo *****</p>"));
     }
 
     [Fact]
@@ -10394,6 +11270,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <strong>*</strong></p>
 
       Parser.Parse("foo **\\***").Is(Parser.Prettify("<p>foo <strong>*</strong></p>"));
+
+      Parser.DoubleParse("foo **\\***").Is(Parser.Prettify("<p>foo <strong>*</strong></p>"));
     }
 
     [Fact]
@@ -10409,6 +11287,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <strong>_</strong></p>
 
       Parser.Parse("foo **_**").Is(Parser.Prettify("<p>foo <strong>_</strong></p>"));
+
+      Parser.DoubleParse("foo **_**").Is(Parser.Prettify("<p>foo <strong>_</strong></p>"));
     }
 
     // Note that when delimiters do not match evenly, Rule 11 determines
@@ -10427,6 +11307,8 @@ namespace Markdraw.Parser.Test
       //   <p>*<em>foo</em></p>
 
       Parser.Parse("**foo*").Is(Parser.Prettify("<p>*<em>foo</em></p>"));
+
+      Parser.DoubleParse("**foo*").Is(Parser.Prettify("<p>*<em>foo</em></p>"));
     }
 
     [Fact]
@@ -10442,6 +11324,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo</em>*</p>
 
       Parser.Parse("*foo**").Is(Parser.Prettify("<p><em>foo</em>*</p>"));
+
+      Parser.DoubleParse("*foo**").Is(Parser.Prettify("<p><em>foo</em>*</p>"));
     }
 
     [Fact]
@@ -10457,6 +11341,8 @@ namespace Markdraw.Parser.Test
       //   <p>*<strong>foo</strong></p>
 
       Parser.Parse("***foo**").Is(Parser.Prettify("<p>*<strong>foo</strong></p>"));
+
+      Parser.DoubleParse("***foo**").Is(Parser.Prettify("<p>*<strong>foo</strong></p>"));
     }
 
     [Fact]
@@ -10472,6 +11358,8 @@ namespace Markdraw.Parser.Test
       //   <p>***<em>foo</em></p>
 
       Parser.Parse("****foo*").Is(Parser.Prettify("<p>***<em>foo</em></p>"));
+
+      Parser.DoubleParse("****foo*").Is(Parser.Prettify("<p>***<em>foo</em></p>"));
     }
 
     [Fact]
@@ -10487,6 +11375,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo</strong>*</p>
 
       Parser.Parse("**foo***").Is(Parser.Prettify("<p><strong>foo</strong>*</p>"));
+
+      Parser.DoubleParse("**foo***").Is(Parser.Prettify("<p><strong>foo</strong>*</p>"));
     }
 
     [Fact]
@@ -10502,6 +11392,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo</em>***</p>
 
       Parser.Parse("*foo****").Is(Parser.Prettify("<p><em>foo</em>***</p>"));
+
+      Parser.DoubleParse("*foo****").Is(Parser.Prettify("<p><em>foo</em>***</p>"));
     }
 
     // Rule 12:
@@ -10518,6 +11410,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo ___</p>
 
       Parser.Parse("foo ___").Is(Parser.Prettify("<p>foo ___</p>"));
+
+      Parser.DoubleParse("foo ___").Is(Parser.Prettify("<p>foo ___</p>"));
     }
 
     [Fact]
@@ -10533,6 +11427,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <em>_</em></p>
 
       Parser.Parse("foo _\\__").Is(Parser.Prettify("<p>foo <em>_</em></p>"));
+
+      Parser.DoubleParse("foo _\\__").Is(Parser.Prettify("<p>foo <em>_</em></p>"));
     }
 
     [Fact]
@@ -10548,6 +11444,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <em>*</em></p>
 
       Parser.Parse("foo _*_").Is(Parser.Prettify("<p>foo <em>*</em></p>"));
+
+      Parser.DoubleParse("foo _*_").Is(Parser.Prettify("<p>foo <em>*</em></p>"));
     }
 
     [Fact]
@@ -10563,6 +11461,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo _____</p>
 
       Parser.Parse("foo _____").Is(Parser.Prettify("<p>foo _____</p>"));
+
+      Parser.DoubleParse("foo _____").Is(Parser.Prettify("<p>foo _____</p>"));
     }
 
     [Fact]
@@ -10578,6 +11478,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <strong>_</strong></p>
 
       Parser.Parse("foo __\\___").Is(Parser.Prettify("<p>foo <strong>_</strong></p>"));
+
+      Parser.DoubleParse("foo __\\___").Is(Parser.Prettify("<p>foo <strong>_</strong></p>"));
     }
 
     [Fact]
@@ -10593,6 +11495,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <strong>*</strong></p>
 
       Parser.Parse("foo __*__").Is(Parser.Prettify("<p>foo <strong>*</strong></p>"));
+
+      Parser.DoubleParse("foo __*__").Is(Parser.Prettify("<p>foo <strong>*</strong></p>"));
     }
 
     [Fact]
@@ -10608,6 +11512,8 @@ namespace Markdraw.Parser.Test
       //   <p>_<em>foo</em></p>
 
       Parser.Parse("__foo_").Is(Parser.Prettify("<p>_<em>foo</em></p>"));
+
+      Parser.DoubleParse("__foo_").Is(Parser.Prettify("<p>_<em>foo</em></p>"));
     }
 
     // Note that when delimiters do not match evenly, Rule 12 determines
@@ -10626,6 +11532,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo</em>_</p>
 
       Parser.Parse("_foo__").Is(Parser.Prettify("<p><em>foo</em>_</p>"));
+
+      Parser.DoubleParse("_foo__").Is(Parser.Prettify("<p><em>foo</em>_</p>"));
     }
 
     [Fact]
@@ -10641,6 +11549,8 @@ namespace Markdraw.Parser.Test
       //   <p>_<strong>foo</strong></p>
 
       Parser.Parse("___foo__").Is(Parser.Prettify("<p>_<strong>foo</strong></p>"));
+
+      Parser.DoubleParse("___foo__").Is(Parser.Prettify("<p>_<strong>foo</strong></p>"));
     }
 
     [Fact]
@@ -10656,6 +11566,8 @@ namespace Markdraw.Parser.Test
       //   <p>___<em>foo</em></p>
 
       Parser.Parse("____foo_").Is(Parser.Prettify("<p>___<em>foo</em></p>"));
+
+      Parser.DoubleParse("____foo_").Is(Parser.Prettify("<p>___<em>foo</em></p>"));
     }
 
     [Fact]
@@ -10671,6 +11583,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo</strong>_</p>
 
       Parser.Parse("__foo___").Is(Parser.Prettify("<p><strong>foo</strong>_</p>"));
+
+      Parser.DoubleParse("__foo___").Is(Parser.Prettify("<p><strong>foo</strong>_</p>"));
     }
 
     [Fact]
@@ -10686,6 +11600,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo</em>___</p>
 
       Parser.Parse("_foo____").Is(Parser.Prettify("<p><em>foo</em>___</p>"));
+
+      Parser.DoubleParse("_foo____").Is(Parser.Prettify("<p><em>foo</em>___</p>"));
     }
 
     // Rule 13 implies that if you want emphasis nested directly inside
@@ -10703,6 +11619,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo</strong></p>
 
       Parser.Parse("**foo**").Is(Parser.Prettify("<p><strong>foo</strong></p>"));
+
+      Parser.DoubleParse("**foo**").Is(Parser.Prettify("<p><strong>foo</strong></p>"));
     }
 
     [Fact]
@@ -10718,6 +11636,8 @@ namespace Markdraw.Parser.Test
       //   <p><em><em>foo</em></em></p>
 
       Parser.Parse("*_foo_*").Is(Parser.Prettify("<p><em><em>foo</em></em></p>"));
+
+      Parser.DoubleParse("*_foo_*").Is(Parser.Prettify("<p><em><em>foo</em></em></p>"));
     }
 
     [Fact]
@@ -10733,6 +11653,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong>foo</strong></p>
 
       Parser.Parse("__foo__").Is(Parser.Prettify("<p><strong>foo</strong></p>"));
+
+      Parser.DoubleParse("__foo__").Is(Parser.Prettify("<p><strong>foo</strong></p>"));
     }
 
     [Fact]
@@ -10748,6 +11670,8 @@ namespace Markdraw.Parser.Test
       //   <p><em><em>foo</em></em></p>
 
       Parser.Parse("_*foo*_").Is(Parser.Prettify("<p><em><em>foo</em></em></p>"));
+
+      Parser.DoubleParse("_*foo*_").Is(Parser.Prettify("<p><em><em>foo</em></em></p>"));
     }
 
     // However, strong emphasis within strong emphasis is possible without
@@ -10765,6 +11689,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong><strong>foo</strong></strong></p>
 
       Parser.Parse("****foo****").Is(Parser.Prettify("<p><strong><strong>foo</strong></strong></p>"));
+
+      Parser.DoubleParse("****foo****").Is(Parser.Prettify("<p><strong><strong>foo</strong></strong></p>"));
     }
 
     [Fact]
@@ -10780,6 +11706,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong><strong>foo</strong></strong></p>
 
       Parser.Parse("____foo____").Is(Parser.Prettify("<p><strong><strong>foo</strong></strong></p>"));
+
+      Parser.DoubleParse("____foo____").Is(Parser.Prettify("<p><strong><strong>foo</strong></strong></p>"));
     }
 
     // Rule 13 can be applied to arbitrarily long sequences of
@@ -10797,6 +11725,8 @@ namespace Markdraw.Parser.Test
       //   <p><strong><strong><strong>foo</strong></strong></strong></p>
 
       Parser.Parse("******foo******").Is(Parser.Prettify("<p><strong><strong><strong>foo</strong></strong></strong></p>"));
+
+      Parser.DoubleParse("******foo******").Is(Parser.Prettify("<p><strong><strong><strong>foo</strong></strong></strong></p>"));
     }
 
     // Rule 14:
@@ -10813,6 +11743,8 @@ namespace Markdraw.Parser.Test
       //   <p><em><strong>foo</strong></em></p>
 
       Parser.Parse("***foo***").Is(Parser.Prettify("<p><em><strong>foo</strong></em></p>"));
+
+      Parser.DoubleParse("***foo***").Is(Parser.Prettify("<p><em><strong>foo</strong></em></p>"));
     }
 
     [Fact]
@@ -10828,6 +11760,8 @@ namespace Markdraw.Parser.Test
       //   <p><em><strong><strong>foo</strong></strong></em></p>
 
       Parser.Parse("_____foo_____").Is(Parser.Prettify("<p><em><strong><strong>foo</strong></strong></em></p>"));
+
+      Parser.DoubleParse("_____foo_____").Is(Parser.Prettify("<p><em><strong><strong>foo</strong></strong></em></p>"));
     }
 
     // Rule 15:
@@ -10844,6 +11778,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo _bar</em> baz_</p>
 
       Parser.Parse("*foo _bar* baz_").Is(Parser.Prettify("<p><em>foo _bar</em> baz_</p>"));
+
+      Parser.DoubleParse("*foo _bar* baz_").Is(Parser.Prettify("<p><em>foo _bar</em> baz_</p>"));
     }
 
     [Fact]
@@ -10859,6 +11795,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo <strong>bar *baz bim</strong> bam</em></p>
 
       Parser.Parse("*foo __bar *baz bim__ bam*").Is(Parser.Prettify("<p><em>foo <strong>bar *baz bim</strong> bam</em></p>"));
+
+      Parser.DoubleParse("*foo __bar *baz bim__ bam*").Is(Parser.Prettify("<p><em>foo <strong>bar *baz bim</strong> bam</em></p>"));
     }
 
     // Rule 16:
@@ -10875,6 +11813,8 @@ namespace Markdraw.Parser.Test
       //   <p>**foo <strong>bar baz</strong></p>
 
       Parser.Parse("**foo **bar baz**").Is(Parser.Prettify("<p>**foo <strong>bar baz</strong></p>"));
+
+      Parser.DoubleParse("**foo **bar baz**").Is(Parser.Prettify("<p>**foo <strong>bar baz</strong></p>"));
     }
 
     [Fact]
@@ -10890,6 +11830,8 @@ namespace Markdraw.Parser.Test
       //   <p>*foo <em>bar baz</em></p>
 
       Parser.Parse("*foo *bar baz*").Is(Parser.Prettify("<p>*foo <em>bar baz</em></p>"));
+
+      Parser.DoubleParse("*foo *bar baz*").Is(Parser.Prettify("<p>*foo <em>bar baz</em></p>"));
     }
 
     // Rule 17:
@@ -10906,6 +11848,8 @@ namespace Markdraw.Parser.Test
       //   <p>*<a href="/url">bar*</a></p>
 
       Parser.Parse("*[bar*](/url)").Is(Parser.Prettify("<p>*<a href=\"/url\">bar*</a></p>"));
+
+      Parser.DoubleParse("*[bar*](/url)").Is(Parser.Prettify("<p>*<a href=\"/url\">bar*</a></p>"));
     }
 
     [Fact]
@@ -10921,6 +11865,8 @@ namespace Markdraw.Parser.Test
       //   <p>_foo <a href="/url">bar_</a></p>
 
       Parser.Parse("_foo [bar_](/url)").Is(Parser.Prettify("<p>_foo <a href=\"/url\">bar_</a></p>"));
+
+      Parser.DoubleParse("_foo [bar_](/url)").Is(Parser.Prettify("<p>_foo <a href=\"/url\">bar_</a></p>"));
     }
 
     [Fact]
@@ -10936,6 +11882,8 @@ namespace Markdraw.Parser.Test
       //   <p>*<img src="foo" title="*"/></p>
 
       Parser.Parse("*<img src=\"foo\" title=\"*\"/>").Is(Parser.Prettify("<p>*<img src=\"foo\" title=\"*\"/></p>"));
+
+      Parser.DoubleParse("*<img src=\"foo\" title=\"*\"/>").Is(Parser.Prettify("<p>*<img src=\"foo\" title=\"*\"/></p>"));
     }
 
     [Fact]
@@ -10951,6 +11899,8 @@ namespace Markdraw.Parser.Test
       //   <p>**<a href="**"></p>
 
       Parser.Parse("**<a href=\"**\">").Is(Parser.Prettify("<p>**<a href=\"**\"></p>"));
+
+      Parser.DoubleParse("**<a href=\"**\">").Is(Parser.Prettify("<p>**<a href=\"**\"></p>"));
     }
 
     [Fact]
@@ -10966,6 +11916,8 @@ namespace Markdraw.Parser.Test
       //   <p>__<a href="__"></p>
 
       Parser.Parse("__<a href=\"__\">").Is(Parser.Prettify("<p>__<a href=\"__\"></p>"));
+
+      Parser.DoubleParse("__<a href=\"__\">").Is(Parser.Prettify("<p>__<a href=\"__\"></p>"));
     }
 
     [Fact]
@@ -10981,6 +11933,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>a <code>*</code></em></p>
 
       Parser.Parse("*a `*`*").Is(Parser.Prettify("<p><em>a <code>*</code></em></p>"));
+
+      Parser.DoubleParse("*a `*`*").Is(Parser.Prettify("<p><em>a <code>*</code></em></p>"));
     }
 
     [Fact]
@@ -10996,6 +11950,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>a <code>_</code></em></p>
 
       Parser.Parse("_a `_`_").Is(Parser.Prettify("<p><em>a <code>_</code></em></p>"));
+
+      Parser.DoubleParse("_a `_`_").Is(Parser.Prettify("<p><em>a <code>_</code></em></p>"));
     }
 
     [Fact]
@@ -11011,6 +11967,8 @@ namespace Markdraw.Parser.Test
       //   <p>**a<a href="http://foo.bar/?q=**">http://foo.bar/?q=**</a></p>
 
       Parser.Parse("**a<http://foo.bar/?q=**>").Is(Parser.Prettify("<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>"));
+
+      Parser.DoubleParse("**a<http://foo.bar/?q=**>").Is(Parser.Prettify("<p>**a<a href=\"http://foo.bar/?q=**\">http://foo.bar/?q=**</a></p>"));
     }
 
     [Fact]
@@ -11026,6 +11984,8 @@ namespace Markdraw.Parser.Test
       //   <p>__a<a href="http://foo.bar/?q=__">http://foo.bar/?q=__</a></p>
 
       Parser.Parse("__a<http://foo.bar/?q=__>").Is(Parser.Prettify("<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>"));
+
+      Parser.DoubleParse("__a<http://foo.bar/?q=__>").Is(Parser.Prettify("<p>__a<a href=\"http://foo.bar/?q=__\">http://foo.bar/?q=__</a></p>"));
     }
   }
 
@@ -11118,6 +12078,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri" title="title">link</a></p>
 
       Parser.Parse("[link](/uri \"title\")").Is(Parser.Prettify("<p><a href=\"/uri\" title=\"title\">link</a></p>"));
+
+      Parser.DoubleParse("[link](/uri \"title\")").Is(Parser.Prettify("<p><a href=\"/uri\" title=\"title\">link</a></p>"));
     }
 
     // The title may be omitted:
@@ -11134,6 +12096,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">link</a></p>
 
       Parser.Parse("[link](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link</a></p>"));
+
+      Parser.DoubleParse("[link](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link</a></p>"));
     }
 
     // Both the title and the destination may be omitted:
@@ -11150,6 +12114,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="">link</a></p>
 
       Parser.Parse("[link]()").Is(Parser.Prettify("<p><a href=\"\">link</a></p>"));
+
+      Parser.DoubleParse("[link]()").Is(Parser.Prettify("<p><a href=\"\">link</a></p>"));
     }
 
     [Fact]
@@ -11165,6 +12131,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="">link</a></p>
 
       Parser.Parse("[link](<>)").Is(Parser.Prettify("<p><a href=\"\">link</a></p>"));
+
+      Parser.DoubleParse("[link](<>)").Is(Parser.Prettify("<p><a href=\"\">link</a></p>"));
     }
 
     // The destination can only contain spaces if it is
@@ -11182,6 +12150,8 @@ namespace Markdraw.Parser.Test
       //   <p>[link](/my uri)</p>
 
       Parser.Parse("[link](/my uri)").Is(Parser.Prettify("<p>[link](/my uri)</p>"));
+
+      Parser.DoubleParse("[link](/my uri)").Is(Parser.Prettify("<p>[link](/my uri)</p>"));
     }
 
     [Fact]
@@ -11197,6 +12167,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/my%20uri">link</a></p>
 
       Parser.Parse("[link](</my uri>)").Is(Parser.Prettify("<p><a href=\"/my%20uri\">link</a></p>"));
+
+      Parser.DoubleParse("[link](</my uri>)").Is(Parser.Prettify("<p><a href=\"/my%20uri\">link</a></p>"));
     }
 
     // The destination cannot contain line breaks,
@@ -11216,6 +12188,8 @@ namespace Markdraw.Parser.Test
       //   bar)</p>
 
       Parser.Parse("[link](foo\nbar)").Is(Parser.Prettify("<p>[link](foo\nbar)</p>"));
+
+      Parser.DoubleParse("[link](foo\nbar)").Is(Parser.Prettify("<p>[link](foo\nbar)</p>"));
     }
 
     [Fact]
@@ -11233,6 +12207,8 @@ namespace Markdraw.Parser.Test
       //   bar>)</p>
 
       Parser.Parse("[link](<foo\nbar>)").Is(Parser.Prettify("<p>[link](<foo\nbar>)</p>"));
+
+      Parser.DoubleParse("[link](<foo\nbar>)").Is(Parser.Prettify("<p>[link](<foo\nbar>)</p>"));
     }
 
     // The destination can contain `)` if it is enclosed
@@ -11250,6 +12226,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="b)c">a</a></p>
 
       Parser.Parse("[a](<b)c>)").Is(Parser.Prettify("<p><a href=\"b)c\">a</a></p>"));
+
+      Parser.DoubleParse("[a](<b)c>)").Is(Parser.Prettify("<p><a href=\"b)c\">a</a></p>"));
     }
 
     // Pointy brackets that enclose links must be unescaped:
@@ -11266,6 +12244,8 @@ namespace Markdraw.Parser.Test
       //   <p>[link](&lt;foo&gt;)</p>
 
       Parser.Parse("[link](<foo\\>)").Is(Parser.Prettify("<p>[link](&lt;foo&gt;)</p>"));
+
+      Parser.DoubleParse("[link](<foo\\>)").Is(Parser.Prettify("<p>[link](&lt;foo&gt;)</p>"));
     }
 
     // These are not links, because the opening pointy bracket
@@ -11287,6 +12267,8 @@ namespace Markdraw.Parser.Test
       //   [a](<b>c)</p>
 
       Parser.Parse("[a](<b)c\n[a](<b)c>\n[a](<b>c)").Is(Parser.Prettify("<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>"));
+
+      Parser.DoubleParse("[a](<b)c\n[a](<b)c>\n[a](<b>c)").Is(Parser.Prettify("<p>[a](&lt;b)c\n[a](&lt;b)c&gt;\n[a](<b>c)</p>"));
     }
 
     // Parentheses inside the link destination may be escaped:
@@ -11303,6 +12285,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="(foo)">link</a></p>
 
       Parser.Parse("[link](\\(foo\\))").Is(Parser.Prettify("<p><a href=\"(foo)\">link</a></p>"));
+
+      Parser.DoubleParse("[link](\\(foo\\))").Is(Parser.Prettify("<p><a href=\"(foo)\">link</a></p>"));
     }
 
     // Any number of parentheses are allowed without escaping, as long as they are
@@ -11320,6 +12304,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="foo(and(bar))">link</a></p>
 
       Parser.Parse("[link](foo(and(bar)))").Is(Parser.Prettify("<p><a href=\"foo(and(bar))\">link</a></p>"));
+
+      Parser.DoubleParse("[link](foo(and(bar)))").Is(Parser.Prettify("<p><a href=\"foo(and(bar))\">link</a></p>"));
     }
 
     // However, if you have unbalanced parentheses, you need to escape or use the
@@ -11337,6 +12323,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="foo(and(bar)">link</a></p>
 
       Parser.Parse("[link](foo\\(and\\(bar\\))").Is(Parser.Prettify("<p><a href=\"foo(and(bar)\">link</a></p>"));
+
+      Parser.DoubleParse("[link](foo\\(and\\(bar\\))").Is(Parser.Prettify("<p><a href=\"foo(and(bar)\">link</a></p>"));
     }
 
     [Fact]
@@ -11352,6 +12340,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="foo(and(bar)">link</a></p>
 
       Parser.Parse("[link](<foo(and(bar)>)").Is(Parser.Prettify("<p><a href=\"foo(and(bar)\">link</a></p>"));
+
+      Parser.DoubleParse("[link](<foo(and(bar)>)").Is(Parser.Prettify("<p><a href=\"foo(and(bar)\">link</a></p>"));
     }
 
     // Parentheses and other symbols can also be escaped, as usual
@@ -11369,6 +12359,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="foo):">link</a></p>
 
       Parser.Parse("[link](foo\\)\\:)").Is(Parser.Prettify("<p><a href=\"foo):\">link</a></p>"));
+
+      Parser.DoubleParse("[link](foo\\)\\:)").Is(Parser.Prettify("<p><a href=\"foo):\">link</a></p>"));
     }
 
     // A link can contain fragment identifiers and queries:
@@ -11391,6 +12383,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="http://example.com?foo=3#frag">link</a></p>
 
       Parser.Parse("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)").Is(Parser.Prettify("<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>"));
+
+      Parser.DoubleParse("[link](#fragment)\n\n[link](http://example.com#fragment)\n\n[link](http://example.com?foo=3#frag)").Is(Parser.Prettify("<p><a href=\"#fragment\">link</a></p>\n<p><a href=\"http://example.com#fragment\">link</a></p>\n<p><a href=\"http://example.com?foo=3#frag\">link</a></p>"));
     }
 
     // Note that a backslash before a non-escapable character is
@@ -11408,6 +12402,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="foo%5Cbar">link</a></p>
 
       Parser.Parse("[link](foo\\bar)").Is(Parser.Prettify("<p><a href=\"foo%5Cbar\">link</a></p>"));
+
+      Parser.DoubleParse("[link](foo\\bar)").Is(Parser.Prettify("<p><a href=\"foo%5Cbar\">link</a></p>"));
     }
 
     // URL-escaping should be left alone inside the destination, as all
@@ -11431,6 +12427,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="foo%20b%C3%A4">link</a></p>
 
       Parser.Parse("[link](foo%20b&auml;)").Is(Parser.Prettify("<p><a href=\"foo%20b%C3%A4\">link</a></p>"));
+
+      Parser.DoubleParse("[link](foo%20b&auml;)").Is(Parser.Prettify("<p><a href=\"foo%20b%C3%A4\">link</a></p>"));
     }
 
     // Note that, because titles can often be parsed as destinations,
@@ -11449,6 +12447,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="%22title%22">link</a></p>
 
       Parser.Parse("[link](\"title\")").Is(Parser.Prettify("<p><a href=\"%22title%22\">link</a></p>"));
+
+      Parser.DoubleParse("[link](\"title\")").Is(Parser.Prettify("<p><a href=\"%22title%22\">link</a></p>"));
     }
 
     // Titles may be in single quotes, double quotes, or parentheses:
@@ -11469,6 +12469,8 @@ namespace Markdraw.Parser.Test
       //   <a href="/url" title="title">link</a></p>
 
       Parser.Parse("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>"));
+
+      Parser.DoubleParse("[link](/url \"title\")\n[link](/url 'title')\n[link](/url (title))").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a>\n<a href=\"/url\" title=\"title\">link</a></p>"));
     }
 
     // Backslash escapes and entity and numeric character references
@@ -11486,6 +12488,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title &quot;&quot;">link</a></p>
 
       Parser.Parse("[link](/url \"title \\\"&quot;\")").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>"));
+
+      Parser.DoubleParse("[link](/url \"title \\\"&quot;\")").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title &quot;&quot;\">link</a></p>"));
     }
 
     // Titles must be separated from the link using a [whitespace].
@@ -11503,6 +12507,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url%C2%A0%22title%22">link</a></p>
 
       Parser.Parse("[link](/url \"title\")").Is(Parser.Prettify("<p><a href=\"/url%C2%A0%22title%22\">link</a></p>"));
+
+      Parser.DoubleParse("[link](/url \"title\")").Is(Parser.Prettify("<p><a href=\"/url%C2%A0%22title%22\">link</a></p>"));
     }
 
     // Nested balanced quotes are not allowed without escaping:
@@ -11519,6 +12525,8 @@ namespace Markdraw.Parser.Test
       //   <p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
 
       Parser.Parse("[link](/url \"title \"and\" title\")").Is(Parser.Prettify("<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>"));
+
+      Parser.DoubleParse("[link](/url \"title \"and\" title\")").Is(Parser.Prettify("<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>"));
     }
 
     // But it is easy to work around this by using a different quote type:
@@ -11535,6 +12543,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title &quot;and&quot; title">link</a></p>
 
       Parser.Parse("[link](/url 'title \"and\" title')").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>"));
+
+      Parser.DoubleParse("[link](/url 'title \"and\" title')").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title &quot;and&quot; title\">link</a></p>"));
     }
 
     // (Note:  `Markdown.pl` did allow double quotes inside a double-quoted
@@ -11567,6 +12577,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri" title="title">link</a></p>
 
       Parser.Parse("[link](   /uri\n  \"title\"  )").Is(Parser.Prettify("<p><a href=\"/uri\" title=\"title\">link</a></p>"));
+
+      Parser.DoubleParse("[link](   /uri\n  \"title\"  )").Is(Parser.Prettify("<p><a href=\"/uri\" title=\"title\">link</a></p>"));
     }
 
     // But it is not allowed between the link text and the
@@ -11584,6 +12596,8 @@ namespace Markdraw.Parser.Test
       //   <p>[link] (/uri)</p>
 
       Parser.Parse("[link] (/uri)").Is(Parser.Prettify("<p>[link] (/uri)</p>"));
+
+      Parser.DoubleParse("[link] (/uri)").Is(Parser.Prettify("<p>[link] (/uri)</p>"));
     }
 
     // The link text may contain balanced brackets, but not unbalanced ones,
@@ -11601,6 +12615,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">link [foo [bar]]</a></p>
 
       Parser.Parse("[link [foo [bar]]](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link [foo [bar]]</a></p>"));
+
+      Parser.DoubleParse("[link [foo [bar]]](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link [foo [bar]]</a></p>"));
     }
 
     [Fact]
@@ -11616,6 +12632,8 @@ namespace Markdraw.Parser.Test
       //   <p>[link] bar](/uri)</p>
 
       Parser.Parse("[link] bar](/uri)").Is(Parser.Prettify("<p>[link] bar](/uri)</p>"));
+
+      Parser.DoubleParse("[link] bar](/uri)").Is(Parser.Prettify("<p>[link] bar](/uri)</p>"));
     }
 
     [Fact]
@@ -11631,6 +12649,8 @@ namespace Markdraw.Parser.Test
       //   <p>[link <a href="/uri">bar</a></p>
 
       Parser.Parse("[link [bar](/uri)").Is(Parser.Prettify("<p>[link <a href=\"/uri\">bar</a></p>"));
+
+      Parser.DoubleParse("[link [bar](/uri)").Is(Parser.Prettify("<p>[link <a href=\"/uri\">bar</a></p>"));
     }
 
     [Fact]
@@ -11646,6 +12666,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">link [bar</a></p>
 
       Parser.Parse("[link \\[bar](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link [bar</a></p>"));
+
+      Parser.DoubleParse("[link \\[bar](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link [bar</a></p>"));
     }
 
     // The link text may contain inline content:
@@ -11662,6 +12684,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
       Parser.Parse("[link *foo **bar** `#`*](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>"));
+
+      Parser.DoubleParse("[link *foo **bar** `#`*](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>"));
     }
 
     [Fact]
@@ -11677,6 +12701,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
       Parser.Parse("[![moon](moon.jpg)](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>"));
+
+      Parser.DoubleParse("[![moon](moon.jpg)](/uri)").Is(Parser.Prettify("<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>"));
     }
 
     // However, links may not contain other links, at any level of nesting.
@@ -11693,6 +12719,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo <a href="/uri">bar</a>](/uri)</p>
 
       Parser.Parse("[foo [bar](/uri)](/uri)").Is(Parser.Prettify("<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>"));
+
+      Parser.DoubleParse("[foo [bar](/uri)](/uri)").Is(Parser.Prettify("<p>[foo <a href=\"/uri\">bar</a>](/uri)</p>"));
     }
 
     [Fact]
@@ -11708,6 +12736,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
 
       Parser.Parse("[foo *[bar [baz](/uri)](/uri)*](/uri)").Is(Parser.Prettify("<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>"));
+
+      Parser.DoubleParse("[foo *[bar [baz](/uri)](/uri)*](/uri)").Is(Parser.Prettify("<p>[foo <em>[bar <a href=\"/uri\">baz</a>](/uri)</em>](/uri)</p>"));
     }
 
     [Fact]
@@ -11723,6 +12753,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="uri3" alt="[foo](uri2)" /></p>
 
       Parser.Parse("![[[foo](uri1)](uri2)](uri3)").Is(Parser.Prettify("<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>"));
+
+      Parser.DoubleParse("![[[foo](uri1)](uri2)](uri3)").Is(Parser.Prettify("<p><img src=\"uri3\" alt=\"[foo](uri2)\" /></p>"));
     }
 
     // These cases illustrate the precedence of link text grouping over
@@ -11740,6 +12772,8 @@ namespace Markdraw.Parser.Test
       //   <p>*<a href="/uri">foo*</a></p>
 
       Parser.Parse("*[foo*](/uri)").Is(Parser.Prettify("<p>*<a href=\"/uri\">foo*</a></p>"));
+
+      Parser.DoubleParse("*[foo*](/uri)").Is(Parser.Prettify("<p>*<a href=\"/uri\">foo*</a></p>"));
     }
 
     [Fact]
@@ -11755,6 +12789,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="baz*">foo *bar</a></p>
 
       Parser.Parse("[foo *bar](baz*)").Is(Parser.Prettify("<p><a href=\"baz*\">foo *bar</a></p>"));
+
+      Parser.DoubleParse("[foo *bar](baz*)").Is(Parser.Prettify("<p><a href=\"baz*\">foo *bar</a></p>"));
     }
 
     // Note that brackets that *aren't* part of links do not take
@@ -11772,6 +12808,8 @@ namespace Markdraw.Parser.Test
       //   <p><em>foo [bar</em> baz]</p>
 
       Parser.Parse("*foo [bar* baz]").Is(Parser.Prettify("<p><em>foo [bar</em> baz]</p>"));
+
+      Parser.DoubleParse("*foo [bar* baz]").Is(Parser.Prettify("<p><em>foo [bar</em> baz]</p>"));
     }
 
     // These cases illustrate the precedence of HTML tags, code spans,
@@ -11789,6 +12827,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo <bar attr="](baz)"></p>
 
       Parser.Parse("[foo <bar attr=\"](baz)\">").Is(Parser.Prettify("<p>[foo <bar attr=\"](baz)\"></p>"));
+
+      Parser.DoubleParse("[foo <bar attr=\"](baz)\">").Is(Parser.Prettify("<p>[foo <bar attr=\"](baz)\"></p>"));
     }
 
     [Fact]
@@ -11804,6 +12844,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo<code>](/uri)</code></p>
 
       Parser.Parse("[foo`](/uri)`").Is(Parser.Prettify("<p>[foo<code>](/uri)</code></p>"));
+
+      Parser.DoubleParse("[foo`](/uri)`").Is(Parser.Prettify("<p>[foo<code>](/uri)</code></p>"));
     }
 
     [Fact]
@@ -11819,6 +12861,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
 
       Parser.Parse("[foo<http://example.com/?search=](uri)>").Is(Parser.Prettify("<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>"));
+
+      Parser.DoubleParse("[foo<http://example.com/?search=](uri)>").Is(Parser.Prettify("<p>[foo<a href=\"http://example.com/?search=%5D(uri)\">http://example.com/?search=](uri)</a></p>"));
     }
 
     // There are three kinds of [reference link](@)s:
@@ -11866,6 +12910,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title">foo</a></p>
 
       Parser.Parse("[foo][bar]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo][bar]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
     }
 
     // The rules for the [link text] are the same as with
@@ -11888,6 +12934,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">link [foo [bar]]</a></p>
 
       Parser.Parse("[link [foo [bar]]][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">link [foo [bar]]</a></p>"));
+
+      Parser.DoubleParse("[link [foo [bar]]][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">link [foo [bar]]</a></p>"));
     }
 
     [Fact]
@@ -11905,6 +12953,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">link [bar</a></p>
 
       Parser.Parse("[link \\[bar][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">link [bar</a></p>"));
+
+      Parser.DoubleParse("[link \\[bar][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">link [bar</a></p>"));
     }
 
     // The link text may contain inline content:
@@ -11923,6 +12973,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
 
       Parser.Parse("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>"));
+
+      Parser.DoubleParse("[link *foo **bar** `#`*][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>"));
     }
 
     [Fact]
@@ -11940,6 +12992,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
 
       Parser.Parse("[![moon](moon.jpg)][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>"));
+
+      Parser.DoubleParse("[![moon](moon.jpg)][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\"><img src=\"moon.jpg\" alt=\"moon\" /></a></p>"));
     }
 
     // However, links may not contain other links, at any level of nesting.
@@ -11958,6 +13012,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>
 
       Parser.Parse("[foo [bar](/uri)][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>"));
+
+      Parser.DoubleParse("[foo [bar](/uri)][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo <a href=\"/uri\">bar</a>]<a href=\"/uri\">ref</a></p>"));
     }
 
     [Fact]
@@ -11975,6 +13031,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>
 
       Parser.Parse("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>"));
+
+      Parser.DoubleParse("[foo *bar [baz][ref]*][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo <em>bar <a href=\"/uri\">baz</a></em>]<a href=\"/uri\">ref</a></p>"));
     }
 
     // (In the examples above, we have two [shortcut reference links]
@@ -11997,6 +13055,8 @@ namespace Markdraw.Parser.Test
       //   <p>*<a href="/uri">foo*</a></p>
 
       Parser.Parse("*[foo*][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p>*<a href=\"/uri\">foo*</a></p>"));
+
+      Parser.DoubleParse("*[foo*][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p>*<a href=\"/uri\">foo*</a></p>"));
     }
 
     [Fact]
@@ -12014,6 +13074,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">foo *bar</a></p>
 
       Parser.Parse("[foo *bar][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">foo *bar</a></p>"));
+
+      Parser.DoubleParse("[foo *bar][ref]\n\n[ref]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">foo *bar</a></p>"));
     }
 
     // These cases illustrate the precedence of HTML tags, code spans,
@@ -12033,6 +13095,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo <bar attr="][ref]"></p>
 
       Parser.Parse("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo <bar attr=\"][ref]\"></p>"));
+
+      Parser.DoubleParse("[foo <bar attr=\"][ref]\">\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo <bar attr=\"][ref]\"></p>"));
     }
 
     [Fact]
@@ -12050,6 +13114,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo<code>][ref]</code></p>
 
       Parser.Parse("[foo`][ref]`\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo<code>][ref]</code></p>"));
+
+      Parser.DoubleParse("[foo`][ref]`\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo<code>][ref]</code></p>"));
     }
 
     [Fact]
@@ -12067,6 +13133,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>
 
       Parser.Parse("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>"));
+
+      Parser.DoubleParse("[foo<http://example.com/?search=][ref]>\n\n[ref]: /uri").Is(Parser.Prettify("<p>[foo<a href=\"http://example.com/?search=%5D%5Bref%5D\">http://example.com/?search=][ref]</a></p>"));
     }
 
     // Matching is case-insensitive:
@@ -12085,6 +13153,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title">foo</a></p>
 
       Parser.Parse("[foo][BaR]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo][BaR]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
     }
 
     // Unicode case fold is used:
@@ -12103,6 +13173,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url">Толпой</a> is a Russian word.</p>
 
       Parser.Parse("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url").Is(Parser.Prettify("<p><a href=\"/url\">Толпой</a> is a Russian word.</p>"));
+
+      Parser.DoubleParse("[Толпой][Толпой] is a Russian word.\n\n[ТОЛПОЙ]: /url").Is(Parser.Prettify("<p><a href=\"/url\">Толпой</a> is a Russian word.</p>"));
     }
 
     // Consecutive internal [whitespace] is treated as one space for
@@ -12123,6 +13195,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url">Baz</a></p>
 
       Parser.Parse("[Foo\n  bar]: /url\n\n[Baz][Foo bar]").Is(Parser.Prettify("<p><a href=\"/url\">Baz</a></p>"));
+
+      Parser.DoubleParse("[Foo\n  bar]: /url\n\n[Baz][Foo bar]").Is(Parser.Prettify("<p><a href=\"/url\">Baz</a></p>"));
     }
 
     // No [whitespace] is allowed between the [link text] and the
@@ -12142,6 +13216,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo] <a href="/url" title="title">bar</a></p>
 
       Parser.Parse("[foo] [bar]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>"));
+
+      Parser.DoubleParse("[foo] [bar]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p>[foo] <a href=\"/url\" title=\"title\">bar</a></p>"));
     }
 
     [Fact]
@@ -12161,6 +13237,8 @@ namespace Markdraw.Parser.Test
       //   <a href="/url" title="title">bar</a></p>
 
       Parser.Parse("[foo]\n[bar]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>"));
+
+      Parser.DoubleParse("[foo]\n[bar]\n\n[bar]: /url \"title\"").Is(Parser.Prettify("<p>[foo]\n<a href=\"/url\" title=\"title\">bar</a></p>"));
     }
 
     // This is a departure from John Gruber's original Markdown syntax
@@ -12209,6 +13287,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url1">bar</a></p>
 
       Parser.Parse("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]").Is(Parser.Prettify("<p><a href=\"/url1\">bar</a></p>"));
+
+      Parser.DoubleParse("[foo]: /url1\n\n[foo]: /url2\n\n[bar][foo]").Is(Parser.Prettify("<p><a href=\"/url1\">bar</a></p>"));
     }
 
     // Note that matching is performed on normalized strings, not parsed
@@ -12229,6 +13309,8 @@ namespace Markdraw.Parser.Test
       //   <p>[bar][foo!]</p>
 
       Parser.Parse("[bar][foo\\!]\n\n[foo!]: /url").Is(Parser.Prettify("<p>[bar][foo!]</p>"));
+
+      Parser.DoubleParse("[bar][foo\\!]\n\n[foo!]: /url").Is(Parser.Prettify("<p>[bar][foo!]</p>"));
     }
 
     // [Link labels] cannot contain brackets, unless they are
@@ -12249,6 +13331,8 @@ namespace Markdraw.Parser.Test
       //   <p>[ref[]: /uri</p>
 
       Parser.Parse("[foo][ref[]\n\n[ref[]: /uri").Is(Parser.Prettify("<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>"));
+
+      Parser.DoubleParse("[foo][ref[]\n\n[ref[]: /uri").Is(Parser.Prettify("<p>[foo][ref[]</p>\n<p>[ref[]: /uri</p>"));
     }
 
     [Fact]
@@ -12267,6 +13351,8 @@ namespace Markdraw.Parser.Test
       //   <p>[ref[bar]]: /uri</p>
 
       Parser.Parse("[foo][ref[bar]]\n\n[ref[bar]]: /uri").Is(Parser.Prettify("<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>"));
+
+      Parser.DoubleParse("[foo][ref[bar]]\n\n[ref[bar]]: /uri").Is(Parser.Prettify("<p>[foo][ref[bar]]</p>\n<p>[ref[bar]]: /uri</p>"));
     }
 
     [Fact]
@@ -12285,6 +13371,8 @@ namespace Markdraw.Parser.Test
       //   <p>[[[foo]]]: /url</p>
 
       Parser.Parse("[[[foo]]]\n\n[[[foo]]]: /url").Is(Parser.Prettify("<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>"));
+
+      Parser.DoubleParse("[[[foo]]]\n\n[[[foo]]]: /url").Is(Parser.Prettify("<p>[[[foo]]]</p>\n<p>[[[foo]]]: /url</p>"));
     }
 
     [Fact]
@@ -12302,6 +13390,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">foo</a></p>
 
       Parser.Parse("[foo][ref\\[]\n\n[ref\\[]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo][ref\\[]\n\n[ref\\[]: /uri").Is(Parser.Prettify("<p><a href=\"/uri\">foo</a></p>"));
     }
 
     // Note that in this example `]` is not backslash-escaped:
@@ -12320,6 +13410,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/uri">bar\</a></p>
 
       Parser.Parse("[bar\\\\]: /uri\n\n[bar\\\\]").Is(Parser.Prettify("<p><a href=\"/uri\">bar\\</a></p>"));
+
+      Parser.DoubleParse("[bar\\\\]: /uri\n\n[bar\\\\]").Is(Parser.Prettify("<p><a href=\"/uri\">bar\\</a></p>"));
     }
 
     // A [link label] must contain at least one [non-whitespace character]:
@@ -12339,6 +13431,8 @@ namespace Markdraw.Parser.Test
       //   <p>[]: /uri</p>
 
       Parser.Parse("[]\n\n[]: /uri").Is(Parser.Prettify("<p>[]</p>\n<p>[]: /uri</p>"));
+
+      Parser.DoubleParse("[]\n\n[]: /uri").Is(Parser.Prettify("<p>[]</p>\n<p>[]: /uri</p>"));
     }
 
     [Fact]
@@ -12361,6 +13455,8 @@ namespace Markdraw.Parser.Test
       //   ]: /uri</p>
 
       Parser.Parse("[\n ]\n\n[\n ]: /uri").Is(Parser.Prettify("<p>[\n]</p>\n<p>[\n]: /uri</p>"));
+
+      Parser.DoubleParse("[\n ]\n\n[\n ]: /uri").Is(Parser.Prettify("<p>[\n]</p>\n<p>[\n]: /uri</p>"));
     }
 
     // A [collapsed reference link](@)
@@ -12386,6 +13482,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title">foo</a></p>
 
       Parser.Parse("[foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
     }
 
     [Fact]
@@ -12403,6 +13501,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
       Parser.Parse("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>"));
+
+      Parser.DoubleParse("[*foo* bar][]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>"));
     }
 
     // The link labels are case-insensitive:
@@ -12421,6 +13521,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title">Foo</a></p>
 
       Parser.Parse("[Foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">Foo</a></p>"));
+
+      Parser.DoubleParse("[Foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">Foo</a></p>"));
     }
 
     // As with full reference links, [whitespace] is not
@@ -12442,6 +13544,8 @@ namespace Markdraw.Parser.Test
       //   []</p>
 
       Parser.Parse("[foo] \n[]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>"));
+
+      Parser.DoubleParse("[foo] \n[]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a>\n[]</p>"));
     }
 
     // A [shortcut reference link](@)
@@ -12467,6 +13571,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title">foo</a></p>
 
       Parser.Parse("[foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">foo</a></p>"));
     }
 
     [Fact]
@@ -12484,6 +13590,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title"><em>foo</em> bar</a></p>
 
       Parser.Parse("[*foo* bar]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>"));
+
+      Parser.DoubleParse("[*foo* bar]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\"><em>foo</em> bar</a></p>"));
     }
 
     [Fact]
@@ -12501,6 +13609,8 @@ namespace Markdraw.Parser.Test
       //   <p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>
 
       Parser.Parse("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>"));
+
+      Parser.DoubleParse("[[*foo* bar]]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p>[<a href=\"/url\" title=\"title\"><em>foo</em> bar</a>]</p>"));
     }
 
     [Fact]
@@ -12518,6 +13628,8 @@ namespace Markdraw.Parser.Test
       //   <p>[[bar <a href="/url">foo</a></p>
 
       Parser.Parse("[[bar [foo]\n\n[foo]: /url").Is(Parser.Prettify("<p>[[bar <a href=\"/url\">foo</a></p>"));
+
+      Parser.DoubleParse("[[bar [foo]\n\n[foo]: /url").Is(Parser.Prettify("<p>[[bar <a href=\"/url\">foo</a></p>"));
     }
 
     // The link labels are case-insensitive:
@@ -12536,6 +13648,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url" title="title">Foo</a></p>
 
       Parser.Parse("[Foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">Foo</a></p>"));
+
+      Parser.DoubleParse("[Foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><a href=\"/url\" title=\"title\">Foo</a></p>"));
     }
 
     // A space after the link text should be preserved:
@@ -12554,6 +13668,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url">foo</a> bar</p>
 
       Parser.Parse("[foo] bar\n\n[foo]: /url").Is(Parser.Prettify("<p><a href=\"/url\">foo</a> bar</p>"));
+
+      Parser.DoubleParse("[foo] bar\n\n[foo]: /url").Is(Parser.Prettify("<p><a href=\"/url\">foo</a> bar</p>"));
     }
 
     // If you just want bracketed text, you can backslash-escape the
@@ -12573,6 +13689,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]</p>
 
       Parser.Parse("\\[foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p>[foo]</p>"));
+
+      Parser.DoubleParse("\\[foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p>[foo]</p>"));
     }
 
     // Note that this is a link, because a link label ends with the first
@@ -12592,6 +13710,8 @@ namespace Markdraw.Parser.Test
       //   <p>*<a href="/url">foo*</a></p>
 
       Parser.Parse("[foo*]: /url\n\n*[foo*]").Is(Parser.Prettify("<p>*<a href=\"/url\">foo*</a></p>"));
+
+      Parser.DoubleParse("[foo*]: /url\n\n*[foo*]").Is(Parser.Prettify("<p>*<a href=\"/url\">foo*</a></p>"));
     }
 
     // Full and compact references take precedence over shortcut
@@ -12612,6 +13732,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url2">foo</a></p>
 
       Parser.Parse("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2").Is(Parser.Prettify("<p><a href=\"/url2\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo][bar]\n\n[foo]: /url1\n[bar]: /url2").Is(Parser.Prettify("<p><a href=\"/url2\">foo</a></p>"));
     }
 
     [Fact]
@@ -12629,6 +13751,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url1">foo</a></p>
 
       Parser.Parse("[foo][]\n\n[foo]: /url1").Is(Parser.Prettify("<p><a href=\"/url1\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo][]\n\n[foo]: /url1").Is(Parser.Prettify("<p><a href=\"/url1\">foo</a></p>"));
     }
 
     // Inline links also take precedence:
@@ -12647,6 +13771,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="">foo</a></p>
 
       Parser.Parse("[foo]()\n\n[foo]: /url1").Is(Parser.Prettify("<p><a href=\"\">foo</a></p>"));
+
+      Parser.DoubleParse("[foo]()\n\n[foo]: /url1").Is(Parser.Prettify("<p><a href=\"\">foo</a></p>"));
     }
 
     [Fact]
@@ -12664,6 +13790,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url1">foo</a>(not a link)</p>
 
       Parser.Parse("[foo](not a link)\n\n[foo]: /url1").Is(Parser.Prettify("<p><a href=\"/url1\">foo</a>(not a link)</p>"));
+
+      Parser.DoubleParse("[foo](not a link)\n\n[foo]: /url1").Is(Parser.Prettify("<p><a href=\"/url1\">foo</a>(not a link)</p>"));
     }
 
     // In the following case `[bar][baz]` is parsed as a reference,
@@ -12683,6 +13811,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]<a href="/url">bar</a></p>
 
       Parser.Parse("[foo][bar][baz]\n\n[baz]: /url").Is(Parser.Prettify("<p>[foo]<a href=\"/url\">bar</a></p>"));
+
+      Parser.DoubleParse("[foo][bar][baz]\n\n[baz]: /url").Is(Parser.Prettify("<p>[foo]<a href=\"/url\">bar</a></p>"));
     }
 
     // Here, though, `[foo][bar]` is parsed as a reference, since
@@ -12703,6 +13833,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="/url2">foo</a><a href="/url1">baz</a></p>
 
       Parser.Parse("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2").Is(Parser.Prettify("<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>"));
+
+      Parser.DoubleParse("[foo][bar][baz]\n\n[baz]: /url1\n[bar]: /url2").Is(Parser.Prettify("<p><a href=\"/url2\">foo</a><a href=\"/url1\">baz</a></p>"));
     }
 
     // Here `[foo]` is not parsed as a shortcut reference, because it
@@ -12723,6 +13855,8 @@ namespace Markdraw.Parser.Test
       //   <p>[foo]<a href="/url1">bar</a></p>
 
       Parser.Parse("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2").Is(Parser.Prettify("<p>[foo]<a href=\"/url1\">bar</a></p>"));
+
+      Parser.DoubleParse("[foo][bar][baz]\n\n[baz]: /url1\n[foo]: /url2").Is(Parser.Prettify("<p>[foo]<a href=\"/url1\">bar</a></p>"));
     }
   }
 
@@ -12752,6 +13886,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="foo" title="title" /></p>
 
       Parser.Parse("![foo](/url \"title\")").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("![foo](/url \"title\")").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>"));
     }
 
     [Fact]
@@ -12769,6 +13905,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
       Parser.Parse("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>"));
+
+      Parser.DoubleParse("![foo *bar*]\n\n[foo *bar*]: train.jpg \"train & tracks\"").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>"));
     }
 
     [Fact]
@@ -12784,6 +13922,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url2" alt="foo bar" /></p>
 
       Parser.Parse("![foo ![bar](/url)](/url2)").Is(Parser.Prettify("<p><img src=\"/url2\" alt=\"foo bar\" /></p>"));
+
+      Parser.DoubleParse("![foo ![bar](/url)](/url2)").Is(Parser.Prettify("<p><img src=\"/url2\" alt=\"foo bar\" /></p>"));
     }
 
     [Fact]
@@ -12799,6 +13939,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url2" alt="foo bar" /></p>
 
       Parser.Parse("![foo [bar](/url)](/url2)").Is(Parser.Prettify("<p><img src=\"/url2\" alt=\"foo bar\" /></p>"));
+
+      Parser.DoubleParse("![foo [bar](/url)](/url2)").Is(Parser.Prettify("<p><img src=\"/url2\" alt=\"foo bar\" /></p>"));
     }
 
     // Though this spec is concerned with parsing, not rendering, it is
@@ -12822,6 +13964,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
       Parser.Parse("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>"));
+
+      Parser.DoubleParse("![foo *bar*][]\n\n[foo *bar*]: train.jpg \"train & tracks\"").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>"));
     }
 
     [Fact]
@@ -12839,6 +13983,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
 
       Parser.Parse("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>"));
+
+      Parser.DoubleParse("![foo *bar*][foobar]\n\n[FOOBAR]: train.jpg \"train & tracks\"").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo bar\" title=\"train &amp; tracks\" /></p>"));
     }
 
     [Fact]
@@ -12854,6 +14000,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="train.jpg" alt="foo" /></p>
 
       Parser.Parse("![foo](train.jpg)").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo\" /></p>"));
+
+      Parser.DoubleParse("![foo](train.jpg)").Is(Parser.Prettify("<p><img src=\"train.jpg\" alt=\"foo\" /></p>"));
     }
 
     [Fact]
@@ -12869,6 +14017,8 @@ namespace Markdraw.Parser.Test
       //   <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
 
       Parser.Parse("My ![foo bar](/path/to/train.jpg  \"title\"   )").Is(Parser.Prettify("<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("My ![foo bar](/path/to/train.jpg  \"title\"   )").Is(Parser.Prettify("<p>My <img src=\"/path/to/train.jpg\" alt=\"foo bar\" title=\"title\" /></p>"));
     }
 
     [Fact]
@@ -12884,6 +14034,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="url" alt="foo" /></p>
 
       Parser.Parse("![foo](<url>)").Is(Parser.Prettify("<p><img src=\"url\" alt=\"foo\" /></p>"));
+
+      Parser.DoubleParse("![foo](<url>)").Is(Parser.Prettify("<p><img src=\"url\" alt=\"foo\" /></p>"));
     }
 
     [Fact]
@@ -12899,6 +14051,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="" /></p>
 
       Parser.Parse("![](/url)").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"\" /></p>"));
+
+      Parser.DoubleParse("![](/url)").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"\" /></p>"));
     }
 
     // Reference-style:
@@ -12917,6 +14071,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="foo" /></p>
 
       Parser.Parse("![foo][bar]\n\n[bar]: /url").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" /></p>"));
+
+      Parser.DoubleParse("![foo][bar]\n\n[bar]: /url").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" /></p>"));
     }
 
     [Fact]
@@ -12934,6 +14090,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="foo" /></p>
 
       Parser.Parse("![foo][bar]\n\n[BAR]: /url").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" /></p>"));
+
+      Parser.DoubleParse("![foo][bar]\n\n[BAR]: /url").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" /></p>"));
     }
 
     // Collapsed:
@@ -12952,6 +14110,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="foo" title="title" /></p>
 
       Parser.Parse("![foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("![foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>"));
     }
 
     [Fact]
@@ -12969,6 +14129,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="foo bar" title="title" /></p>
 
       Parser.Parse("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("![*foo* bar][]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>"));
     }
 
     // The labels are case-insensitive:
@@ -12987,6 +14149,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="Foo" title="title" /></p>
 
       Parser.Parse("![Foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("![Foo][]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>"));
     }
 
     // As with reference links, [whitespace] is not allowed
@@ -13008,6 +14172,8 @@ namespace Markdraw.Parser.Test
       //   []</p>
 
       Parser.Parse("![foo] \n[]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>"));
+
+      Parser.DoubleParse("![foo] \n[]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" />\n[]</p>"));
     }
 
     // Shortcut:
@@ -13026,6 +14192,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="foo" title="title" /></p>
 
       Parser.Parse("![foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("![foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo\" title=\"title\" /></p>"));
     }
 
     [Fact]
@@ -13043,6 +14211,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="foo bar" title="title" /></p>
 
       Parser.Parse("![*foo* bar]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("![*foo* bar]\n\n[*foo* bar]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"foo bar\" title=\"title\" /></p>"));
     }
 
     // Note that link labels cannot contain unescaped brackets:
@@ -13062,6 +14232,8 @@ namespace Markdraw.Parser.Test
       //   <p>[[foo]]: /url &quot;title&quot;</p>
 
       Parser.Parse("![[foo]]\n\n[[foo]]: /url \"title\"").Is(Parser.Prettify("<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>"));
+
+      Parser.DoubleParse("![[foo]]\n\n[[foo]]: /url \"title\"").Is(Parser.Prettify("<p>![[foo]]</p>\n<p>[[foo]]: /url &quot;title&quot;</p>"));
     }
 
     // The link labels are case-insensitive:
@@ -13080,6 +14252,8 @@ namespace Markdraw.Parser.Test
       //   <p><img src="/url" alt="Foo" title="title" /></p>
 
       Parser.Parse("![Foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>"));
+
+      Parser.DoubleParse("![Foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p><img src=\"/url\" alt=\"Foo\" title=\"title\" /></p>"));
     }
 
     // If you just want a literal `!` followed by bracketed text, you can
@@ -13099,6 +14273,8 @@ namespace Markdraw.Parser.Test
       //   <p>![foo]</p>
 
       Parser.Parse("!\\[foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p>![foo]</p>"));
+
+      Parser.DoubleParse("!\\[foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p>![foo]</p>"));
     }
 
     // If you want a link after a literal `!`, backslash-escape the
@@ -13118,6 +14294,8 @@ namespace Markdraw.Parser.Test
       //   <p>!<a href="/url" title="title">foo</a></p>
 
       Parser.Parse("\\![foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p>!<a href=\"/url\" title=\"title\">foo</a></p>"));
+
+      Parser.DoubleParse("\\![foo]\n\n[foo]: /url \"title\"").Is(Parser.Prettify("<p>!<a href=\"/url\" title=\"title\">foo</a></p>"));
     }
   }
 
@@ -13159,6 +14337,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="http://foo.bar.baz">http://foo.bar.baz</a></p>
 
       Parser.Parse("<http://foo.bar.baz>").Is(Parser.Prettify("<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>"));
+
+      Parser.DoubleParse("<http://foo.bar.baz>").Is(Parser.Prettify("<p><a href=\"http://foo.bar.baz\">http://foo.bar.baz</a></p>"));
     }
 
     [Fact]
@@ -13174,6 +14354,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
 
       Parser.Parse("<http://foo.bar.baz/test?q=hello&id=22&boolean>").Is(Parser.Prettify("<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>"));
+
+      Parser.DoubleParse("<http://foo.bar.baz/test?q=hello&id=22&boolean>").Is(Parser.Prettify("<p><a href=\"http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean\">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>"));
     }
 
     [Fact]
@@ -13189,6 +14371,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
 
       Parser.Parse("<irc://foo.bar:2233/baz>").Is(Parser.Prettify("<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>"));
+
+      Parser.DoubleParse("<irc://foo.bar:2233/baz>").Is(Parser.Prettify("<p><a href=\"irc://foo.bar:2233/baz\">irc://foo.bar:2233/baz</a></p>"));
     }
 
     // Uppercase is also fine:
@@ -13205,6 +14389,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
 
       Parser.Parse("<MAILTO:FOO@BAR.BAZ>").Is(Parser.Prettify("<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>"));
+
+      Parser.DoubleParse("<MAILTO:FOO@BAR.BAZ>").Is(Parser.Prettify("<p><a href=\"MAILTO:FOO@BAR.BAZ\">MAILTO:FOO@BAR.BAZ</a></p>"));
     }
 
     // Note that many strings that count as [absolute URIs] for
@@ -13224,6 +14410,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="a+b+c:d">a+b+c:d</a></p>
 
       Parser.Parse("<a+b+c:d>").Is(Parser.Prettify("<p><a href=\"a+b+c:d\">a+b+c:d</a></p>"));
+
+      Parser.DoubleParse("<a+b+c:d>").Is(Parser.Prettify("<p><a href=\"a+b+c:d\">a+b+c:d</a></p>"));
     }
 
     [Fact]
@@ -13239,6 +14427,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
 
       Parser.Parse("<made-up-scheme://foo,bar>").Is(Parser.Prettify("<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>"));
+
+      Parser.DoubleParse("<made-up-scheme://foo,bar>").Is(Parser.Prettify("<p><a href=\"made-up-scheme://foo,bar\">made-up-scheme://foo,bar</a></p>"));
     }
 
     [Fact]
@@ -13254,6 +14444,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="http://../">http://../</a></p>
 
       Parser.Parse("<http://../>").Is(Parser.Prettify("<p><a href=\"http://../\">http://../</a></p>"));
+
+      Parser.DoubleParse("<http://../>").Is(Parser.Prettify("<p><a href=\"http://../\">http://../</a></p>"));
     }
 
     [Fact]
@@ -13269,6 +14461,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
 
       Parser.Parse("<localhost:5001/foo>").Is(Parser.Prettify("<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>"));
+
+      Parser.DoubleParse("<localhost:5001/foo>").Is(Parser.Prettify("<p><a href=\"localhost:5001/foo\">localhost:5001/foo</a></p>"));
     }
 
     // Spaces are not allowed in autolinks:
@@ -13285,6 +14479,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;http://foo.bar/baz bim&gt;</p>
 
       Parser.Parse("<http://foo.bar/baz bim>").Is(Parser.Prettify("<p>&lt;http://foo.bar/baz bim&gt;</p>"));
+
+      Parser.DoubleParse("<http://foo.bar/baz bim>").Is(Parser.Prettify("<p>&lt;http://foo.bar/baz bim&gt;</p>"));
     }
 
     // Backslash-escapes do not work inside autolinks:
@@ -13301,6 +14497,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
 
       Parser.Parse("<http://example.com/\\[\\>").Is(Parser.Prettify("<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>"));
+
+      Parser.DoubleParse("<http://example.com/\\[\\>").Is(Parser.Prettify("<p><a href=\"http://example.com/%5C%5B%5C\">http://example.com/\\[\\</a></p>"));
     }
 
     // An [email autolink](@)
@@ -13330,6 +14528,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="mailto:foo@bar.example.com">foo@bar.example.com</a></p>
 
       Parser.Parse("<foo@bar.example.com>").Is(Parser.Prettify("<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>"));
+
+      Parser.DoubleParse("<foo@bar.example.com>").Is(Parser.Prettify("<p><a href=\"mailto:foo@bar.example.com\">foo@bar.example.com</a></p>"));
     }
 
     [Fact]
@@ -13345,6 +14545,8 @@ namespace Markdraw.Parser.Test
       //   <p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
 
       Parser.Parse("<foo+special@Bar.baz-bar0.com>").Is(Parser.Prettify("<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>"));
+
+      Parser.DoubleParse("<foo+special@Bar.baz-bar0.com>").Is(Parser.Prettify("<p><a href=\"mailto:foo+special@Bar.baz-bar0.com\">foo+special@Bar.baz-bar0.com</a></p>"));
     }
 
     // Backslash-escapes do not work inside email autolinks:
@@ -13361,6 +14563,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;foo+@bar.example.com&gt;</p>
 
       Parser.Parse("<foo\\+@bar.example.com>").Is(Parser.Prettify("<p>&lt;foo+@bar.example.com&gt;</p>"));
+
+      Parser.DoubleParse("<foo\\+@bar.example.com>").Is(Parser.Prettify("<p>&lt;foo+@bar.example.com&gt;</p>"));
     }
 
     // These are not autolinks:
@@ -13377,6 +14581,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;&gt;</p>
 
       Parser.Parse("<>").Is(Parser.Prettify("<p>&lt;&gt;</p>"));
+
+      Parser.DoubleParse("<>").Is(Parser.Prettify("<p>&lt;&gt;</p>"));
     }
 
     [Fact]
@@ -13392,6 +14598,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt; http://foo.bar &gt;</p>
 
       Parser.Parse("< http://foo.bar >").Is(Parser.Prettify("<p>&lt; http://foo.bar &gt;</p>"));
+
+      Parser.DoubleParse("< http://foo.bar >").Is(Parser.Prettify("<p>&lt; http://foo.bar &gt;</p>"));
     }
 
     [Fact]
@@ -13407,6 +14615,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;m:abc&gt;</p>
 
       Parser.Parse("<m:abc>").Is(Parser.Prettify("<p>&lt;m:abc&gt;</p>"));
+
+      Parser.DoubleParse("<m:abc>").Is(Parser.Prettify("<p>&lt;m:abc&gt;</p>"));
     }
 
     [Fact]
@@ -13422,6 +14632,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;foo.bar.baz&gt;</p>
 
       Parser.Parse("<foo.bar.baz>").Is(Parser.Prettify("<p>&lt;foo.bar.baz&gt;</p>"));
+
+      Parser.DoubleParse("<foo.bar.baz>").Is(Parser.Prettify("<p>&lt;foo.bar.baz&gt;</p>"));
     }
 
     [Fact]
@@ -13437,6 +14649,8 @@ namespace Markdraw.Parser.Test
       //   <p>http://example.com</p>
 
       Parser.Parse("http://example.com").Is(Parser.Prettify("<p>http://example.com</p>"));
+
+      Parser.DoubleParse("http://example.com").Is(Parser.Prettify("<p>http://example.com</p>"));
     }
 
     [Fact]
@@ -13452,6 +14666,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo@bar.example.com</p>
 
       Parser.Parse("foo@bar.example.com").Is(Parser.Prettify("<p>foo@bar.example.com</p>"));
+
+      Parser.DoubleParse("foo@bar.example.com").Is(Parser.Prettify("<p>foo@bar.example.com</p>"));
     }
   }
 
@@ -13544,6 +14760,8 @@ namespace Markdraw.Parser.Test
       //   <p><a><bab><c2c></p>
 
       Parser.Parse("<a><bab><c2c>").Is(Parser.Prettify("<p><a><bab><c2c></p>"));
+
+      Parser.DoubleParse("<a><bab><c2c>").Is(Parser.Prettify("<p><a><bab><c2c></p>"));
     }
 
     // Empty elements:
@@ -13560,6 +14778,8 @@ namespace Markdraw.Parser.Test
       //   <p><a/><b2/></p>
 
       Parser.Parse("<a/><b2/>").Is(Parser.Prettify("<p><a/><b2/></p>"));
+
+      Parser.DoubleParse("<a/><b2/>").Is(Parser.Prettify("<p><a/><b2/></p>"));
     }
 
     // [Whitespace] is allowed:
@@ -13578,6 +14798,8 @@ namespace Markdraw.Parser.Test
       //   data="foo" ></p>
 
       Parser.Parse("<a  /><b2\ndata=\"foo\" >").Is(Parser.Prettify("<p><a  /><b2\ndata=\"foo\" ></p>"));
+
+      Parser.DoubleParse("<a  /><b2\ndata=\"foo\" >").Is(Parser.Prettify("<p><a  /><b2\ndata=\"foo\" ></p>"));
     }
 
     // With attributes:
@@ -13596,6 +14818,8 @@ namespace Markdraw.Parser.Test
       //   _boolean zoop:33=zoop:33 /></p>
 
       Parser.Parse("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />").Is(Parser.Prettify("<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>"));
+
+      Parser.DoubleParse("<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />").Is(Parser.Prettify("<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>"));
     }
 
     // Custom tag names can be used:
@@ -13612,6 +14836,8 @@ namespace Markdraw.Parser.Test
       //   <p>Foo <responsive-image src="foo.jpg" /></p>
 
       Parser.Parse("Foo <responsive-image src=\"foo.jpg\" />").Is(Parser.Prettify("<p>Foo <responsive-image src=\"foo.jpg\" /></p>"));
+
+      Parser.DoubleParse("Foo <responsive-image src=\"foo.jpg\" />").Is(Parser.Prettify("<p>Foo <responsive-image src=\"foo.jpg\" /></p>"));
     }
 
     // Illegal tag names, not parsed as HTML:
@@ -13628,6 +14854,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;33&gt; &lt;__&gt;</p>
 
       Parser.Parse("<33> <__>").Is(Parser.Prettify("<p>&lt;33&gt; &lt;__&gt;</p>"));
+
+      Parser.DoubleParse("<33> <__>").Is(Parser.Prettify("<p>&lt;33&gt; &lt;__&gt;</p>"));
     }
 
     // Illegal attribute names:
@@ -13644,6 +14872,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
 
       Parser.Parse("<a h*#ref=\"hi\">").Is(Parser.Prettify("<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>"));
+
+      Parser.DoubleParse("<a h*#ref=\"hi\">").Is(Parser.Prettify("<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>"));
     }
 
     // Illegal attribute values:
@@ -13660,6 +14890,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
 
       Parser.Parse("<a href=\"hi'> <a href=hi'>").Is(Parser.Prettify("<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>"));
+
+      Parser.DoubleParse("<a href=\"hi'> <a href=hi'>").Is(Parser.Prettify("<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>"));
     }
 
     // Illegal [whitespace]:
@@ -13682,6 +14914,8 @@ namespace Markdraw.Parser.Test
       //   bim!bop /&gt;</p>
 
       Parser.Parse("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />").Is(Parser.Prettify("<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>"));
+
+      Parser.DoubleParse("< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />").Is(Parser.Prettify("<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>"));
     }
 
     // Missing [whitespace]:
@@ -13698,6 +14932,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;a href='bar'title=title&gt;</p>
 
       Parser.Parse("<a href='bar'title=title>").Is(Parser.Prettify("<p>&lt;a href='bar'title=title&gt;</p>"));
+
+      Parser.DoubleParse("<a href='bar'title=title>").Is(Parser.Prettify("<p>&lt;a href='bar'title=title&gt;</p>"));
     }
 
     // Closing tags:
@@ -13714,6 +14950,8 @@ namespace Markdraw.Parser.Test
       //   <p></a></foo ></p>
 
       Parser.Parse("</a></foo >").Is(Parser.Prettify("<p></a></foo ></p>"));
+
+      Parser.DoubleParse("</a></foo >").Is(Parser.Prettify("<p></a></foo ></p>"));
     }
 
     // Illegal attributes in closing tag:
@@ -13730,6 +14968,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;/a href=&quot;foo&quot;&gt;</p>
 
       Parser.Parse("</a href=\"foo\">").Is(Parser.Prettify("<p>&lt;/a href=&quot;foo&quot;&gt;</p>"));
+
+      Parser.DoubleParse("</a href=\"foo\">").Is(Parser.Prettify("<p>&lt;/a href=&quot;foo&quot;&gt;</p>"));
     }
 
     // Comments:
@@ -13748,6 +14988,8 @@ namespace Markdraw.Parser.Test
       //   comment - with hyphen --></p>
 
       Parser.Parse("foo <!-- this is a\ncomment - with hyphen -->").Is(Parser.Prettify("<p>foo <!-- this is a\ncomment - with hyphen --></p>"));
+
+      Parser.DoubleParse("foo <!-- this is a\ncomment - with hyphen -->").Is(Parser.Prettify("<p>foo <!-- this is a\ncomment - with hyphen --></p>"));
     }
 
     [Fact]
@@ -13763,6 +15005,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
 
       Parser.Parse("foo <!-- not a comment -- two hyphens -->").Is(Parser.Prettify("<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>"));
+
+      Parser.DoubleParse("foo <!-- not a comment -- two hyphens -->").Is(Parser.Prettify("<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>"));
     }
 
     // Not comments:
@@ -13782,6 +15026,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo &lt;!-- foo---&gt;</p>
 
       Parser.Parse("foo <!--> foo -->\n\nfoo <!-- foo--->").Is(Parser.Prettify("<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>"));
+
+      Parser.DoubleParse("foo <!--> foo -->\n\nfoo <!-- foo--->").Is(Parser.Prettify("<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>"));
     }
 
     // Processing instructions:
@@ -13798,6 +15044,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <?php echo $a; ?></p>
 
       Parser.Parse("foo <?php echo $a; ?>").Is(Parser.Prettify("<p>foo <?php echo $a; ?></p>"));
+
+      Parser.DoubleParse("foo <?php echo $a; ?>").Is(Parser.Prettify("<p>foo <?php echo $a; ?></p>"));
     }
 
     // Declarations:
@@ -13814,6 +15062,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <!ELEMENT br EMPTY></p>
 
       Parser.Parse("foo <!ELEMENT br EMPTY>").Is(Parser.Prettify("<p>foo <!ELEMENT br EMPTY></p>"));
+
+      Parser.DoubleParse("foo <!ELEMENT br EMPTY>").Is(Parser.Prettify("<p>foo <!ELEMENT br EMPTY></p>"));
     }
 
     // CDATA sections:
@@ -13830,6 +15080,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <![CDATA[>&<]]></p>
 
       Parser.Parse("foo <![CDATA[>&<]]>").Is(Parser.Prettify("<p>foo <![CDATA[>&<]]></p>"));
+
+      Parser.DoubleParse("foo <![CDATA[>&<]]>").Is(Parser.Prettify("<p>foo <![CDATA[>&<]]></p>"));
     }
 
     // Entity and numeric character references are preserved in HTML
@@ -13847,6 +15099,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <a href="&ouml;"></p>
 
       Parser.Parse("foo <a href=\"&ouml;\">").Is(Parser.Prettify("<p>foo <a href=\"&ouml;\"></p>"));
+
+      Parser.DoubleParse("foo <a href=\"&ouml;\">").Is(Parser.Prettify("<p>foo <a href=\"&ouml;\"></p>"));
     }
 
     // Backslash escapes do not work in HTML attributes:
@@ -13863,6 +15117,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo <a href="\*"></p>
 
       Parser.Parse("foo <a href=\"\\*\">").Is(Parser.Prettify("<p>foo <a href=\"\\*\"></p>"));
+
+      Parser.DoubleParse("foo <a href=\"\\*\">").Is(Parser.Prettify("<p>foo <a href=\"\\*\"></p>"));
     }
 
     [Fact]
@@ -13878,6 +15134,8 @@ namespace Markdraw.Parser.Test
       //   <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
 
       Parser.Parse("<a href=\"\\\"\">").Is(Parser.Prettify("<p>&lt;a href=&quot;&quot;&quot;&gt;</p>"));
+
+      Parser.DoubleParse("<a href=\"\\\"\">").Is(Parser.Prettify("<p>&lt;a href=&quot;&quot;&quot;&gt;</p>"));
     }
   }
 
@@ -13904,6 +15162,8 @@ namespace Markdraw.Parser.Test
       //   baz</p>
 
       Parser.Parse("foo  \nbaz").Is(Parser.Prettify("<p>foo<br />\nbaz</p>"));
+
+      Parser.DoubleParse("foo  \nbaz").Is(Parser.Prettify("<p>foo<br />\nbaz</p>"));
     }
 
     // For a more visible alternative, a backslash before the
@@ -13923,6 +15183,8 @@ namespace Markdraw.Parser.Test
       //   baz</p>
 
       Parser.Parse("foo\\\nbaz").Is(Parser.Prettify("<p>foo<br />\nbaz</p>"));
+
+      Parser.DoubleParse("foo\\\nbaz").Is(Parser.Prettify("<p>foo<br />\nbaz</p>"));
     }
 
     // More than two spaces can be used:
@@ -13941,6 +15203,8 @@ namespace Markdraw.Parser.Test
       //   baz</p>
 
       Parser.Parse("foo       \nbaz").Is(Parser.Prettify("<p>foo<br />\nbaz</p>"));
+
+      Parser.DoubleParse("foo       \nbaz").Is(Parser.Prettify("<p>foo<br />\nbaz</p>"));
     }
 
     // Leading spaces at the beginning of the next line are ignored:
@@ -13959,6 +15223,8 @@ namespace Markdraw.Parser.Test
       //   bar</p>
 
       Parser.Parse("foo  \n     bar").Is(Parser.Prettify("<p>foo<br />\nbar</p>"));
+
+      Parser.DoubleParse("foo  \n     bar").Is(Parser.Prettify("<p>foo<br />\nbar</p>"));
     }
 
     [Fact]
@@ -13976,6 +15242,8 @@ namespace Markdraw.Parser.Test
       //   bar</p>
 
       Parser.Parse("foo\\\n     bar").Is(Parser.Prettify("<p>foo<br />\nbar</p>"));
+
+      Parser.DoubleParse("foo\\\n     bar").Is(Parser.Prettify("<p>foo<br />\nbar</p>"));
     }
 
     // Line breaks can occur inside emphasis, links, and other constructs
@@ -13995,6 +15263,8 @@ namespace Markdraw.Parser.Test
       //   bar</em></p>
 
       Parser.Parse("*foo  \nbar*").Is(Parser.Prettify("<p><em>foo<br />\nbar</em></p>"));
+
+      Parser.DoubleParse("*foo  \nbar*").Is(Parser.Prettify("<p><em>foo<br />\nbar</em></p>"));
     }
 
     [Fact]
@@ -14012,6 +15282,8 @@ namespace Markdraw.Parser.Test
       //   bar</em></p>
 
       Parser.Parse("*foo\\\nbar*").Is(Parser.Prettify("<p><em>foo<br />\nbar</em></p>"));
+
+      Parser.DoubleParse("*foo\\\nbar*").Is(Parser.Prettify("<p><em>foo<br />\nbar</em></p>"));
     }
 
     // Line breaks do not occur inside code spans
@@ -14029,6 +15301,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>code  span</code></p>
 
       Parser.Parse("`code \nspan`").Is(Parser.Prettify("<p><code>code  span</code></p>"));
+
+      Parser.DoubleParse("`code \nspan`").Is(Parser.Prettify("<p><code>code  span</code></p>"));
     }
 
     [Fact]
@@ -14045,6 +15319,8 @@ namespace Markdraw.Parser.Test
       //   <p><code>code\ span</code></p>
 
       Parser.Parse("`code\\\nspan`").Is(Parser.Prettify("<p><code>code\\ span</code></p>"));
+
+      Parser.DoubleParse("`code\\\nspan`").Is(Parser.Prettify("<p><code>code\\ span</code></p>"));
     }
 
     // or HTML tags:
@@ -14063,6 +15339,8 @@ namespace Markdraw.Parser.Test
       //   bar"></p>
 
       Parser.Parse("<a href=\"foo  \nbar\">").Is(Parser.Prettify("<p><a href=\"foo  \nbar\"></p>"));
+
+      Parser.DoubleParse("<a href=\"foo  \nbar\">").Is(Parser.Prettify("<p><a href=\"foo  \nbar\"></p>"));
     }
 
     [Fact]
@@ -14080,6 +15358,8 @@ namespace Markdraw.Parser.Test
       //   bar"></p>
 
       Parser.Parse("<a href=\"foo\\\nbar\">").Is(Parser.Prettify("<p><a href=\"foo\\\nbar\"></p>"));
+
+      Parser.DoubleParse("<a href=\"foo\\\nbar\">").Is(Parser.Prettify("<p><a href=\"foo\\\nbar\"></p>"));
     }
 
     // Hard line breaks are for separating inline content within a block.
@@ -14098,6 +15378,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo\</p>
 
       Parser.Parse("foo\\").Is(Parser.Prettify("<p>foo\\</p>"));
+
+      Parser.DoubleParse("foo\\").Is(Parser.Prettify("<p>foo\\</p>"));
     }
 
     [Fact]
@@ -14113,6 +15395,8 @@ namespace Markdraw.Parser.Test
       //   <p>foo</p>
 
       Parser.Parse("foo  ").Is(Parser.Prettify("<p>foo</p>"));
+
+      Parser.DoubleParse("foo  ").Is(Parser.Prettify("<p>foo</p>"));
     }
 
     [Fact]
@@ -14128,6 +15412,8 @@ namespace Markdraw.Parser.Test
       //   <h3>foo\</h3>
 
       Parser.Parse("### foo\\").Is(Parser.Prettify("<h3>foo\\</h3>"));
+
+      Parser.DoubleParse("### foo\\").Is(Parser.Prettify("<h3>foo\\</h3>"));
     }
 
     [Fact]
@@ -14143,6 +15429,8 @@ namespace Markdraw.Parser.Test
       //   <h3>foo</h3>
 
       Parser.Parse("### foo  ").Is(Parser.Prettify("<h3>foo</h3>"));
+
+      Parser.DoubleParse("### foo  ").Is(Parser.Prettify("<h3>foo</h3>"));
     }
   }
 
@@ -14170,6 +15458,8 @@ namespace Markdraw.Parser.Test
       //   baz</p>
 
       Parser.Parse("foo\nbaz").Is(Parser.Prettify("<p>foo\nbaz</p>"));
+
+      Parser.DoubleParse("foo\nbaz").Is(Parser.Prettify("<p>foo\nbaz</p>"));
     }
 
     // Spaces at the end of the line and beginning of the next line are
@@ -14189,6 +15479,8 @@ namespace Markdraw.Parser.Test
       //   baz</p>
 
       Parser.Parse("foo \n baz").Is(Parser.Prettify("<p>foo\nbaz</p>"));
+
+      Parser.DoubleParse("foo \n baz").Is(Parser.Prettify("<p>foo\nbaz</p>"));
     }
   }
 
@@ -14217,6 +15509,8 @@ namespace Markdraw.Parser.Test
       //   <p>hello $.;'there</p>
 
       Parser.Parse("hello $.;'there").Is(Parser.Prettify("<p>hello $.;'there</p>"));
+
+      Parser.DoubleParse("hello $.;'there").Is(Parser.Prettify("<p>hello $.;'there</p>"));
     }
 
     [Fact]
@@ -14232,6 +15526,8 @@ namespace Markdraw.Parser.Test
       //   <p>Foo χρῆν</p>
 
       Parser.Parse("Foo χρῆν").Is(Parser.Prettify("<p>Foo χρῆν</p>"));
+
+      Parser.DoubleParse("Foo χρῆν").Is(Parser.Prettify("<p>Foo χρῆν</p>"));
     }
 
     // Internal spaces are preserved verbatim:
@@ -14248,6 +15544,8 @@ namespace Markdraw.Parser.Test
       //   <p>Multiple     spaces</p>
 
       Parser.Parse("Multiple     spaces").Is(Parser.Prettify("<p>Multiple     spaces</p>"));
+
+      Parser.DoubleParse("Multiple     spaces").Is(Parser.Prettify("<p>Multiple     spaces</p>"));
     }
 
     // Within a blockquote a setext heading takes precedence
@@ -14270,6 +15568,8 @@ namespace Markdraw.Parser.Test
       //   </blockquote>
 
       Parser.Parse("> Foo\n> ---\n> bar").Is(Parser.Prettify("<blockquote>\n<h2>Foo</h2>\n<p>bar</p>\n</blockquote>"));
+
+      Parser.DoubleParse("> Foo\n> ---\n> bar").Is(Parser.Prettify("<blockquote>\n<h2>Foo</h2>\n<p>bar</p>\n</blockquote>"));
     }
     // <!-- END TESTS -->
     //

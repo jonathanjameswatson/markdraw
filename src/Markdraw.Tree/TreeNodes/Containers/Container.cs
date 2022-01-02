@@ -28,6 +28,11 @@ public abstract class Container : TreeNode, IEnumerable<TreeNode>
     return ElementsInside.GetEnumerator();
   }
 
+  public string InnerHtml()
+  {
+    return string.Concat(this);
+  }
+
   public override string ToString()
   {
     var stringBuilder = new StringBuilder();

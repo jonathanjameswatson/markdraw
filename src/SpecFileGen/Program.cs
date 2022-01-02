@@ -256,6 +256,29 @@ internal static class Program
     }
     Line("\"));");
 
+    Line();
+
+    Indent(3);
+    Write("Parser.DoubleParse(\"");
+    for (var i = markdownOffset; i < markdownEnd; i++)
+    {
+      Write(Escape(lines[i]));
+      if (i != markdownEnd - 1)
+      {
+        Write("\\n");
+      }
+    }
+    Write("\").Is(Parser.Prettify(\"");
+    for (var i = htmlOffset; i < htmlEnd; i++)
+    {
+      Write(Escape(lines[i]));
+      if (i != htmlEnd - 1)
+      {
+        Write("\\n");
+      }
+    }
+    Line("\"));");
+
     Indent(2);
     Line("}");
   }

@@ -48,6 +48,6 @@ public class DeltaTree
 
   public override string ToString()
   {
-    return Root.ToString();
+    return Root.InnerHtml();
   }
 }

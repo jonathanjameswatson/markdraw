@@ -1,3 +1,4 @@
+using Markdraw.MarkdownToDelta;
 using Markdraw.Tree;
 using NUglify;
 using NUglify.Html;
@@ -8,8 +9,14 @@ public static class Parser
 {
   public static string Parse(string markdown)
   {
-    var html = string.Concat(DeltaTree.Parse(markdown).Select(child => child.ToString()));
+    var html = DeltaTree.Parse(markdown).InnerHtml();
     return Prettify(html);
+  }
+
+  public static string DoubleParse(string markdown)
+  {
+    var delta = MarkdownToDeltaConverter.Parse(markdown);
+    return Parse(delta.ToString());
   }
 
   public static string Prettify(string html)
