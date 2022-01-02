@@ -13,7 +13,7 @@ internal static class Program
     Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new InvalidOperationException(),
     "../../../"));
 
-  private static readonly StringBuilder StringBuilder = new(1 << 20); // 1 MB
+  private static readonly StringBuilder StringBuilder = new(1 << 20);// 1 MB
 
   private static void Main()
   {

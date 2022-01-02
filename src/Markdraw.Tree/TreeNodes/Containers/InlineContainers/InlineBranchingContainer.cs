@@ -25,8 +25,8 @@ public abstract class InlineBranchingContainer : BranchingContainer<Style, Inlin
     return style;
   }
 
-  protected override InlineBranchingContainer CreateChildContainer(Style style, IEnumerable<InlineInsert> document, int depth,
-    int i)
+  protected override InlineBranchingContainer CreateChildContainer(Style style, IEnumerable<InlineInsert> document,
+    int depth, int i)
   {
     return style switch {
       Bold => BoldInlineContainer.CreateInstance(depth, document, ParentTree, i),

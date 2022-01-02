@@ -15,16 +15,16 @@ public partial class Parser : ComponentBase
   private static readonly string OriginalMarkdrawHtml = GetMarkdrawHtml(OriginalDeltaTree);
   private static readonly MarkdownDocument OriginalMarkdigAst = GetMarkdigAst(Original);
   private static readonly string OriginalMarkdigHtml = GetMarkdigHtml(OriginalMarkdigAst);
-
-  private string _markdrawHtml = OriginalMarkdrawHtml;
-  private string _markdigHtml = OriginalMarkdigHtml;
   private DeltaTree _deltaTree = OriginalDeltaTree;
-  private MarkdownDocument _markdigAst = OriginalMarkdigAst;
-
-  private string _highlightedMarkdrawHtml = OriginalMarkdrawHtml;
   private string _highlightedMarkdigHtml = OriginalMarkdigHtml;
 
+  private string _highlightedMarkdrawHtml = OriginalMarkdrawHtml;
+
   private string _input = Original;
+  private MarkdownDocument _markdigAst = OriginalMarkdigAst;
+  private string _markdigHtml = OriginalMarkdigHtml;
+
+  private string _markdrawHtml = OriginalMarkdrawHtml;
 
   private string Input
   {
@@ -51,7 +51,6 @@ public partial class Parser : ComponentBase
   {
     _highlightedMarkdrawHtml = HighlightHtml(_markdrawHtml);
     _highlightedMarkdigHtml = HighlightHtml(_markdigHtml);
-
   }
 
   private static DeltaTree GetDeltaTree(Document input)

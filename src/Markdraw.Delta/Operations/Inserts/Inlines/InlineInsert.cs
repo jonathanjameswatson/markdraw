@@ -6,6 +6,11 @@ public abstract record InlineInsert(InlineFormat Format) : IInsert
 {
   public virtual int Length => 1;
 
+  IInsert? IInsert.SetFormat(IFormatModifier formatModifier)
+  {
+    return SetFormat(formatModifier);
+  }
+
   public InlineInsert? SetFormat(IFormatModifier formatModifier)
   {
     if (formatModifier is not IFormatModifier<InlineFormat> inlineFormatModifier) return null;
@@ -15,6 +20,4 @@ public abstract record InlineInsert(InlineFormat Format) : IInsert
       Format = newFormat
     };
   }
-
-  IInsert? IInsert.SetFormat(IFormatModifier formatModifier) => SetFormat(formatModifier);
 }

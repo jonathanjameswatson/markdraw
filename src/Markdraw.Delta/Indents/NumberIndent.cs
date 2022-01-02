@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Markdraw.Delta.Indents;
+﻿namespace Markdraw.Delta.Indents;
 
 public record NumberIndent : ListIndent
 {
@@ -10,6 +8,7 @@ public record NumberIndent : ListIndent
   {
     Start = start;
   }
+
   public int Start
   {
     get => _start;

@@ -7,6 +7,11 @@ public record LineInsert(LineFormat Format) : IInsert
 {
   public LineInsert() : this(new LineFormat()) {}
 
+  IInsert? IInsert.SetFormat(IFormatModifier formatModifier)
+  {
+    return SetFormat(formatModifier);
+  }
+
   public LineInsert? SetFormat(IFormatModifier formatModifier)
   {
     if (formatModifier is not IFormatModifier<LineFormat> lineFormatModifier) return null;
@@ -16,8 +21,6 @@ public record LineInsert(LineFormat Format) : IInsert
       Format = newFormat
     };
   }
-
-  IInsert? IInsert.SetFormat(IFormatModifier formatModifier) => SetFormat(formatModifier);
 
   public override string ToString()
   {

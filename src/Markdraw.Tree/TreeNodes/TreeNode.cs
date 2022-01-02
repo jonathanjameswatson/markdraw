@@ -7,6 +7,7 @@ public abstract class TreeNode
     ParentTree = deltaTree;
     I = i;
   }
+
   protected DeltaTree? ParentTree { get; set; }
   public int I { get; }
 

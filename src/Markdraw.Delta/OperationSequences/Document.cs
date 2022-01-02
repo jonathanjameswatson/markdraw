@@ -11,8 +11,9 @@ internal abstract record InsertTransformState(int InsertIndex, IInsert Insert) :
 
 internal record AtomTransformState(int InsertIndex, IInsert Insert) : InsertTransformState(InsertIndex, Insert);
 
-internal record SplittableTransformState(int InsertIndex, int CharacterIndex, ISplittableInsert SplittableInsert) : InsertTransformState(InsertIndex,
-  SplittableInsert);
+internal record SplittableTransformState
+  (int InsertIndex, int CharacterIndex, ISplittableInsert SplittableInsert) : InsertTransformState(InsertIndex,
+    SplittableInsert);
 
 internal record FinalTransformState(int InsertIndex) : TransformState(InsertIndex);
 
@@ -74,8 +75,7 @@ public class Document : OperationSequence<IInsert, Document>
             ISplittableInsert splittableInsert => splittableInsert,
             _ => throw new InvalidOperationException("The previous insert must be splittable if a merge back succeeds.")
           };
-          var newSplittableTransformState = new SplittableTransformState(opIndex - 1, (int)beforeLength,
-            previous);
+          var newSplittableTransformState = new SplittableTransformState(opIndex - 1, (int)beforeLength, previous);
           transformState = newSplittableTransformState;
           return newSplittableTransformState;
       }
@@ -137,8 +137,8 @@ public class Document : OperationSequence<IInsert, Document>
                 }
 
                 transformState = transformState switch {
-                  SplittableTransformState(_, var characterIndex, var splittableInsert) currentSplittableTransformState when
-                    characterIndex + progress < splittableInsert.Length => currentSplittableTransformState with {
+                  SplittableTransformState(_, var characterIndex, var splittableInsert) currentSplittableTransformState
+                    when characterIndex + progress < splittableInsert.Length => currentSplittableTransformState with {
                       CharacterIndex = characterIndex + progress
                     },
                   _ => GetTransformState(currentInsertIndex + 1)
@@ -165,8 +165,8 @@ public class Document : OperationSequence<IInsert, Document>
             {
               case FinalTransformState:
                 throw new InvalidOperationException("Cannot delete past the end of a document.");
-              case SplittableTransformState(var currentInsertIndex, var currentCharacterIndex, var currentSplittableInsert)
-                splittableTransformState:
+              case SplittableTransformState(var currentInsertIndex, var currentCharacterIndex, var
+                currentSplittableInsert) splittableTransformState:
                 if (currentCharacterIndex > 0)
                 {
                   (splittableTransformState, _) = SplitAtCharacterIndex(splittableTransformState,

@@ -193,7 +193,7 @@ public class IndentationTest
   {
     DeltaTree.Parse(new Document().Insert("A")
       .Insert(new LineInsert(
-        new LineFormat(ImmutableList.Create<Indent>(Indent.Number(1), Indent.LooseBullet, Indent.Quote)))).Insert("B")
+        new LineFormat(ImmutableList.Create<Indent>(Indent.Number(), Indent.LooseBullet, Indent.Quote)))).Insert("B")
       .Insert(new LineInsert(new LineFormat(ImmutableList.Create<Indent>(Indent.Number(-1)))))).Is(new BlockContainer(
       new List<TreeNode> {
         new NumbersContainer(new List<TreeNode> {

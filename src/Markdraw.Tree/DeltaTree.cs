@@ -15,6 +15,7 @@ public class DeltaTree
     Root = BlockContainer.CreateInstance(0, _delta, this);
     AddSpans = true;
   }
+
   public Document Delta
   {
     get => _delta;

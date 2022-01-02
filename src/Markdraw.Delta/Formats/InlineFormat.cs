@@ -22,6 +22,16 @@ public record InlineFormat(ImmutableList<Style> Styles, bool Code = false) : For
 
   public InlineFormat() : this(ImmutableList<Style>.Empty) {}
 
+  IEnumerator IEnumerable.GetEnumerator()
+  {
+    return GetEnumerator();
+  }
+
+  public IEnumerator<Style> GetEnumerator()
+  {
+    return Styles.GetEnumerator();
+  }
+
   public virtual bool Equals(InlineFormat? other)
   {
     return other is not null && Code == other.Code && Styles.SequenceEqual(other.Styles);
@@ -35,16 +45,6 @@ public record InlineFormat(ImmutableList<Style> Styles, bool Code = false) : For
       intermediate = $"`{intermediate}`";
     }
     return Styles.Aggregate(intermediate, (current, style) => style.Wrap(current));
-  }
-
-  IEnumerator IEnumerable.GetEnumerator()
-  {
-    return GetEnumerator();
-  }
-
-  public IEnumerator<Style> GetEnumerator()
-  {
-    return Styles.GetEnumerator();
   }
 
   public override int GetHashCode()

@@ -118,15 +118,12 @@ public abstract class OperationSequence<T, TSelf> : IEnumerable<T>
     return beforeLength;
   }
 
-  /// <summary>
-  ///   Adds a <see cref="IInsert" /> to the end of this sequence of operations, which is then
-  ///   normalised.
-  /// </summary>
+  /// <summary>Adds a <see cref="IInsert" /> to the end of this sequence of operations, which is then normalised.</summary>
   /// <param name="insert">The insert to be added.</param>
   /// <returns>This sequence of operations.</returns>
   /// <exception cref="InvalidOperationException">
-  ///   This method must not be ran on classes where
-  ///   <see cref="IInsert" /> does not extend <typeparamref name="T" />.
+  ///   This method must not be ran on classes where <see cref="IInsert" /> does
+  ///   not extend <typeparamref name="T" />.
   /// </exception>
   public TSelf Insert(IInsert insert)
   {

@@ -33,11 +33,11 @@ public class TransformTest
     new Document().Insert("AA").Transform(new Transformation().Retain(1).Retain(1, turnBold))
       .Is(new Document().Insert("A").Insert("A", InlineFormat.BoldPreset));
 
-    new Document().Insert("A").Insert("A", InlineFormat.BoldPreset)
-      .Transform(new Transformation().Retain(1, turnBold)).Is(new Document().Insert("AA", InlineFormat.BoldPreset));
+    new Document().Insert("A").Insert("A", InlineFormat.BoldPreset).Transform(new Transformation().Retain(1, turnBold))
+      .Is(new Document().Insert("AA", InlineFormat.BoldPreset));
 
-    new Document().Insert("A").Insert("A", InlineFormat.BoldPreset)
-      .Transform(new Transformation().Retain(2, turnBold)).Is(new Document().Insert("A", InlineFormat.BoldPreset)
+    new Document().Insert("A").Insert("A", InlineFormat.BoldPreset).Transform(new Transformation().Retain(2, turnBold))
+      .Is(new Document().Insert("A", InlineFormat.BoldPreset)
         .Insert("A", new InlineFormat(ImmutableList.Create<Style>(Style.Bold, Style.Bold))));
 
     new Document().Insert("A", InlineFormat.BoldPreset).Insert("A", InlineFormat.ItalicPreset)
@@ -70,8 +70,7 @@ public class TransformTest
     new Document().Insert(new LineInsert()).Transform(new Transformation().Retain(1, turnQuote))
       .Is(new Document().Insert(new LineInsert(LineFormat.QuotePreset)));
 
-    new Document().Insert("A").Insert(new LineInsert()).Insert("A")
-      .Transform(new Transformation().Retain(3, turnQuote))
+    new Document().Insert("A").Insert(new LineInsert()).Insert("A").Transform(new Transformation().Retain(3, turnQuote))
       .Is(new Document().Insert("A").Insert(new LineInsert(LineFormat.QuotePreset)).Insert("A"));
   }
 
@@ -90,8 +89,7 @@ public class TransformTest
   [Fact]
   public void Insert_InsertsInText()
   {
-    new Document().Insert("AA").Transform(new Transformation().Retain(1).Insert("A"))
-      .Is(new Document().Insert("AAA"));
+    new Document().Insert("AA").Transform(new Transformation().Retain(1).Insert("A")).Is(new Document().Insert("AAA"));
 
     new Document().Insert("AA").Transform(new Transformation().Retain(1).Insert("A", InlineFormat.BoldPreset))
       .Is(new Document().Insert("A").Insert("A", InlineFormat.BoldPreset).Insert("A"));
@@ -114,9 +112,8 @@ public class TransformTest
   {
     var turnBold = new InlineFormatModifier(styles => styles.Add(Style.Bold));
 
-    new Document().Insert("AAA").Insert(new LineInsert())
-      .Transform(new Transformation().Retain(1).Retain(1, turnBold)).Is(new Document().Insert("A")
-        .Insert("A", InlineFormat.BoldPreset).Insert("A").Insert(new LineInsert()));
+    new Document().Insert("AAA").Insert(new LineInsert()).Transform(new Transformation().Retain(1).Retain(1, turnBold))
+      .Is(new Document().Insert("A").Insert("A", InlineFormat.BoldPreset).Insert("A").Insert(new LineInsert()));
   }
 
   [Fact]
@@ -139,8 +136,7 @@ public class TransformTest
       new Document().Insert("A").Transform(new Transformation().Delete(2)));
 
     Assert.Throws<InvalidOperationException>(() =>
-      new Document().Insert(new DividerInsert()).Insert(new DividerInsert())
-        .Transform(new Transformation().Delete(3)));
+      new Document().Insert(new DividerInsert()).Insert(new DividerInsert()).Transform(new Transformation().Delete(3)));
   }
 
   [Fact]
@@ -152,7 +148,6 @@ public class TransformTest
       new Document().Insert("A").Transform(new Transformation().Retain(2)));
 
     Assert.Throws<InvalidOperationException>(() =>
-      new Document().Insert(new DividerInsert()).Insert(new DividerInsert())
-        .Transform(new Transformation().Retain(3)));
+      new Document().Insert(new DividerInsert()).Insert(new DividerInsert()).Transform(new Transformation().Retain(3)));
   }
 }

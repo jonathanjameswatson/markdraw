@@ -56,8 +56,7 @@ public static class MarkdownToDeltaConverter
           case ListItemBlock when listSequence is not null:
             listSequence.MoveNext();
             newIndentSequences =
-              newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(listSequence.Current,
-                Indent.Continue));
+              newIndentSequences.Add(SequenceHelpers.RepeatAfterFirst<Indent>(listSequence.Current, Indent.Continue));
             break;
           case ListItemBlock:
             throw new InvalidOperationException(
@@ -134,8 +133,8 @@ public static class MarkdownToDeltaConverter
     }
   }
 
-  private static bool InsertInline(Document document, Inline inline, InlineFormat? format = null, bool
-    previousLineBreak = false)
+  private static bool InsertInline(Document document, Inline inline, InlineFormat? format = null,
+    bool previousLineBreak = false)
   {
     var newFormat = format ?? new InlineFormat();
 
@@ -170,8 +169,7 @@ public static class MarkdownToDeltaConverter
         }
 
         return containerInline.Aggregate(previousLineBreak,
-          (newPreviousLineBreak, child) =>
-            InsertInline(document, child, newFormat, newPreviousLineBreak));
+          (newPreviousLineBreak, child) => InsertInline(document, child, newFormat, newPreviousLineBreak));
       case LeafInline leafInline:
         InlineInsert newInsert = leafInline switch {
           AutolinkInline { Url: var url } => new TextInsert(url),

@@ -22,11 +22,6 @@ public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format
 
   public LineFormat() : this(ImmutableList<Indent>.Empty) {}
 
-  public virtual bool Equals(LineFormat? other)
-  {
-    return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
-  }
-
   IEnumerator IEnumerable.GetEnumerator()
   {
     return GetEnumerator();
@@ -35,6 +30,11 @@ public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format
   public IEnumerator<Indent> GetEnumerator()
   {
     return Indents.GetEnumerator();
+  }
+
+  public virtual bool Equals(LineFormat? other)
+  {
+    return other is not null && Header == other.Header && Indents.SequenceEqual(other.Indents);
   }
 
   public override int GetHashCode()

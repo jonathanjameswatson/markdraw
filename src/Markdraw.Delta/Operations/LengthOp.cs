@@ -8,6 +8,7 @@ public abstract record LengthOp : IOp
   {
     Length = length;
   }
+
   public int Length
   {
     get => _length;
