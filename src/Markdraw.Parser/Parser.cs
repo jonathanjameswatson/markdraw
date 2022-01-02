@@ -9,7 +9,7 @@ public static class Parser
 {
   public static string Parse(string markdown)
   {
-    var html = DeltaTree.Parse(markdown).InnerHtml();
+    var html = DeltaTree.Parse(markdown).InnerHtml;
     return Prettify(html);
   }
 

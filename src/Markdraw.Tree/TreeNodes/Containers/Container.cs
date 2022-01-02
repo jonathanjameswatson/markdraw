@@ -18,6 +18,8 @@ public abstract class Container : TreeNode, IEnumerable<TreeNode>
 
   public List<TreeNode> ElementsInside { get; } = new();
 
+  public string InnerHtml => string.Concat(this);
+
   IEnumerator IEnumerable.GetEnumerator()
   {
     return GetEnumerator();
@@ -26,11 +28,6 @@ public abstract class Container : TreeNode, IEnumerable<TreeNode>
   public IEnumerator<TreeNode> GetEnumerator()
   {
     return ElementsInside.GetEnumerator();
-  }
-
-  public string InnerHtml()
-  {
-    return string.Concat(this);
   }
 
   public override string ToString()
