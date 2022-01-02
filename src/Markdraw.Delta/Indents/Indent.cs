@@ -16,4 +16,6 @@ public abstract record Indent
   {
     return new BulletIndent(start, loose);
   }
+
+  public abstract string GetMarkdown();
 }

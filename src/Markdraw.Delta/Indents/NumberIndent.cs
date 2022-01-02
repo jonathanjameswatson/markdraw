@@ -33,4 +33,14 @@ public record NumberIndent : ListIndent
   {
     return $"||{(Start == -1 ? "?" : Start.ToString())}. {(Loose ? "LOOSE" : "TIGHT")}||";
   }
+
+  public int GetMarkdownNumber(int? lastNumber)
+  {
+    return Start != -1 ? Start : (lastNumber ?? 0) + 1;
+  }
+
+  public override string GetMarkdown()
+  {
+    return $"{GetMarkdownNumber(null)}.";
+  }
 }

@@ -6,4 +6,9 @@ public record QuoteIndent(bool Start = false) : Indent
   {
     return "||>||";
   }
+
+  public override string GetMarkdown()
+  {
+    return ">";
+  }
 }

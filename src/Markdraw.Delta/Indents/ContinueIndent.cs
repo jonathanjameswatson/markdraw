@@ -6,4 +6,9 @@ public record ContinueIndent : Indent
   {
     return "||•||";
   }
+
+  public override string GetMarkdown()
+  {
+    return " ";
+  }
 }

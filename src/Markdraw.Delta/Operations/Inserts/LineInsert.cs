@@ -1,7 +1,10 @@
 using System.Text;
 using Markdraw.Delta.Formats;
+using Markdraw.Delta.Indents;
 
 namespace Markdraw.Delta.Operations.Inserts;
+
+public record IndentState(int LastLength, int? LastNumber);
 
 public record LineInsert(LineFormat Format) : IInsert
 {
@@ -27,18 +30,58 @@ public record LineInsert(LineFormat Format) : IInsert
     return $@"[\n {Format}]";
   }
 
-  public string LineInsertString()
+  public string LineInsertString(List<IndentState> indentStates, int indentStateCount)
   {
     var stringBuilder = new StringBuilder();
 
+    var i = 0;
     foreach (var indent in Format.Indents)
     {
-      stringBuilder.Append(indent);
+      int length;
+      int? number = null;
+
+      switch (indent)
+      {
+        case ContinueIndent:
+          length = i < indentStateCount ? indentStates[i].LastLength : 1;
+          for (var j = 0; j < length; j++)
+          {
+            stringBuilder.Append(' ');
+          }
+          break;
+        default:
+          string indentString;
+          if (indent is NumberIndent numberIndent)
+          {
+            var lastNumber = i < indentStateCount ? indentStates[i].LastNumber : null;
+            number = numberIndent.GetMarkdownNumber(lastNumber);
+            indentString = $"{number}.";
+          }
+          else
+          {
+            indentString = indent.GetMarkdown();
+          }
+          length = indentString.Length;
+          stringBuilder.Append(indentString);
+          break;
+      }
+
+      if (indentStates.Count <= i)
+      {
+        indentStates.Add(new IndentState(length, number));
+      }
+      else
+      {
+        indentStates[i] = new IndentState(length, number);
+      }
+
+      stringBuilder.Append(' ');
+      i += 1;
     }
 
     if (Format.Header == 0) return stringBuilder.ToString();
 
-    for (var i = 0; i < Format.Header; i++)
+    for (var j = 0; j < Format.Header; j++)
     {
       stringBuilder.Append('#');
     }

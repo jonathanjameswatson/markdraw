@@ -17,4 +17,9 @@ public record BulletIndent(bool Start = false, bool Loose = true) : ListIndent(L
     stringBuilder.Append(Loose ? " LOOSE||" : " TIGHT||");
     return stringBuilder.ToString();
   }
+
+  public override string GetMarkdown()
+  {
+    return "-";
+  }
 }

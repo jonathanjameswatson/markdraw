@@ -164,26 +164,30 @@ public abstract class OperationSequence<T, TSelf> : IEnumerable<T>
   public override string ToString()
   {
     var stringBuilder = new StringBuilder();
-    var buffer = new StringBuilder();
+    var lineBuffer = new StringBuilder();
+    var indentStates = new List<IndentState>();
+    var lastIndentCount = 0;
 
     foreach (var op in _ops)
     {
       if (op is LineInsert lineInsert)
       {
-        stringBuilder.Append(lineInsert.LineInsertString());
-        stringBuilder.Append(buffer);
+        stringBuilder.Append(lineInsert.LineInsertString(indentStates, lastIndentCount));
+        stringBuilder.Append(lineBuffer);
         stringBuilder.Append('\n');
-        buffer.Clear();
+        stringBuilder.Append('\n');
+        lineBuffer.Clear();
+        lastIndentCount = lineInsert.Format.Indents.Count;
       }
       else
       {
-        buffer.Append(op);
+        lineBuffer.Append(op);
       }
     }
 
-    if (buffer.Length != 0)
+    if (lineBuffer.Length != 0)
     {
-      stringBuilder.Append(buffer);
+      stringBuilder.Append(lineBuffer);
     }
 
     return stringBuilder.ToString();
