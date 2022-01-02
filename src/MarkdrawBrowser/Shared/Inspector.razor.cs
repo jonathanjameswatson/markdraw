@@ -125,7 +125,7 @@ public partial class Inspector : ComponentBase
       _ => obj.ToString() switch {
         "" => @"""""",
         null => "null",
-        var x => x
+        var x => x.Trim().Equals("") ? @"""""" : x
       }
     };
   }

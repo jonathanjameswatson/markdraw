@@ -4,6 +4,15 @@
     <Button EnabledClickCallback="Back" Disabled="@(_history.Count == 0)">Back</Button>
   </div>
 
+  <p class="block">
+    <code>
+      @(new ObjectInformation(Object).ObjectType)
+    </code>:
+    <code>
+      @LinkString(Object)
+    </code>
+  </p>
+
   <div class="table-container">
     <table class="table is-fullwidth">
       <thead>
