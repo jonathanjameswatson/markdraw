@@ -2,5 +2,5 @@
 
 public interface IHtmlContent
 {
-  public string Content { get; init; }
+  string Content { get; init; }
 }

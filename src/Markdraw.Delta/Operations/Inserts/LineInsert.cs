@@ -3,11 +3,11 @@ using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts;
 
-public record LineInsert(LineFormat Format) : Insert
+public record LineInsert(LineFormat Format) : IInsert
 {
   public LineInsert() : this(new LineFormat()) {}
 
-  public override LineInsert? SetFormat(IFormatModifier formatModifier)
+  public LineInsert? SetFormat(IFormatModifier formatModifier)
   {
     if (formatModifier is not IFormatModifier<LineFormat> lineFormatModifier) return null;
     var newFormat = lineFormatModifier.Modify(Format);
@@ -16,6 +16,8 @@ public record LineInsert(LineFormat Format) : Insert
       Format = newFormat
     };
   }
+
+  IInsert? IInsert.SetFormat(IFormatModifier formatModifier) => SetFormat(formatModifier);
 
   public override string ToString()
   {

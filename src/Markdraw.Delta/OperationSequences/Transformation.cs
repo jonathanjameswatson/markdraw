@@ -5,7 +5,7 @@ namespace Markdraw.Delta.OperationSequences;
 
 /// <summary>A sequence of inserts representing a transformation.</summary>
 /// <remarks>Transformations are not canonical, so two different transformations may have the same effect.</remarks>
-public class Transformation : OperationSequence<Op, Transformation>
+public class Transformation : OperationSequence<IOp, Transformation>
 {
   /// <summary>Adds a <see cref="Operations.Delete" /> with a given length to the end of this transformation.</summary>
   /// <param name="amount">The length of the <see cref="Operations.Delete" />.</param>

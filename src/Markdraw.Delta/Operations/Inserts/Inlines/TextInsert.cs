@@ -2,7 +2,7 @@ using Markdraw.Delta.Formats;
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines;
 
-public record TextInsert : InlineInsert
+public record TextInsert : InlineInsert, ISplittableInsert
 {
   private readonly string _text = "";
 
@@ -38,11 +38,27 @@ public record TextInsert : InlineInsert
     };
   }
 
+  ISplittableInsert? ISplittableInsert.Merge(ISplittableInsert before)
+  {
+    return before switch {
+      TextInsert beforeTextInsert => Merge(beforeTextInsert),
+      _ => null
+    };
+  }
+
   public TextInsert? Merge(TextInsert middle, TextInsert before)
   {
     if (!Format.Equals(middle.Format)) return null;
     return before with {
       Text = before.Text + middle.Text + Text
+    };
+  }
+
+  ISplittableInsert? ISplittableInsert.Merge(ISplittableInsert middle, ISplittableInsert before)
+  {
+    return (middle, before) switch {
+      (TextInsert middleTextInsert, TextInsert beforeTextInsert) => Merge(middleTextInsert, beforeTextInsert),
+      _ => null
     };
   }
 
@@ -55,6 +71,8 @@ public record TextInsert : InlineInsert
     };
   }
 
+  ISplittableInsert? ISplittableInsert.DeleteUpTo(int position) => DeleteUpTo(position);
+
   public (TextInsert, TextInsert)? SplitAt(int position)
   {
     if (position == 0 || position >= Length) return null;
@@ -64,6 +82,8 @@ public record TextInsert : InlineInsert
       Text = startText
     }, new TextInsert(endText, Format));
   }
+
+  (ISplittableInsert, ISplittableInsert)? ISplittableInsert.SplitAt(int position) => SplitAt(position);
 
   public override string ToString()
   {

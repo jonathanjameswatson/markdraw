@@ -15,7 +15,7 @@ namespace Markdraw.Delta.OperationSequences;
 /// <typeparam name="T">A class that all elements in this sequence must be or extend.</typeparam>
 /// <typeparam name="TSelf">The class of instances returned by methods that use chaining.</typeparam>
 public abstract class OperationSequence<T, TSelf> : IEnumerable<T>
-  where T : Op where TSelf : OperationSequence<T, TSelf>
+  where T : class, IOp where TSelf : OperationSequence<T, TSelf>
 {
   private readonly List<T> _ops = new();
 
@@ -119,16 +119,16 @@ public abstract class OperationSequence<T, TSelf> : IEnumerable<T>
   }
 
   /// <summary>
-  ///   Adds a <see cref="Operations.Inserts.Insert" /> to the end of this sequence of operations, which is then
+  ///   Adds a <see cref="IInsert" /> to the end of this sequence of operations, which is then
   ///   normalised.
   /// </summary>
   /// <param name="insert">The insert to be added.</param>
   /// <returns>This sequence of operations.</returns>
   /// <exception cref="InvalidOperationException">
   ///   This method must not be ran on classes where
-  ///   <see cref="Operations.Inserts.Insert" /> does not extend <typeparamref name="T" />.
+  ///   <see cref="IInsert" /> does not extend <typeparamref name="T" />.
   /// </exception>
-  public TSelf Insert(Insert insert)
+  public TSelf Insert(IInsert insert)
   {
     if (insert is not T castedInsert)
     {

@@ -2,7 +2,7 @@
 
 public interface IFormatModifier<T> : IFormatModifier where T : Format
 {
-  public T? Modify(T format);
+  T? Modify(T format);
 }
 
 public interface IFormatModifier {}

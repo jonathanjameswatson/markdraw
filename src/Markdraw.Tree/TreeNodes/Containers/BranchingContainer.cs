@@ -5,8 +5,8 @@ using Markdraw.Delta.Operations.Inserts;
 namespace Markdraw.Tree.TreeNodes.Containers;
 
 public abstract class BranchingContainer<TBranchMarker, TBranchInsert, TInsert> : Container where TBranchMarker : class
-  where TBranchInsert : Insert
-  where TInsert : Insert
+  where TBranchInsert : class, IInsert
+  where TInsert : class, IInsert
 {
   protected BranchingContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 

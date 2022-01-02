@@ -1,6 +1,6 @@
 namespace Markdraw.Delta.Operations;
 
-public abstract record LengthOp : Op
+public abstract record LengthOp : IOp
 {
   private readonly int _length;
 

@@ -1,3 +1,3 @@
 namespace Markdraw.Delta.Operations;
 
-public abstract record Op {}
+public interface IOp {}

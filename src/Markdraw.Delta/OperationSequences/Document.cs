@@ -7,20 +7,20 @@ namespace Markdraw.Delta.OperationSequences;
 
 internal abstract record TransformState(int InsertIndex);
 
-internal abstract record InsertTransformState(int InsertIndex, Insert Insert) : TransformState(InsertIndex);
+internal abstract record InsertTransformState(int InsertIndex, IInsert Insert) : TransformState(InsertIndex);
 
-internal record AtomTransformState(int InsertIndex, Insert Insert) : InsertTransformState(InsertIndex, Insert);
+internal record AtomTransformState(int InsertIndex, IInsert Insert) : InsertTransformState(InsertIndex, Insert);
 
-internal record SplittableTransformState
-  (int InsertIndex, int CharacterIndex, TextInsert TextInsert) : InsertTransformState(InsertIndex, TextInsert);
+internal record SplittableTransformState(int InsertIndex, int CharacterIndex, ISplittableInsert SplittableInsert) : InsertTransformState(InsertIndex,
+  SplittableInsert);
 
 internal record FinalTransformState(int InsertIndex) : TransformState(InsertIndex);
 
-internal record SplitResult(SplittableTransformState CurrentState, TextInsert Before);
+internal record SplitResult(SplittableTransformState CurrentState, ISplittableInsert Before);
 
-/// <summary>A sequence of <see cref="Insert" />s representing a Markdown document.</summary>
+/// <summary>A sequence of <see cref="IInsert" />s representing a Markdown document.</summary>
 /// <remarks>Each unique document is represented by one canonical sequence of inserts.</remarks>
-public class Document : OperationSequence<Insert, Document>
+public class Document : OperationSequence<IInsert, Document>
 {
   /// <summary>The number of characters in the document.</summary>
   /// <remarks>Certain inserts result in one character, such as dividers and code blocks.</remarks>
@@ -29,7 +29,7 @@ public class Document : OperationSequence<Insert, Document>
   /// <summary>Transforms this document with a transformation.</summary>
   /// <param name="transformation">A transformation.</param>
   /// <returns>This document.</returns>
-  public Document Transform(IEnumerable<Op> transformation)
+  public Document Transform(IEnumerable<IOp> transformation)
   {
     TransformState GetTransformState(int insertIndex)
     {
@@ -39,7 +39,7 @@ public class Document : OperationSequence<Insert, Document>
       }
 
       return Get(insertIndex) switch {
-        TextInsert textInsert => new SplittableTransformState(insertIndex, 0, textInsert),
+        ISplittableInsert splittableInsert => new SplittableTransformState(insertIndex, 0, splittableInsert),
         var insert => new AtomTransformState(insertIndex, insert)
       };
     }
@@ -48,8 +48,8 @@ public class Document : OperationSequence<Insert, Document>
 
     SplitResult SplitAtCharacterIndex(SplittableTransformState splittableTransformState, int characterIndex)
     {
-      var (opIndex, _, textInsert) = splittableTransformState;
-      switch (textInsert.SplitAt(characterIndex))
+      var (opIndex, _, splittableInsert) = splittableTransformState;
+      switch (splittableInsert.SplitAt(characterIndex))
       {
         case var (newBefore, after):
           Set(opIndex, newBefore);
@@ -70,8 +70,12 @@ public class Document : OperationSequence<Insert, Document>
         case null:
           return null;
         case var beforeLength:
+          var previous = Get(opIndex - 1) switch {
+            ISplittableInsert splittableInsert => splittableInsert,
+            _ => throw new InvalidOperationException("The previous insert must be splittable if a merge back succeeds.")
+          };
           var newSplittableTransformState = new SplittableTransformState(opIndex - 1, (int)beforeLength,
-            (Get(opIndex - 1) as TextInsert)!);
+            previous);
           transformState = newSplittableTransformState;
           return newSplittableTransformState;
       }
@@ -133,8 +137,8 @@ public class Document : OperationSequence<Insert, Document>
                 }
 
                 transformState = transformState switch {
-                  SplittableTransformState(_, var characterIndex, var textInsert) currentSplittableTransformState when
-                    characterIndex + progress < textInsert.Length => currentSplittableTransformState with {
+                  SplittableTransformState(_, var characterIndex, var splittableInsert) currentSplittableTransformState when
+                    characterIndex + progress < splittableInsert.Length => currentSplittableTransformState with {
                       CharacterIndex = characterIndex + progress
                     },
                   _ => GetTransformState(currentInsertIndex + 1)
@@ -161,29 +165,29 @@ public class Document : OperationSequence<Insert, Document>
             {
               case FinalTransformState:
                 throw new InvalidOperationException("Cannot delete past the end of a document.");
-              case SplittableTransformState(var currentInsertIndex, var currentCharacterIndex, var currentTextInsert)
+              case SplittableTransformState(var currentInsertIndex, var currentCharacterIndex, var currentSplittableInsert)
                 splittableTransformState:
                 if (currentCharacterIndex > 0)
                 {
                   (splittableTransformState, _) = SplitAtCharacterIndex(splittableTransformState,
                     currentCharacterIndex);
-                  (currentInsertIndex, _, currentTextInsert) = splittableTransformState;
+                  (currentInsertIndex, _, currentSplittableInsert) = splittableTransformState;
                 }
 
-                var amountDeleted = Math.Min(currentTextInsert.Length, remainingDeleteLength);
+                var amountDeleted = Math.Min(currentSplittableInsert.Length, remainingDeleteLength);
                 remainingDeleteLength -= amountDeleted;
 
-                switch (currentTextInsert.DeleteUpTo(amountDeleted))
+                switch (currentSplittableInsert.DeleteUpTo(amountDeleted))
                 {
                   case null:
                     RemoveAt(currentInsertIndex);
                     transformState = GetTransformState(currentInsertIndex);
                     break;
-                  case var newTextInsert:
-                    Set(currentInsertIndex, newTextInsert);
-                    currentTextInsert = newTextInsert;
+                  case var newSplittableInsert:
+                    Set(currentInsertIndex, newSplittableInsert);
+                    currentSplittableInsert = newSplittableInsert;
                     transformState = splittableTransformState with {
-                      Insert = currentTextInsert
+                      Insert = currentSplittableInsert
                     };
                     break;
                 }
@@ -203,7 +207,7 @@ public class Document : OperationSequence<Insert, Document>
 
           break;
         }
-        case Insert insert
+        case IInsert insert
           when transformState is SplittableTransformState(_, > 0 and var currentCharacterIndex, _)
             splittableTransformState:
         {
@@ -213,7 +217,7 @@ public class Document : OperationSequence<Insert, Document>
           currentInsertIndex += 1;
           transformState = GetTransformState(currentInsertIndex);
 
-          if (insert is TextInsert middle)
+          if (insert is ISplittableInsert middle)
           {
             var merged = after.Merge(middle, newBefore);
             if (merged is not null)
@@ -229,7 +233,7 @@ public class Document : OperationSequence<Insert, Document>
 
           break;
         }
-        case Insert insert:
+        case IInsert insert:
         {
           var currentInsertIndex = transformState.InsertIndex;
 
@@ -298,7 +302,7 @@ public class Document : OperationSequence<Insert, Document>
       var op = Get(opIndex);
       switch (op)
       {
-        case TextInsert { Format: T t }:
+        case InlineInsert { Format: T t }:
           return t;
         case LineInsert { Format: T t }:
           return t;

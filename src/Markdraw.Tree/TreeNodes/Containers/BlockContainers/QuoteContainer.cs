@@ -11,7 +11,7 @@ public class QuoteContainer : BlockContainer
 
   protected override string Tag => "blockquote";
 
-  public new static QuoteContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree? deltaTree = null,
+  public new static QuoteContainer CreateInstance(int depth, IEnumerable<IInsert> document, DeltaTree? deltaTree = null,
     int i = 0)
   {
     var container = new QuoteContainer(deltaTree, i);

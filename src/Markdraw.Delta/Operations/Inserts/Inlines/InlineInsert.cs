@@ -2,9 +2,11 @@
 
 namespace Markdraw.Delta.Operations.Inserts.Inlines;
 
-public abstract record InlineInsert(InlineFormat Format) : Insert
+public abstract record InlineInsert(InlineFormat Format) : IInsert
 {
-  public override InlineInsert? SetFormat(IFormatModifier formatModifier)
+  public virtual int Length => 1;
+
+  public InlineInsert? SetFormat(IFormatModifier formatModifier)
   {
     if (formatModifier is not IFormatModifier<InlineFormat> inlineFormatModifier) return null;
     var newFormat = inlineFormatModifier.Modify(Format);
@@ -13,4 +15,6 @@ public abstract record InlineInsert(InlineFormat Format) : Insert
       Format = newFormat
     };
   }
+
+  IInsert? IInsert.SetFormat(IFormatModifier formatModifier) => SetFormat(formatModifier);
 }

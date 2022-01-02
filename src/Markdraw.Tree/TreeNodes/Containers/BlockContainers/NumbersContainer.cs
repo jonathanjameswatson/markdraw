@@ -20,7 +20,7 @@ public class NumbersContainer : ListContainer
   protected override string Tag => "ol";
   protected override string StartingTag => Start != 1 ? $@"<ol start=""{Start}"">" : "<ol>";
 
-  public static NumbersContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree? deltaTree = null,
+  public static NumbersContainer CreateInstance(int depth, IEnumerable<IInsert> document, DeltaTree? deltaTree = null,
     int i = 0, int start = 1, bool loose = true)
   {
     var container = new NumbersContainer(deltaTree, i, start, loose);

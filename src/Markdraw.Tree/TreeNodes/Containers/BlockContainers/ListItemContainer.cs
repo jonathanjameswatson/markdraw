@@ -20,7 +20,7 @@ public class ListItemContainer : BlockContainer
   public bool Loose { get; set; }
   protected override bool LooseInlines => Loose;
 
-  public static ListItemContainer CreateInstance(int depth, IEnumerable<Insert> document,
+  public static ListItemContainer CreateInstance(int depth, IEnumerable<IInsert> document,
     DeltaTree? deltaTree = null, int i = 0, bool loose = true)
   {
     var container = new ListItemContainer(deltaTree, i, loose);

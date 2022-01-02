@@ -24,7 +24,7 @@ public abstract class ListContainer : BlockContainer
     return Indent.Continue;
   }
 
-  protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<Insert> document, int depth, int i)
+  protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<IInsert> document, int depth, int i)
   {
     return ListItemContainer.CreateInstance(depth, document, ParentTree, i, Loose);
   }

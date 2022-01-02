@@ -1,6 +1,6 @@
 namespace Markdraw.Delta.Operations.Inserts;
 
-public record DividerInsert : Insert
+public record DividerInsert : IInsert
 {
   public override string ToString()
   {

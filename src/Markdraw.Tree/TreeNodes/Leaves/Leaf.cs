@@ -5,7 +5,7 @@ namespace Markdraw.Tree.TreeNodes.Leaves;
 public abstract class Leaf : TreeNode
 {
   protected Leaf(DeltaTree? deltaTree, int i) : base(deltaTree, i) {}
-  protected abstract Insert CorrespondingInsert { get; }
+  protected abstract IInsert CorrespondingInsert { get; }
 
   public override int Length
   {

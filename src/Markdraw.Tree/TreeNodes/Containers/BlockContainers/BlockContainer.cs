@@ -7,7 +7,7 @@ using Markdraw.Tree.TreeNodes.Leaves;
 
 namespace Markdraw.Tree.TreeNodes.Containers.BlockContainers;
 
-public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
+public class BlockContainer : BranchingContainer<Indent, LineInsert, IInsert>
 {
   protected BlockContainer(DeltaTree? deltaTree = null, int i = 0) : base(deltaTree, i) {}
 
@@ -18,7 +18,7 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
 
   protected sealed override bool AllLeaves => false;
 
-  public static BlockContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree? deltaTree = null,
+  public static BlockContainer CreateInstance(int depth, IEnumerable<IInsert> document, DeltaTree? deltaTree = null,
     int i = 0)
   {
     var container = new BlockContainer(deltaTree, i);
@@ -47,7 +47,7 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
     };
   }
 
-  protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<Insert> document, int depth, int i)
+  protected override BlockContainer CreateChildContainer(Indent indent, IEnumerable<IInsert> document, int depth, int i)
   {
     return indent switch {
       QuoteIndent => QuoteContainer.CreateInstance(depth, document, ParentTree, i),
@@ -58,13 +58,13 @@ public class BlockContainer : BranchingContainer<Indent, LineInsert, Insert>
     };
   }
 
-  protected override int AddLeaves(IEnumerable<Insert> document, LineInsert? lastLineInsert, int i)
+  protected override int AddLeaves(IEnumerable<IInsert> document, LineInsert? lastLineInsert, int i)
   {
     var header = lastLineInsert?.Format.Header ?? 0;
     var inlineBuffer = new List<InlineInsert>();
     var newI = i;
 
-    var enumerable = document as Insert[] ?? document.ToArray();
+    var enumerable = document as IInsert[] ?? document.ToArray();
     if (!enumerable.Any())
     {
       ElementsInside.Add(OuterInlineContainer.CreateInstance(0, inlineBuffer, ParentTree, newI, header, LooseInlines));

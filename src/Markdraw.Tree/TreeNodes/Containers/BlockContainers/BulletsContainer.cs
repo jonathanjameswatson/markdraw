@@ -11,7 +11,7 @@ public class BulletsContainer : ListContainer
 
   protected override string Tag => "ul";
 
-  public static BulletsContainer CreateInstance(int depth, IEnumerable<Insert> document, DeltaTree? deltaTree = null,
+  public static BulletsContainer CreateInstance(int depth, IEnumerable<IInsert> document, DeltaTree? deltaTree = null,
     int i = 0, bool loose = true)
   {
     var container = new BulletsContainer(deltaTree, i, loose);

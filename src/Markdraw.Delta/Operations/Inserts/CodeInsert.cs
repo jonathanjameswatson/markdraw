@@ -1,6 +1,6 @@
 namespace Markdraw.Delta.Operations.Inserts;
 
-public record CodeInsert(string Text = "", string Tag = "") : Insert
+public record CodeInsert(string Text = "", string Tag = "") : IInsert
 {
   public override string ToString()
   {
