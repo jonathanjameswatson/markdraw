@@ -1,3 +1,4 @@
+using System.Text;
 using Markdraw.Delta.Operations.Inserts;
 using Markdraw.Helpers;
 
@@ -16,13 +17,22 @@ public class CodeLeaf : Leaf
   {
     // var language = CorrespondingInsert.Tag is "" or null
     //   ? "none" : CorrespondingInsert.Tag;
-    var classString = CorrespondingInsert.Tag is "" or null ? "" : $@" class=""language-{CorrespondingInsert.Tag}""";
-    var text = EscapeHelpers.Escape(CorrespondingInsert.Text);
-    if (text != "")
+    var stringBuilder = new StringBuilder("<pre><code");
+    if (!CorrespondingInsert.Tag.Equals("", StringComparison.Ordinal))
     {
-      text += @"&#10;";
+      stringBuilder.Append(@" class=""language-");
+      stringBuilder.Append(CorrespondingInsert.Tag);
+      stringBuilder.Append('"');
     }
-    return $@"<pre><code{classString}>{text}</code></pre>";
+    stringBuilder.Append('>');
+    var text = EscapeHelpers.Escape(CorrespondingInsert.Text);
+    stringBuilder.Append(text);
+    if (!text.Equals("", StringComparison.Ordinal))
+    {
+      stringBuilder.Append("&#10;");
+    }
+    stringBuilder.Append("</code></pre>");
+    return stringBuilder.ToString();
     // return $@"<pre class=""language-{language}"" contenteditable=""false""><code class=""language-{language}"">{CorrespondingInsert.Text}</code></pre>";
   }
 }

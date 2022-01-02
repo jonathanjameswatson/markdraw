@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 
 namespace MarkdrawBrowser.Shared;
 
@@ -15,7 +15,7 @@ public partial class TabPage : ComponentBase
 
   protected override void OnInitialized()
   {
-    if (Parent == null)
+    if (Parent is null)
     {
       throw new InvalidOperationException("TabPage must exist within a TabControl");
     }

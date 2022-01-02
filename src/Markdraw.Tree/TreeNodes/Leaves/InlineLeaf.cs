@@ -1,4 +1,5 @@
-﻿using Markdraw.Delta.Operations.Inserts.Inlines;
+using System.Text;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Helpers;
 
 namespace Markdraw.Tree.TreeNodes.Leaves;
@@ -21,8 +22,19 @@ public class InlineLeaf : Leaf
   private static string ImageTag(ImageInsert imageInsert)
   {
     var (url, alt, title, _) = imageInsert;
-    var titleString = title == "" ? "" : $@"title=""{EscapeHelpers.Escape(title)}"" ";
-    return $@"<img src=""{url}"" alt=""{alt}""{titleString}/>";
+    var stringBuilder = new StringBuilder(@"<img src=""");
+    stringBuilder.Append(url);
+    stringBuilder.Append(@""" alt=""");
+    stringBuilder.Append(alt);
+    stringBuilder.Append('"');
+    if (!title.Equals("", StringComparison.Ordinal))
+    {
+      stringBuilder.Append(@" title=""");
+      stringBuilder.Append(EscapeHelpers.Escape(title));
+      stringBuilder.Append('"');
+    }
+    stringBuilder.Append("/>");
+    return stringBuilder.ToString();
   }
 
   public override string ToString()

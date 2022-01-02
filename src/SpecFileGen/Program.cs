@@ -124,7 +124,7 @@ internal static class Program
           {
             var nextLine = lines[i];
             Indent(2);
-            Write(nextLine == "" ? "//" : "// ");
+            Write(nextLine.Equals("", StringComparison.Ordinal) ? "//" : "// ");
             Line(nextLine);
           }
         }
@@ -185,7 +185,7 @@ internal static class Program
       {
         var nextLine = lines[i];
         Indent(2);
-        Write(nextLine == "" ? "//" : "// ");
+        Write(nextLine.Equals("", StringComparison.Ordinal) ? "//" : "// ");
         Line(nextLine);
       }
     }
@@ -209,7 +209,7 @@ internal static class Program
     {
       var nextLine = lines[i];
       Indent(3);
-      Write(nextLine == "" ? "//" : "// ");
+      Write(nextLine.Equals("", StringComparison.Ordinal) ? "//" : "// ");
       Indent();
       Line(nextLine);
     }
@@ -222,7 +222,7 @@ internal static class Program
     {
       var nextLine = lines[i];
       Indent(3);
-      Write(nextLine == "" ? "//" : "// ");
+      Write(nextLine.Equals("", StringComparison.Ordinal) ? "//" : "// ");
       Indent();
       Line(nextLine);
     }

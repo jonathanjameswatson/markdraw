@@ -9,10 +9,15 @@ public record ImageInsert(string Url, string Alt, string Title, InlineFormat For
 
   public override string ToString()
   {
-    var stringBuilder = new StringBuilder($"![{Alt}]({Url}");
-    if (Title != "")
+    var stringBuilder = new StringBuilder("![");
+    stringBuilder.Append(Alt);
+    stringBuilder.Append("](");
+    stringBuilder.Append(Url);
+    if (!Title.Equals("", StringComparison.Ordinal))
     {
-      stringBuilder.Append($@" ""{Title}""");
+      stringBuilder.Append(@" """);
+      stringBuilder.Append(Title);
+      stringBuilder.Append('"');
     }
     stringBuilder.Append(')');
     return Format.Wrap(stringBuilder.ToString());

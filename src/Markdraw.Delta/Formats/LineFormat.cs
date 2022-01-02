@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Immutable;
+using System.Text;
 using Markdraw.Delta.Indents;
 
 namespace Markdraw.Delta.Formats;
@@ -44,11 +45,15 @@ public record LineFormat(ImmutableList<Indent> Indents, int Header = 0) : Format
 
   public override string ToString()
   {
-    var indentString = string.Concat(Indents);
-    if (indentString != "")
+    var stringBuilder = new StringBuilder();
+    stringBuilder.Append('{');
+    stringBuilder.Append(string.Concat(Indents));
+    if (Indents.Count > 0)
     {
-      indentString += " ";
+      stringBuilder.Append(' ');
     }
-    return $"{{{indentString}{Header}}}";
+    stringBuilder.Append(Header);
+    stringBuilder.Append('}');
+    return stringBuilder.ToString();
   }
 }

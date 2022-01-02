@@ -1,4 +1,5 @@
-﻿using Markdraw.Delta.Operations.Inserts.Inlines;
+using System.Text;
+using Markdraw.Delta.Operations.Inserts.Inlines;
 using Markdraw.Helpers;
 
 namespace Markdraw.Tree.TreeNodes.Containers.InlineContainers;
@@ -27,13 +28,21 @@ public class LinkInlineContainer : InlineBranchingContainer
     get
     {
       var escapedUrl = EscapeHelpers.EscapeUrl(Url);
-      var escapedTitle = EscapeHelpers.Escape(Title);
+      var stringBuilder = new StringBuilder(@"<a href=""");
       if (EmailHelpers.IsEmail(Url))
       {
-        escapedUrl = $"mailto:{escapedUrl}";
+        stringBuilder.Append("mailto:");
       }
-      var titleString = Title == "" ? "" : $@" title=""{escapedTitle}""";
-      return $@"<a href=""{escapedUrl}""{titleString}>";
+      stringBuilder.Append(escapedUrl);
+      stringBuilder.Append('"');
+      if (!Title.Equals("", StringComparison.Ordinal))
+      {
+        stringBuilder.Append(@" title=""");
+        stringBuilder.Append(EscapeHelpers.Escape(Title));
+        stringBuilder.Append('"');
+      }
+      stringBuilder.Append('>');
+      return stringBuilder.ToString();
     }
   }
 

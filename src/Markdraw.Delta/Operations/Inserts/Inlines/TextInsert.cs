@@ -21,7 +21,7 @@ public record TextInsert : InlineInsert, ISplittableInsert
     get => _text;
     init
     {
-      if (value.Equals(""))
+      if (value.Equals("", StringComparison.Ordinal))
       {
         throw new ArgumentOutOfRangeException(nameof(value), "Text must be a non-empty string.");
       }

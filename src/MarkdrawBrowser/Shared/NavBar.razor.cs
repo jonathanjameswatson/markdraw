@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 
 namespace MarkdrawBrowser.Shared;
 
@@ -20,7 +20,7 @@ public partial class NavBar : ComponentBase
     get => _markdown;
     set
     {
-      if (_markdown == value) return;
+      if (_markdown.Equals(value, StringComparison.Ordinal)) return;
       _temporaryMarkdown = value;
       _markdown = value;
       ImportMarkdownChanged.InvokeAsync(value);

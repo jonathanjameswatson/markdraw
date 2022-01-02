@@ -32,7 +32,7 @@ public record CodeInsert(string Text = "", string Tag = "") : ISplittableInsert
 
   public ISplittableInsert? Merge(CodeInsert before)
   {
-    if (!Tag.Equals(before.Tag)) return null;
+    if (!Tag.Equals(before.Tag, StringComparison.Ordinal)) return null;
     return before with {
       Text = before.Text + Text
     };
@@ -42,7 +42,8 @@ public record CodeInsert(string Text = "", string Tag = "") : ISplittableInsert
   {
     var (middleText, middleTag) = middle;
     var (beforeText, beforeTag) = before;
-    if (!Tag.Equals(middleTag) || !Tag.Equals(beforeTag)) return null;
+    if (!Tag.Equals(middleTag, StringComparison.Ordinal)
+        || !Tag.Equals(beforeTag, StringComparison.Ordinal)) return null;
     return before with {
       Text = beforeText + middleText + Text
     };
