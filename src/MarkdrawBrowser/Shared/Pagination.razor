@@ -1,0 +1,13 @@
+﻿<nav class="pagination" role="navigation" aria-label="pagination">
+  <ul class="pagination-list">
+    @for (var i = Min; i <= Max; i += Increment)
+    {
+      var j = i;
+      <li>
+        <a class="pagination-link@(Page == j ? " is-current" : "")" aria-label="Goto page @j" @onclick="() => { Page = j; }">
+          @j
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

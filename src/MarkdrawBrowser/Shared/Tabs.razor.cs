@@ -20,4 +20,11 @@ public partial class Tabs : ComponentBase
     }
     StateHasChanged();
   }
+
+  public bool TrySetPage(int pageNumber)
+  {
+    if (pageNumber < 0 || pageNumber >= _pages.Count) return false;
+    ActivePage = _pages[pageNumber];
+    return true;
+  }
 }

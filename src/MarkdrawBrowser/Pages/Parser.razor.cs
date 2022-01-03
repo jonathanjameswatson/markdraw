@@ -1,8 +1,10 @@
-﻿using Markdig;
+﻿using System.Text.Json;
+using Markdig;
 using Markdig.Syntax;
 using Markdraw.Delta.OperationSequences;
 using Markdraw.MarkdownToDelta;
 using Markdraw.Tree;
+using MarkdrawBrowser.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -11,20 +13,26 @@ namespace MarkdrawBrowser.Pages;
 public partial class Parser : ComponentBase
 {
   private const string Original = "# Parser\n\nUse this page to see how Markdraw handles Markdown.";
+
+  private const int CommonMarkTestsPageIncrement = 100;
   private static readonly DeltaTree OriginalDeltaTree = GetDeltaTree(GetDelta(Original));
   private static readonly string OriginalMarkdrawHtml = GetMarkdrawHtml(OriginalDeltaTree);
   private static readonly MarkdownDocument OriginalMarkdigAst = GetMarkdigAst(Original);
   private static readonly string OriginalMarkdigHtml = GetMarkdigHtml(OriginalMarkdigAst);
+  private List<string> _commonMarkTests = new();
   private DeltaTree _deltaTree = OriginalDeltaTree;
   private string _highlightedMarkdigHtml = OriginalMarkdigHtml;
 
   private string _highlightedMarkdrawHtml = OriginalMarkdrawHtml;
 
   private string _input = Original;
+
+  private Tabs? _inputTabs;
   private MarkdownDocument _markdigAst = OriginalMarkdigAst;
   private string _markdigHtml = OriginalMarkdigHtml;
 
   private string _markdrawHtml = OriginalMarkdrawHtml;
+  private int CommonMarkPage { get; set; } = 1;
 
   private string Input
   {
@@ -81,5 +89,25 @@ public partial class Parser : ComponentBase
   private string HighlightHtml(string html)
   {
     return ((IJSInProcessRuntime)_js).Invoke<string>("window.highlightHtml", html);
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    const string url = "commonmark.json";
+    var json = await _http.GetStreamAsync(url);
+    var document = await JsonDocument.ParseAsync(json);
+    _commonMarkTests = document.RootElement.EnumerateArray().Select(element => element.GetString() ?? "").ToList();
+    CommonMarkPage = CommonMarkPage;
+  }
+
+  private void OpenTest(string test)
+  {
+    Input = test;
+    _inputTabs?.TrySetPage(0);
+  }
+
+  private void OpenCommonMarkTest(string test)
+  {
+    OpenTest(test.Replace("→", "\t"));
   }
 }

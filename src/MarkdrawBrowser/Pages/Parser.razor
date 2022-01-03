@@ -1,5 +1,6 @@
 ﻿@page "/Parser"
 
+@inject HttpClient _http;
 @inject IJSRuntime _js;
 
 <div class="container">
@@ -8,7 +9,44 @@
       <h1 class="title">
         Input
       </h1>
-      <textarea rows="25" class="textarea is-family-monospace" @bind="Input" @bind:event="oninput"></textarea>
+      <Tabs @ref="_inputTabs">
+        <TabPage Text="Plain text editor">
+          <textarea rows="25" class="textarea is-family-monospace" @bind="Input" @bind:event="oninput"></textarea>
+        </TabPage>
+        <TabPage Text="CommonMark 0.29">
+          <Pagination Min="1" Max="649" Increment="@CommonMarkTestsPageIncrement" @bind-Page="CommonMarkPage"/>
+          <div class="table-container">
+            <table class="table is-fullwidth">
+              <thead>
+              <tr>
+                <th>Test</th>
+                <th>Type</th>
+              </tr>
+              </thead>
+              <tbody>
+              @for (var i = CommonMarkPage; i <= Math.Min(_commonMarkTests.Count, CommonMarkPage + CommonMarkTestsPageIncrement - 1); i++)
+              {
+                var j = i - 1;
+                <tr>
+                  <td>
+                    @i
+                  </td>
+                  <td>
+                    <code>
+                      <a @onclick="() => OpenCommonMarkTest(_commonMarkTests[j])">
+                        @_commonMarkTests[j]
+                      </a>
+                    </code>
+                  </td>
+                </tr>
+              }
+              </tbody>
+            </table>
+          </div>
+          <Pagination Min="1" Max="649" Increment="@CommonMarkTestsPageIncrement" @bind-Page="CommonMarkPage"/>
+          <br/>
+        </TabPage>
+      </Tabs>
     </div>
     <div class="column is-half">
       <h1 class="title">

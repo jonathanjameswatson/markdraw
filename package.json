@@ -24,13 +24,14 @@
   "scripts": {
     "watch": "cross-env NODE_ENV='development' gulp watch",
     "dotnet-watch": "dotnet watch --project src/MarkdrawBrowser run",
-    "dev": "gulp build-grammars && run-p watch dotnet-watch",
+    "dev": "run-p watch dotnet-watch",
     "build": "cross-env NODE_ENV='production' gulp build && dotnet publish src/MarkdrawBrowser/MarkdrawBrowser.csproj -c Release -o release --nologo",
     "docs": "docfx metadata doc/docfx.json && node doc/nest.js && docfx build doc/docfx.json"
   },
   "dependencies": {
     "animateplus": "^2.1.1",
     "bulma": "^0.9.3",
+    "commonmark-spec": "^0.29.0",
     "prismjs": "^1.25.0",
     "rangy": "^1.3.0"
   }
