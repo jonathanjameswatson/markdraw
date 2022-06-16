@@ -7,37 +7,35 @@ on:
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
 
     steps:
-    -
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v3
-    -
-      name: Setup .NET 5.0 SDK
+
+    - name: Setup .NET 5.0 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    -
-      name: Use Node.js 14
+
+    - name: Use Node.js 14
       uses: actions/setup-node@v3
       with:
         node-version: 14
-    -
-      name: Install packages with yarn
+
+    - name: Install packages with yarn
       run: yarn install
-    -
-      name: Build project with yarn
+
+    - name: Build project with yarn
       run: yarn build
-    -
-      name: Change base-tag in index.html from / to Markdraw
+
+    - name: Change base-tag in index.html from / to Markdraw
       run: sed -i 's/<base href="\/" \/>/<base href="\/markdraw\/" \/>/g' release/wwwroot/index.html
-    -
-      name: Copy index.html to 404.html
+
+    - name: Copy index.html to 404.html
       run: cp release/wwwroot/index.html release/wwwroot/404.html
-    -
-      name: Deploy
+
+    - name: Deploy
       if: success()
       uses: crazy-max/ghaction-github-pages@v2
       with:
