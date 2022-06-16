@@ -20,10 +20,10 @@ jobs:
       with:
         dotnet-version: 5.0.x
     -
-      name: Use Node.js 12
+      name: Use Node.js 14
       uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 14
     -
       name: Install packages with yarn
       run: yarn install
