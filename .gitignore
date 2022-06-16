@@ -1,6 +1,6 @@
 .vscode
 MarkdrawBrowser/wwwroot/css
-MarkdrawBrowser/wwwroot/markdrawBrowser.bundle.js
+MarkdrawBrowser/wwwroot/markdrawBrowser.bundle.js*
 MarkdrawBrowser/wwwroot/grammars
 
 ## Ignore Visual Studio temporary files, build results, and
